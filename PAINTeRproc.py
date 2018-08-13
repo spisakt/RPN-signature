@@ -36,13 +36,16 @@ if (len(sys.argv) > 3):
 #_regtype_ = globals._RegType_.FSL
 _regtype_ = globals._RegType_.ANTS
 ##############################
+_refvolplace_ = globals._RefVolPos_.first
+
+
 # specify atlas for network construction:
 # name of labelmap nii (or list of probmaps)
-_ATLAS_FILE = '/Users/tspisak/data/atlases/MIST/Parcellations/MIST_122.nii.gz'
+_ATLAS_FILE = '/home/analyser/Documents/mistatlases/Parcellations/MIST_122.nii.gz'
 # a list of labels, where index+1 corresponds to the label in the labelmap
-_ATLAS_LABELS = tsext.mist_labels(mist_directory='/Users/tspisak/data/atlases/MIST/', resolution="122")
+_ATLAS_LABELS = tsext.mist_labels(mist_directory='/home/analyser/Documents/mistatlases/', resolution="122")
 # a list of labels, where index i corresponds to the module of the i+1th region, this is optional
-_ATLAS_MODULES = tsext.mist_modules(mist_directory='/Users/tspisak/data/atlases/MIST/', resolution="122")
+_ATLAS_MODULES = tsext.mist_modules(mist_directory='/home/analyser/Documents/mistatlases', resolution="122")
 ##############################
 
 
@@ -85,20 +88,18 @@ add_masks = pe.MapNode(fsl.ImageMaths(op_string=' -add'),
                        iterfield=['in_file', 'in_file2'],
                        name="addimgs")
 
-# TODO: erode compcor noise mask!!!!
 erode_mask = pe.MapNode(fsl.ErodeImage(),
                         iterfield=['in_file'],
                         name="erode_compcor_mask")
-# TODO: add skull voxels??
 
 def pickindex(vec, i):
     return [x[i] for x in vec]
 
-myfuncproc = funcproc.FuncProc()
+myfuncproc = funcproc.FuncProc(stdrefvol=_refvolplace_)
 
 #create atlas matching this space
 resample_atlas = pe.Node(interface=afni.Resample(outputtype = 'NIFTI_GZ',
-                                          in_file="/Users/tspisak/data/atlases/MIST/Parcellations/MIST_7.nii.gz",
+                                          in_file="/home/analyser/Documents/mistatlases/Parcellations/MIST_7.nii.gz",
                                           master=globals._FSLDIR_ + '/data/standard/MNI152_T1_3mm_brain.nii.gz'),
                          name='resample_atlas') #default interpolation is nearest neighbour
 
@@ -162,17 +163,17 @@ totalWorkflow.connect([
      [('out_file','inputspec.cc_noise_roi')]),
 
     # push func to standard space
-    (myfuncproc, myfunc2mni,
-     [('outputspec.func_mc', 'inputspec.func'),
-      ('outputspec.FD', 'inputspec.confounds')]),
-    (mybbr, myfunc2mni,
-     [('outputspec.func_to_anat_linear_xfm', 'inputspec.linear_reg_mtrx')]),
-    (myanatproc, myfunc2mni,
-     [('outputspec.anat2mni_warpfield', 'inputspec.nonlinear_reg_mtrx'),
-      #('outputspec.std_template', 'inputspec.reference_brain'),
-      ('outputspec.brain', 'inputspec.anat')]),
-    (resample_atlas, myfunc2mni,
-     [('out_file', 'inputspec.atlas')]),
+#    (myfuncproc, myfunc2mni,
+#    [('outputspec.func_mc', 'inputspec.func'),
+#     ('outputspec.FD', 'inputspec.confounds')]),
+#   (mybbr, myfunc2mni,
+#    [('outputspec.func_to_anat_linear_xfm', 'inputspec.linear_reg_mtrx')]),
+#   (myanatproc, myfunc2mni,
+#    [('outputspec.anat2mni_warpfield', 'inputspec.nonlinear_reg_mtrx'),
+#     #('outputspec.std_template', 'inputspec.reference_brain'),
+#     ('outputspec.brain', 'inputspec.anat')]),
+#   (resample_atlas, myfunc2mni,
+#    [('out_file', 'inputspec.atlas')]),
 
     (myfuncproc, myfunc2mni_cc_bpf_cens_mac,
      [('outputspec.func_mc_nuis_bpf_cens_medang', 'inputspec.func'),
