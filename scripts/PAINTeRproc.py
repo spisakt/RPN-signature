@@ -38,8 +38,8 @@ else:
     _MISTDIR_ = '/home/analyser/Documents/mistatlases/'
 
 ##############################
-#_regtype_ = globals._RegType_.FSL
-_regtype_ = globals._RegType_.ANTS
+_regtype_ = globals._RegType_.FSL
+#_regtype_ = globals._RegType_.ANTS
 globals._brainref="/data/standard/MNI152_T1_2mm_brain.nii.gz"
 globals._headref="/data/standard/MNI152_T1_2mm.nii.gz"
 globals._brainref_mask="/data/standard/MNI152_T1_2mm_brain_mask_dil.nii.gz"
