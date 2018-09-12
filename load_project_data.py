@@ -15,7 +15,22 @@ def load_QST_data(data_filename='/Users/tspisak/projects/Mercure_rest/data/data.
     if y.std() < 0.0001:
         raise Warning("Data has to be upsacled!")
         y = y* 1000
+
+    print "*** Included subjects: " + str(data["ID"])
+
     return y
+
+def load_timeseries_tsv(file_list):
+    pooled_subjects = []
+    for f in file_list:
+        ts = pd.read_csv(f, sep="\t").values
+        pooled_subjects.append(ts)
+        #import matplotlib.pyplot as plt
+        #plt.plot(ts[..., 0])
+        #plt.show()
+
+    return pooled_subjects
+
 
 
 def load_timeseries_sav(timeseries_sav_file="/Users/tspisak/projects/Mercure_rest/src/conn/timeseries_122_friston_new.sav"):

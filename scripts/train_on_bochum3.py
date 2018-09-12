@@ -47,6 +47,8 @@ outer_cv = LeaveOneOut()
 
 clf = GridSearchCV(estimator=mymodel, param_grid=p_grid, cv=inner_cv, scoring="neg_mean_squared_error", verbose=False, return_train_score=False, n_jobs=8)
 
+print "** Number of subjects: " + str(len(y))
+
 clf.fit(X, y)
 
 
