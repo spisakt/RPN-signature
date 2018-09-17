@@ -1,7 +1,7 @@
 import numpy as np
 import pandas as pd
 
-def load_QST_data(data_filename='/home/analyser/Documents/PAINTER/data.csv',
+def load_QST_data(data_filename='/Users/tspisak/data/Mercure_rest/data.csv',
                   target_var="mean_QST_pain_sensitivity", sep=",", exclude_ids=[1,2,3, 8, 21, 22]):
     # load QST
     # 1,2,3: pilots

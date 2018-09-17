@@ -49,7 +49,7 @@ files = [
     "/Users/tspisak/res/PAINTeR/bochum/connectivity/regional_timeseries/_extract_timeseries31extract_timeseries.tsv",
     "/Users/tspisak/res/PAINTeR/bochum/connectivity/regional_timeseries/_extract_timeseries32extract_timeseries.tsv",
     "/Users/tspisak/res/PAINTeR/bochum/connectivity/regional_timeseries/_extract_timeseries33extract_timeseries.tsv",
-    #"/Users/tspisak/res/PAINTeR/bochum/connectivity/regional_timeseries/_extract_timeseries34extract_timeseries.tsv",
+    "/Users/tspisak/res/PAINTeR/bochum/connectivity/regional_timeseries/_extract_timeseries34extract_timeseries.tsv",
     "/Users/tspisak/res/PAINTeR/bochum/connectivity/regional_timeseries/_extract_timeseries35extract_timeseries.tsv",
     "/Users/tspisak/res/PAINTeR/bochum/connectivity/regional_timeseries/_extract_timeseries36extract_timeseries.tsv",
     "/Users/tspisak/res/PAINTeR/bochum/connectivity/regional_timeseries/_extract_timeseries37extract_timeseries.tsv",
@@ -60,7 +60,7 @@ files = [
 
 ########################################################################################################################
 
-y = load.load_QST_data(exclude_ids=[1,2,3, 8, 21, 22, 40])  # default load Bochum "QST_pain_sesnitiviy" from QST data
+y = load.load_QST_data(exclude_ids=[1,2,3, 8, 21, 22])  # default load Bochum "QST_pain_sesnitiviy" from QST data
 ts = load.load_timeseries_tsv(files)
 X = load.compute_connectivity(ts, kind="tangent")
 
