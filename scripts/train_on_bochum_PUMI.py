@@ -16,10 +16,11 @@ import PAINTeR.model_selection as modsel
 from sklearn.model_selection import LeaveOneOut
 
 files = [
+    "/Users/tspisak/res/PAINTeR/bochum/connectivity/regional_timeseries/_extract_timeseries0extract_timeseries.tsv",
     "/Users/tspisak/res/PAINTeR/bochum/connectivity/regional_timeseries/_extract_timeseries1extract_timeseries.tsv",
     "/Users/tspisak/res/PAINTeR/bochum/connectivity/regional_timeseries/_extract_timeseries2extract_timeseries.tsv",
     "/Users/tspisak/res/PAINTeR/bochum/connectivity/regional_timeseries/_extract_timeseries3extract_timeseries.tsv",
-    "/Users/tspisak/res/PAINTeR/bochum/connectivity/regional_timeseries/_extract_timeseries4extract_timeseries.tsv",
+    #"/Users/tspisak/res/PAINTeR/bochum/connectivity/regional_timeseries/_extract_timeseries4extract_timeseries.tsv",
     "/Users/tspisak/res/PAINTeR/bochum/connectivity/regional_timeseries/_extract_timeseries5extract_timeseries.tsv",
     "/Users/tspisak/res/PAINTeR/bochum/connectivity/regional_timeseries/_extract_timeseries6extract_timeseries.tsv",
     "/Users/tspisak/res/PAINTeR/bochum/connectivity/regional_timeseries/_extract_timeseries7extract_timeseries.tsv",
@@ -49,7 +50,7 @@ files = [
     "/Users/tspisak/res/PAINTeR/bochum/connectivity/regional_timeseries/_extract_timeseries31extract_timeseries.tsv",
     "/Users/tspisak/res/PAINTeR/bochum/connectivity/regional_timeseries/_extract_timeseries32extract_timeseries.tsv",
     "/Users/tspisak/res/PAINTeR/bochum/connectivity/regional_timeseries/_extract_timeseries33extract_timeseries.tsv",
-    "/Users/tspisak/res/PAINTeR/bochum/connectivity/regional_timeseries/_extract_timeseries34extract_timeseries.tsv",
+    #"/Users/tspisak/res/PAINTeR/bochum/connectivity/regional_timeseries/_extract_timeseries34extract_timeseries.tsv",
     "/Users/tspisak/res/PAINTeR/bochum/connectivity/regional_timeseries/_extract_timeseries35extract_timeseries.tsv",
     "/Users/tspisak/res/PAINTeR/bochum/connectivity/regional_timeseries/_extract_timeseries36extract_timeseries.tsv",
     "/Users/tspisak/res/PAINTeR/bochum/connectivity/regional_timeseries/_extract_timeseries37extract_timeseries.tsv",
@@ -60,19 +61,23 @@ files = [
 
 ########################################################################################################################
 
-y = load.load_QST_data(exclude_ids=[1,2,3, 8, 21, 22])  # default load Bochum "QST_pain_sesnitiviy" from QST data
-ts = load.load_timeseries_tsv(files)
-X = load.compute_connectivity(ts, kind="tangent")
+y = load.load_QST_data(exclude_ids=[1,2,3, 8, 21, 22, 40])  # default load Bochum "QST_pain_sesnitiviy" from QST data
+#ts = load.load_timeseries_tsv(files)
+ts = load.load_timeseries_sav("/Users/tspisak/tmp/test/timeseries_122_friston_cpac.sav")
+#ts = load.load_timeseries_sav()
+X, cm = load.compute_connectivity(ts, kind="tangent")
 
 # eliminate NA-s
 X = X[~np.isnan(y)]
 y = y[~np.isnan(y)]
 
+print X[1]
+
 mymodel, p_grid = models.pipe_scale_fsel_model()
 #mymodel, p_grid = models.pipe_scale_fsel_ridge()
 
 
-p_grid = {'fsel__k': [20, 30, 35, 40, 50], 'model__alpha': [.01, .05, .1], 'model__l1_ratio': [.1, .3, .5, .8, .9]}
+p_grid = {'fsel__k': [1000], 'model__alpha': [.00065, .0007, .00075, 0.0008], 'model__l1_ratio': [.07, .08, .09]}
 #p_grid = {'fsel__k': [20, 30, 35, 40, 50], 'model__alpha': [.01, .05, .1]} # for pure ridge
 ############ hyperparamter tuning with gridserach and model evaluation ####################
 

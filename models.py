@@ -23,11 +23,25 @@ def pipe_conn_scale_fsel_model(conn=ConnectivityMeasure(kind="tangent", vectoriz
 
 def pipe_scale_fsel_model(scaler=preprocessing.StandardScaler(),
                           fsel=SelectKBest(f_regression),
-                          model=ElasticNet(max_iter=10000),
+                          model=ElasticNet(max_iter=100000),
                           p_grid={'fsel__k': [30], 'model__alpha': [.6], 'model__l1_ratio': [.02]}
                           ):
     mymodel = Pipeline(
         [('scaler', scaler), ('fsel', fsel),
+         ('model', model)])
+    return mymodel, p_grid
+
+
+def pipe_scale_fsel_fgen_model(scaler=preprocessing.StandardScaler(),
+                          fsel=SelectKBest(f_regression),
+                          fgen=preprocessing.PolynomialFeatures(),
+                          model=ElasticNet(max_iter=100000),
+                          p_grid={'fsel__k': [30], 'model__alpha': [.6], 'model__l1_ratio': [.02]}
+                          ):
+    mymodel = Pipeline(
+        [('scaler', scaler),
+         ('fsel', fsel),
+         ('fgen', fgen),
          ('model', model)])
     return mymodel, p_grid
 

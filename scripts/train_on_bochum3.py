@@ -24,6 +24,8 @@ X = load.compute_connectivity(ts, kind="tangent")
 X = X[~np.isnan(y)]
 y = y[~np.isnan(y)]
 
+print X[1]
+
 mymodel, p_grid = models.pipe_scale_fsel_model()
 #mymodel, p_grid = models.pipe_scale_fsel_ridge()
 
