@@ -7,9 +7,10 @@ import sys
 import nipype
 import nipype.pipeline as pe
 # import the defined workflows from the anat_preproc folder
-import nipype.interfaces.io as nio
+import nipype.interfaces.io as io
 import nipype.interfaces.fsl as fsl
 import nipype.interfaces.afni as afni
+import nipype.interfaces.utility as utility
 import PUMI.AnatProc as anatproc
 import PUMI.FuncProc as funcproc
 # import the necessary workflows from the func_preproc folder
@@ -19,6 +20,8 @@ import PUMI.utils.utils_convert as utils_convert
 import os
 import PUMI.utils.globals as globals
 import PUMI.connectivity.TimeseriesExtractor as tsext
+import nipype.interfaces.nilearn as learn
+import PUMI.utils.QC as qc
 import PUMI.connectivity.NetworkBuilder as nw
 
 # parse command line arguments
@@ -60,7 +63,7 @@ _regtype_ = globals._RegType_.ANTS
 ##############################
 
 # create data grabber
-datagrab = pe.Node(nio.DataGrabber(outfields=['func', 'struct']), name='data_grabber')
+datagrab = pe.Node(io.DataGrabber(outfields=['func', 'struct']), name='data_grabber')
 
 datagrab.inputs.base_directory = os.getcwd()  # do we need this?
 datagrab.inputs.template = "*"  # do we need this?
@@ -73,7 +76,7 @@ pop_id = pe.Node(interface=utils_convert.List2TxtFile,
                      name='pop_id')
 pop_id.inputs.rownum = 0
 pop_id.inputs.out_file = "subject_IDs.txt"
-ds_id = pe.Node(interface=nio.DataSink(), name='ds_pop_id')
+ds_id = pe.Node(interface=io.DataSink(), name='ds_pop_id')
 ds_id.inputs.regexp_substitutions = [("(\/)[^\/]*$", "IDs.txt")]
 ds_id.inputs.base_directory = globals._SinkDir_
 
@@ -108,35 +111,110 @@ def pickindex(vec, i):
     return [x[i] for x in vec]
 
 #myfuncproc = funcproc.FuncProc_cpac(stdrefvol="mean")
-myfuncproc = funcproc.FuncProc()
+myfuncproc = funcproc.FuncProc_despike_afni()
 
-#create atlas matching this space
-resample_atlas = pe.Node(interface=afni.Resample(outputtype = 'NIFTI_GZ',
-                                          in_file=_MISTDIR_ + "/Parcellations/MIST_7.nii.gz",
-                                          master=globals._FSLDIR_ + '/data/standard/MNI152_T1_3mm_brain.nii.gz'),
+
+#########################
+atlasinput=pe.Node(utility.IdentityInterface(fields=['modules', 'labels', 'labelmap']),
+                   name="atlasinput")
+atlasinput.inputs.modules = _ATLAS_MODULES
+atlasinput.inputs.labels = _ATLAS_LABELS
+atlasinput.inputs.labelmap=_MISTDIR_ + "/Parcellations/MIST_122.nii.gz"
+
+relabel_atls = pe.Node(interface=utility.Function(input_names=['atlas_file', 'modules', 'labels'],
+                       output_names=['relabelled_atlas_file', 'reordered_modules', 'reordered_labels', 'newlabels_file'],
+                       function=tsext.relabel_atlas),
+                                name='relabel_atlas2')
+
+#create atlas matching the stabndard space used
+resample_atlas = pe.Node(interface=afni.Resample(outputtype='NIFTI_GZ',
+                                          master=globals._FSLDIR_ + globals._brainref),
                          name='resample_atlas') #default interpolation is nearest neighbour
 
-# standardize what you need
-myfunc2mni = transform.func2mni(stdreg=_regtype_, carpet_plot="1_original", wf_name="func2mni_1")
-myfunc2mni_nuis = transform.func2mni(stdreg=_regtype_, carpet_plot="2_nuis", wf_name="func2mni_2_nuis")
-myfunc2mni_nuis_medang = transform.func2mni(stdreg=_regtype_, carpet_plot="3_nuis_medang", wf_name="func2mni_3_nuis_medang")
-myfunc2mni_nuis_medang_bpf = transform.func2mni(stdreg=_regtype_, carpet_plot="5_nuis_medang_bptf", wf_name="func2mni_4_nuis_medang_bptf")
+resample_atlas_3mm = pe.Node(interface=afni.Resample(outputtype='NIFTI_GZ', # only for the carpet plot
+                                          master=globals._FSLDIR_ + "/data/standard/MNI152_T1_3mm_brain.nii.gz"),
+                         name='resample_atlas_3mm') #default interpolation is nearest neighbour
 
-###################
+# Save outputs which are important
+ds_nii = pe.Node(interface=io.DataSink(),
+                         name='ds_relabeled_atlas')
+ds_nii.inputs.base_directory = globals._SinkDir_
+ds_nii.inputs.regexp_substitutions = [("(\/)[^\/]*$", ".nii.gz")]
 
-#create matrices
-myextract = tsext.extract_timeseries()
-myextract.inputs.inputspec.atlas_file = _ATLAS_FILE
-myextract.inputs.inputspec.labels = _ATLAS_LABELS
-myextract.inputs.inputspec.modules = _ATLAS_MODULES
+        # Save outputs which are important
+ds_newlabels = pe.Node(interface=io.DataSink(),
+                         name='ds_newlabels')
+ds_newlabels.inputs.base_directory = globals._SinkDir_
+ds_newlabels.inputs.regexp_substitutions = [("(\/)[^\/]*$", ".tsv")]
+
+# transform atlas back to native EPI spaces!
+atlas2native = transform.atlas2func(stdreg=_regtype_)
+
+#extract_timesereies = pe.MapNode(interface=learn.SignalExtraction(detrend=False, include_global=False),
+#                                 iterfield=['in_file', 'label_files'],
+#                                 name='extract_timeseries')
+
+extract_timesereies = pe.MapNode(interface=utility.Function(input_names=['labels', 'labelmap', 'func', 'mask'],
+                                                            output_names=['out_file', 'labels'],
+                                                            function=tsext.myExtractor),
+                                 iterfield=['labelmap', 'func', 'mask'],
+                                 name='extract_timeseries')
+
+
+
+# Save outputs which are important
+ds_txt = pe.Node(interface=io.DataSink(),
+                 name='ds_txt')
+ds_txt.inputs.base_directory = globals._SinkDir_
+ds_txt.inputs.regexp_substitutions = [("(\/)[^\/]*$", "timeseries" + ".tsv")]
+
+#QC
+timeseries_qc = qc.regTimeseriesQC("regional_timeseries", tag="timeseries")
+
 
 measure = "tangent"
 mynetmat = nw.build_netmat(wf_name=measure.replace(" ", "_"))
 mynetmat.inputs.inputspec.measure = measure
 
 
+
 totalWorkflow = nipype.Workflow('preprocess_cpac')
 totalWorkflow.base_dir = '.'
+
+totalWorkflow.connect(extract_timesereies, 'out_file', mynetmat, 'inputspec.timeseries')
+totalWorkflow.connect(relabel_atls, 'reordered_modules', mynetmat, 'inputspec.modules')
+totalWorkflow.connect(resample_atlas_3mm, 'out_file', mynetmat, 'inputspec.atlas')
+
+totalWorkflow.connect(atlasinput, 'modules', relabel_atls, 'modules')
+totalWorkflow.connect(atlasinput, 'labels', relabel_atls, 'labels')
+totalWorkflow.connect(atlasinput, 'labelmap', relabel_atls, 'atlas_file')
+totalWorkflow.connect(relabel_atls, 'relabelled_atlas_file', resample_atlas, 'in_file')
+totalWorkflow.connect(relabel_atls, 'relabelled_atlas_file', resample_atlas_3mm, 'in_file')
+totalWorkflow.connect(resample_atlas, 'out_file', atlas2native, 'inputspec.atlas')
+
+totalWorkflow.connect(atlas2native, 'outputspec.atlas2func', extract_timesereies, 'labelmap')
+totalWorkflow.connect(mybbr, 'outputspec.gm_mask_in_funcspace', extract_timesereies, 'mask')
+totalWorkflow.connect(relabel_atls, 'reordered_labels', extract_timesereies, 'labels')
+totalWorkflow.connect(myfuncproc, 'outputspec.func_preprocessed', extract_timesereies, 'func')
+
+totalWorkflow.connect(relabel_atls, 'reordered_modules', timeseries_qc, 'inputspec.modules')
+totalWorkflow.connect(resample_atlas_3mm, 'out_file', timeseries_qc, 'inputspec.atlas')
+totalWorkflow.connect(resample_atlas, 'out_file', ds_nii, 'atlas_relabeled')
+totalWorkflow.connect(relabel_atls, 'newlabels_file', ds_newlabels, 'atlas_relabeled')
+totalWorkflow.connect(extract_timesereies, 'out_file', ds_txt, 'regional_timeseries')
+totalWorkflow.connect(extract_timesereies, 'out_file', timeseries_qc, 'inputspec.timeseries')
+
+##################
+
+# standardize what you need
+#myfunc2mni = transform.func2mni(stdreg=_regtype_, carpet_plot="1_original", wf_name="func2mni_1")
+#myfunc2mni_nuis = transform.func2mni(stdreg=_regtype_, carpet_plot="2_nuis", wf_name="func2mni_2_nuis")
+#myfunc2mni_nuis_medang = transform.func2mni(stdreg=_regtype_, carpet_plot="3_nuis_medang", wf_name="func2mni_3_nuis_medang")
+#myfunc2mni_nuis_medang_bpf = transform.func2mni(stdreg=_regtype_, carpet_plot="5_nuis_medang_bptf", wf_name="func2mni_4_nuis_medang_bptf")
+
+###################
+
+
 
 # anatomical part and func2anat
 totalWorkflow.connect([
@@ -177,64 +255,27 @@ totalWorkflow.connect([
     (add_masks, myfuncproc,
      [('out_file','inputspec.cc_noise_roi')]),
 
-    # push func to std space
- #  (myfuncproc, myfunc2mni,
- #    [('outputspec.func_mc', 'inputspec.func'),
- #     ('outputspec.FD', 'inputspec.confounds')]),
- #   (mybbr, myfunc2mni,
- #    [('outputspec.func_to_anat_linear_xfm', 'inputspec.linear_reg_mtrx')]),
- #   (myanatproc, myfunc2mni,
- #    [('outputspec.anat2mni_warpfield', 'inputspec.nonlinear_reg_mtrx'),
- #     # ('outputspec.std_template', 'inputspec.reference_brain'),
- #     ('outputspec.brain', 'inputspec.anat')]),
- #   (resample_atlas, myfunc2mni,
- #    [('out_file', 'inputspec.atlas')]),
-#
- #   (myfuncproc, myfunc2mni_nuis,
- #    [('outputspec.func_mc_nuis', 'inputspec.func'),
- #     ('outputspec.FD', 'inputspec.confounds')]),
- #   (mybbr, myfunc2mni_nuis,
- #    [('outputspec.func_to_anat_linear_xfm', 'inputspec.linear_reg_mtrx')]),
- #   (myanatproc, myfunc2mni_nuis,
- #    [('outputspec.anat2mni_warpfield', 'inputspec.nonlinear_reg_mtrx'),
- #     # ('outputspec.std_template', 'inputspec.reference_brain'),
- #     ('outputspec.brain', 'inputspec.anat')]),
- #   (resample_atlas, myfunc2mni_nuis,
- #    [('out_file', 'inputspec.atlas')]),
-#
- #   (myfuncproc, myfunc2mni_nuis_medang,
- #    [('outputspec.func_mc_nuis_medang', 'inputspec.func'),
- #     ('outputspec.FD', 'inputspec.confounds')]),
- #   (mybbr, myfunc2mni_nuis_medang,
- #    [('outputspec.func_to_anat_linear_xfm', 'inputspec.linear_reg_mtrx')]),
- #   (myanatproc, myfunc2mni_nuis_medang,
- #    [('outputspec.anat2mni_warpfield', 'inputspec.nonlinear_reg_mtrx'),
- #     # ('outputspec.std_template', 'inputspec.reference_brain'),
- #     ('outputspec.brain', 'inputspec.anat')]),
- #   (resample_atlas, myfunc2mni_nuis_medang,
-  #   [('out_file', 'inputspec.atlas')]),
+    # atlas2native
 
-    (myfuncproc, myfunc2mni_nuis_medang_bpf,
-     [('outputspec.func_mc_nuis_bpf_cens_medang', 'inputspec.func'),
+    (mybbr, atlas2native, [('outputspec.example_func', 'inputspec.example_func'),
+                           ('outputspec.anat_to_func_linear_xfm', 'inputspec.inv_linear_reg_mtrx')]),
+    (myfuncproc, atlas2native,
+     [('outputspec.func_preprocessed', 'inputspec.func'),
       ('outputspec.FD', 'inputspec.confounds')]),
-    (mybbr, myfunc2mni_nuis_medang_bpf,
-     [('outputspec.func_to_anat_linear_xfm', 'inputspec.linear_reg_mtrx')]),
-    (myanatproc, myfunc2mni_nuis_medang_bpf,
-     [('outputspec.anat2mni_warpfield', 'inputspec.nonlinear_reg_mtrx'),
+    (myanatproc, atlas2native,
+     [('outputspec.mni2anat_warpfield', 'inputspec.inv_nonlinear_reg_mtrx'),
       # ('outputspec.std_template', 'inputspec.reference_brain'),
-      ('outputspec.brain', 'inputspec.anat')]),
-    (resample_atlas, myfunc2mni_nuis_medang_bpf,
-     [('out_file', 'inputspec.atlas')])
+      ('outputspec.brain', 'inputspec.anat')])
 
     ])
 
 # connect network analysis part
-totalWorkflow.connect(myfunc2mni_nuis_medang_bpf, 'outputspec.func_std', myextract, 'inputspec.std_func')
-totalWorkflow.connect(myextract, 'outputspec.timeseries_file', mynetmat, 'inputspec.timeseries')
-totalWorkflow.connect(myextract, 'outputspec.reordered_modules', mynetmat, 'inputspec.modules')
-totalWorkflow.connect(myextract, 'outputspec.relabelled_atlas_file', mynetmat, 'inputspec.atlas')
+#totalWorkflow.connect(atlas2native, 'outputspec.func_std', myextract, 'inputspec.std_func')
+#totalWorkflow.connect(myextract, 'outputspec.timeseries_file', mynetmat, 'inputspec.timeseries')
+#totalWorkflow.connect(myextract, 'outputspec.reordered_modules', mynetmat, 'inputspec.modules')
+#totalWorkflow.connect(myextract, 'outputspec.relabelled_atlas_file', mynetmat, 'inputspec.atlas')
 
 totalWorkflow.write_graph('graph-orig.dot', graph2use='orig', simple_form=True)
 totalWorkflow.write_graph('graph-exec-detailed.dot', graph2use='exec', simple_form=False)
 totalWorkflow.write_graph('graph.dot', graph2use='colored')
-totalWorkflow.run(plugin='Linear')
+totalWorkflow.run(plugin='MultiProc')
