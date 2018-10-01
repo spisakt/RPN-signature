@@ -58,7 +58,7 @@ subjID_cpacID={int(subjectID_bochum.values[i, 1].split("/rest")[0][-2:]):subject
 
 #exclude_idx_frombochumnumber=[4,28] # here the 4 means idx8,and 28 means idx34. The rest is exluded by default.
 # The independent variables
-path="/home/analyser/Documents/PAINTER/regional_timeseries_bochumMAmask/"
+path="/home/analyser/Documents/PAINTER/regional_timeseries_5compcor/"
 files=os.listdir(path)
 files.sort()
 for i in range(len(files)):
@@ -85,8 +85,9 @@ for i in range(len(pooled_subjects_bochum_MAmask)):
         else:
             pooled_subjects_bochum_MAmask_norm[i][:, j] = 0
 
-correlation_matrix_bochum_MAmask_norm = conn_measure.fit_transform(pooled_subjects_bochum_MAmask_norm)
-X_bochum_MAmask_norm=correlation_matrix_bochum_MAmask_norm
+
+correlation_matrix_bochum_MAmask = conn_measure.fit_transform(pooled_subjects_bochum_MAmask)
+X_bochum_compcor=correlation_matrix_bochum_MAmask
 correlation_matrix_cpac = conn_measure.fit_transform(pooled_subjects_cpac)
 X_cpac=correlation_matrix_cpac
 # The response and predictive values are preprocessed previously, Here the cleaned data are used.
@@ -94,7 +95,7 @@ X_cpac=correlation_matrix_cpac
 # Dependent/response variable Y contains the composite pain sensitivity scores
 
 
-mymodel, p_grid = models.pipe_scale_fsel_model()
+mymodel, p_grid = pipe_scale_fsel_model()
 p_grid = {'fsel__k': [20, 30, 35, 40, 50], 'model__alpha': [.01, .05, .1], 'model__l1_ratio': [.1, .3, .5, .8, .9]}
 inner_cv = LeaveOneOut()
 outer_cv = LeaveOneOut()
@@ -103,7 +104,9 @@ outer_cv = LeaveOneOut()
 clf = GridSearchCV(estimator=mymodel, param_grid=p_grid, cv=inner_cv, scoring="neg_mean_squared_error", verbose=False, return_train_score=False, n_jobs=8)
 y=y_bochum
 # X=X_bochum
-X=X_bochum_MAmask_norm
+# X=X_bochum_MAmask_norm
+# X=X_bochum_strictMC
+X=X_bochum_compcor
 # X=X_cpac
 # y=y_essen
 # X=X_essen
