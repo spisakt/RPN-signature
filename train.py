@@ -19,7 +19,7 @@ def get_full_coef(X, m, labels="/Users/tspisak/res/PAINTeR/bochum/atlas_relabele
 
     RES = np.zeros(X[1].shape)
     RES[featuremask] = m.named_steps['model'].coef_
-    mat = vec_to_sym_matrix(RES, diagonal=np.repeat(0, len(labels))) #+1
+    mat = vec_to_sym_matrix(RES, diagonal=np.repeat(0, len(labels)+1)) #+1
 
     # partial correlation, RobustScaler, NoDiagonal, ts_scaling, scaled only on bochum: 23.6%
     # partial correlation, MaxAbsScaler, NoDiagonal, ts_scaling, scaled_together_with_essen: 25.4%
@@ -27,7 +27,7 @@ def get_full_coef(X, m, labels="/Users/tspisak/res/PAINTeR/bochum/atlas_relabele
     # partial correlation, StandardScaler, NoDiagonal, ts_scaling, scaled_together_with_essen, noglobsig: 19%
 
     if plot:
-        plotting.plot_matrix(mat, figure=(12, 12), labels=labels['modules'].values.tolist(), title="", grid=True)  #['GS']+
+        plotting.plot_matrix(mat, figure=(10, 10), labels=['GS']+labels['modules'].values.tolist(), title="", grid=True)  #['GS']+
         plotting.show()
 
     return RES, mat, labels
@@ -103,6 +103,7 @@ def train(X, y, model, p_grid, name="sample_name", nested=False, model_averaging
         print "** Mean Nested Crossvalidation Score (outer_cv):\t" + str(nested_scores_test.mean())
 
         print "Explained Variance: " +  str( 1- nested_scores_test.mean()/-mean_squared_error(np.repeat(y.mean(), len(y)), y) )
+        print "Correlation: " + str(np.corrcoef(actual, predicted)[0,1])
 
         avg_model = np.mean(np.array(avg), axis=0)
 
@@ -115,7 +116,10 @@ def train(X, y, model, p_grid, name="sample_name", nested=False, model_averaging
                    lw=2)
         ax.set_xlabel('Pain Sensitivity')
         ax.set_ylabel('Predicted (Nested LOO)')
-        plt.title("Expl. Var.:" +  str( 1- nested_scores_test.mean()/-mean_squared_error(np.repeat(y.mean(), len(y)), y) ) )
+        plt.title("Expl. Var.:" +  str( 1- nested_scores_test.mean()/-mean_squared_error(np.repeat(y.mean(), len(y)), y) ) +
+        "\nCorrelation: " + str(np.corrcoef(actual, predicted)[0, 1]) )
         plt.show()
+
+    model.fit(X, y) # fot to whole data
 
     return model, avg_model

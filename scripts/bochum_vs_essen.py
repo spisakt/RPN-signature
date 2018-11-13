@@ -193,7 +193,7 @@ essen_fmri=[
 "/Volumes/Bingel_Mac/PAINTeR/std4D/pumi_own1_essen_reg1antsown/func2mni/_applywarp38func2mni_4_nuis_medang_bptf.nii.gz",
 "/Volumes/Bingel_Mac/PAINTeR/std4D/pumi_own1_essen_reg1antsown/func2mni/_applywarp39func2mni_4_nuis_medang_bptf.nii.gz",
 "/Volumes/Bingel_Mac/PAINTeR/std4D/pumi_own1_essen_reg1antsown/func2mni/_applywarp40func2mni_4_nuis_medang_bptf.nii.gz",
-"/Volumes/Bingel_Mac/PAINTeR/std4D/pumi_own1_essen_reg1antsown/func2mni/_applywarp41func2mni_4_nuis_medang_bptf.nii.gz",
+#"/Volumes/Bingel_Mac/PAINTeR/std4D/pumi_own1_essen_reg1antsown/func2mni/_applywarp41func2mni_4_nuis_medang_bptf.nii.gz",
 "/Volumes/Bingel_Mac/PAINTeR/std4D/pumi_own1_essen_reg1antsown/func2mni/_applywarp42func2mni_4_nuis_medang_bptf.nii.gz",
 "/Volumes/Bingel_Mac/PAINTeR/std4D/pumi_own1_essen_reg1antsown/func2mni/_applywarp43func2mni_4_nuis_medang_bptf.nii.gz",
 "/Volumes/Bingel_Mac/PAINTeR/std4D/pumi_own1_essen_reg1antsown/func2mni/_applywarp44func2mni_4_nuis_medang_bptf.nii.gz"
@@ -308,23 +308,23 @@ print X_essen.shape
 ###################################################################################################
 # load QST data
 ###################################################################################################
-y_bochum_old = load.load_QST_data(data_filename="/Volumes/Bingel_Mac/PAINTeR/std4D/bochum_painthr.csv",
+y_bochum_old = load.load_QST_data(data_filename="/Users/tspisak/data/PAINTeR/bingel_drive/bochum_painthr.csv",
                              target_var= "mean_QST_pain_sensitivity",
                               exclude_ids=[1,2,3, 21, 22]) #40, 8???
 
-y_essen_old = load.load_QST_data(data_filename="/Volumes/Bingel_Mac/PAINTeR/std4D/essen_painthr_fixed.csv",
-                              idvar="subject.ID",
+y_essen_old = load.load_QST_data(data_filename="/Users/tspisak/data/PAINTeR/bingel_drive/essen_painthr_fixed.csv",
+                              idvar="pumi.ID",
                               target_var= "compositepainsensitivity",
-                           exclude_ids=["PAINTeR_46", "PAINTeR_47", "PAINTeR_48", "PAINTeR_49"])
+                           exclude_ids=["P46", "P47", "P48", "P49", "P50"])
 
 y_all = load.load_QST_data_all(data_filename="/Volumes/Bingel_Mac/PAINTeR/std4D/bochum+essen_painthr.csv",
                               exclude_ids=["1","2","3", "21", "22", "PAINTeR_46", "PAINTeR_47", "PAINTeR_48", "PAINTeR_49"]) #40, 8???
 
-y_bochum = y_all[y_all["sample"] == "BOCHUM"]
-y_bochum = y_bochum["pain_sensitivity.lib"].values.ravel()
+y_bochum = y_bochum_old#y_all[y_all["sample"] == "BOCHUM"]
+#y_bochum = y_essen_old#y_bochum["pain_sensitivity.lib"].values.ravel()
 
-y_essen = y_all[y_all["sample"] == "ESSEN"]
-y_essen = y_essen["pain_sensitivity.lib"].values.ravel()
+y_essen = y_essen_old#y_all[y_all["sample"] == "ESSEN"]
+#y_essen = y_essen["pain_sensitivity.lib"].values.ravel()
 
 #import matplotlib.pyplot as plt
 #plt.plot(y_essen, y_essen_old)

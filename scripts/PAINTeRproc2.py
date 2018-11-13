@@ -23,6 +23,7 @@ import PUMI.connectivity.TimeseriesExtractor as tsext
 import nipype.interfaces.nilearn as learn
 import PUMI.utils.QC as qc
 import PUMI.connectivity.NetworkBuilder as nw
+import PUMI.func_preproc.DataCensorer as scrub
 
 # parse command line arguments
 if (len(sys.argv) <= 2):
@@ -113,6 +114,8 @@ def pickindex(vec, i):
 #myfuncproc = funcproc.FuncProc_cpac(stdrefvol="mean")
 myfuncproc = funcproc.FuncProc_despike_afni()
 
+myscrub = scrub.datacens_workflow_threshold()
+
 
 #########################
 atlasinput=pe.Node(utility.IdentityInterface(fields=['modules', 'labels', 'labelmap']),
@@ -155,10 +158,16 @@ atlas2native = transform.atlas2func(stdreg=_regtype_)
 #                                 name='extract_timeseries')
 
 extract_timesereies = pe.MapNode(interface=utility.Function(input_names=['labels', 'labelmap', 'func', 'mask'],
-                                                            output_names=['out_file', 'labels'],
+                                                            output_names=['out_file', 'labels', 'out_gm_label'],
                                                             function=tsext.myExtractor),
                                  iterfield=['labelmap', 'func', 'mask'],
                                  name='extract_timeseries')
+
+extract_timesereies_scrub = pe.MapNode(interface=utility.Function(input_names=['labels', 'labelmap', 'func', 'mask'],
+                                                            output_names=['out_file', 'labels', 'out_gm_label'],
+                                                            function=tsext.myExtractor),
+                                 iterfield=['labelmap', 'func', 'mask'],
+                                 name='extract_timeseries_scrub')
 
 
 
@@ -178,7 +187,7 @@ mynetmat.inputs.inputspec.measure = measure
 
 
 
-totalWorkflow = nipype.Workflow('preprocess_cpac')
+totalWorkflow = nipype.Workflow('preprocess_new1_last5')
 totalWorkflow.base_dir = '.'
 
 totalWorkflow.connect(extract_timesereies, 'out_file', mynetmat, 'inputspec.timeseries')
@@ -197,12 +206,26 @@ totalWorkflow.connect(mybbr, 'outputspec.gm_mask_in_funcspace', extract_timesere
 totalWorkflow.connect(relabel_atls, 'reordered_labels', extract_timesereies, 'labels')
 totalWorkflow.connect(myfuncproc, 'outputspec.func_preprocessed', extract_timesereies, 'func')
 
+totalWorkflow.connect(atlas2native, 'outputspec.atlas2func', extract_timesereies_scrub, 'labelmap')
+totalWorkflow.connect(mybbr, 'outputspec.gm_mask_in_funcspace', extract_timesereies_scrub, 'mask')
+totalWorkflow.connect(relabel_atls, 'reordered_labels', extract_timesereies_scrub, 'labels')
+totalWorkflow.connect(myscrub, 'outputspec.scrubbed_image', extract_timesereies_scrub, 'func')
+
+totalWorkflow.connect(myfuncproc, 'outputspec.func_preprocessed', myscrub, 'inputspec.func')
+totalWorkflow.connect(myfuncproc, 'outputspec.FD', myscrub, 'inputspec.FD')
+
+
+
+
 totalWorkflow.connect(relabel_atls, 'reordered_modules', timeseries_qc, 'inputspec.modules')
 totalWorkflow.connect(resample_atlas_3mm, 'out_file', timeseries_qc, 'inputspec.atlas')
 totalWorkflow.connect(resample_atlas, 'out_file', ds_nii, 'atlas_relabeled')
 totalWorkflow.connect(relabel_atls, 'newlabels_file', ds_newlabels, 'atlas_relabeled')
 totalWorkflow.connect(extract_timesereies, 'out_file', ds_txt, 'regional_timeseries')
 totalWorkflow.connect(extract_timesereies, 'out_file', timeseries_qc, 'inputspec.timeseries')
+totalWorkflow.connect(extract_timesereies, 'out_gm_label', ds_nii, 'gm_label_funcspace')
+
+totalWorkflow.connect(extract_timesereies_scrub, 'out_file', ds_txt, 'regional_timeseries_scrub')
 
 ##################
 
