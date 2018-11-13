@@ -278,4 +278,4 @@ totalWorkflow.connect([
 totalWorkflow.write_graph('graph-orig.dot', graph2use='orig', simple_form=True)
 totalWorkflow.write_graph('graph-exec-detailed.dot', graph2use='exec', simple_form=False)
 totalWorkflow.write_graph('graph.dot', graph2use='colored')
-totalWorkflow.run(plugin='MultiProc')
+totalWorkflow.run(plugin='Linear')
