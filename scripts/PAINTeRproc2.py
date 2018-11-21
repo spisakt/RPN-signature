@@ -1,5 +1,4 @@
 #!/usr/bin/env python
-# This is a PUMI pipeline closely replicating the results of C-PAC (v.1.0.2), with the configuration file etc/cpac_conf.yml
 
 import sys
 # sys.path.append("/home/balint/Dokumentumok/phd/github/") #PUMI should be added to the path by install or by the developer
@@ -115,7 +114,6 @@ def pickindex(vec, i):
 myfuncproc = funcproc.FuncProc_despike_afni()
 
 myscrub = scrub.datacens_workflow_threshold()
-
 
 #########################
 atlasinput=pe.Node(utility.IdentityInterface(fields=['modules', 'labels', 'labelmap']),
