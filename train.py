@@ -56,6 +56,7 @@ def train(X, y, model, p_grid, name="sample_name", nested=False, model_averaging
         1 - clf.best_score_ / -mean_squared_error(np.repeat(y.mean(), len(y)), y))
 
     avg_model = None
+    all_models = []
     if nested:
         print "**** Nested analysis ****"
 
@@ -80,6 +81,7 @@ def train(X, y, model, p_grid, name="sample_name", nested=False, model_averaging
             # model avaraging
             RES, mat, labels = get_full_coef(X[train], clf.best_estimator_, plot=False)
             avg.append(RES)
+            all_models.append(clf.best_estimator_)
             # plot histograms to check distributions
             #bins = np.linspace(-1.5, 1.5, 6)
             #pyplot.hist(y[train], bins, alpha=0.5, label='train')
@@ -119,7 +121,18 @@ def train(X, y, model, p_grid, name="sample_name", nested=False, model_averaging
         plt.title("Expl. Var.:" +  str( 1- nested_scores_test.mean()/-mean_squared_error(np.repeat(y.mean(), len(y)), y) ) +
         "\nCorrelation: " + str(np.corrcoef(actual, predicted)[0, 1]) )
         plt.show()
+    else:
+        all_models = [model]
 
     model.fit(X, y) # fot to whole data
 
-    return model, avg_model
+    return model, avg_model, all_models
+
+def bagged_predict(models, X):
+    preds=[]
+    for m in models:
+        preds.append(m.predict(X))
+
+    bagged = np.array(preds).mean(axis=0)
+    print bagged
+    return bagged
