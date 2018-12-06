@@ -389,17 +389,18 @@ X_essen, cm_essen = load.compute_connectivity(essen_timeseries, kind="partial co
 ########################################################################################################################
 
 y_bochum=bochum_data["mean_QST_pain_sensitivity"].values.ravel()
+#y_bochum=np.mean(bochum_data[["mean_QST_pain_sensitivityd2", "mean_QST_pain_sensitivity"]], axis=1)
 # exclude NANs
 X_bochum_ = X_bochum[~np.isnan(y_bochum), :]
 y_bochum = y_bochum[~np.isnan(y_bochum)]
 
 
-mymodel, p_grid = models.pipe_scale_fsel_model(scaler=preprocessing.MinMaxScaler())
+mymodel, p_grid = models.pipe_scale_fsel_model(scaler=preprocessing.MaxAbsScaler())
 #p_grid = {'fsel__k': [10, 20, 30], 'model__alpha': [.000001, .00005], 'model__l1_ratio': [.999999999]}
-p_grid = {'fsel__k': [50, 75, 100, 200], 'model__alpha': [ .001, .01, .05, .1], 'model__l1_ratio': [.999999999]}
-p_grid = {'fsel__k': [50], 'model__alpha': [.01], 'model__l1_ratio': [.999999999]}
+p_grid = {'fsel__k': [20, 30, 40], 'model__alpha': [.01, .02, .03], 'model__l1_ratio': [.999999999]}
+#p_grid = {'fsel__k': [50], 'model__alpha': [.01], 'model__l1_ratio': [.999999999]}
 
-m, avg_model = train.train(X_bochum_, y_bochum, mymodel, p_grid, "Bochum", nested=False)
+m, avg_model, all_models = train.train(X_bochum_, y_bochum, mymodel, p_grid, "Bochum", nested=False)
 
 RES, mat, labels = train.get_full_coef(X_bochum_, m)
 
@@ -408,7 +409,9 @@ RES, mat, labels = train.get_full_coef(X_bochum_, m)
 ########################################################################################################################
 
 y_essen = essen_data["painsensitivity.2.boch"].values.ravel() #liberal
-
+#y_essen[6,]=float('nan')
+#y_essen[7,]=float('nan')
+y_essen[31,]=float('nan')    # incidental finding!!!
 # exclude NANs
 essen_data_ = essen_data[~np.isnan(y_essen)]
 X = X_essen[~np.isnan(y_essen), :]
@@ -416,7 +419,7 @@ y_essen = y_essen[~np.isnan(y_essen)]
 
 print len(y_essen)
 
-pred_essen = m.predict(X_essen)
+pred_essen = m.predict(X)
 
 #pred_essen=pred_essen-np.mean(pred_essen)#/np.std(pred_essen)
 #y_essen=y_essen-np.mean(y_essen)#/np.std(y_essen)
@@ -430,24 +433,24 @@ from scipy import stats
 import matplotlib.pyplot as plt
 fig, ax = plt.subplots()
 ax.scatter(y_essen, pred_essen, edgecolors=(0, 0, 0))
-#ax.plot([y_essen.min(), y_essen.max()],
-#                   [y_essen.min(), y_essen.max()],
-#                   'k--',
-#                   lw=2)
+ax.plot([y_essen.min(), y_essen.max()],
+                   [y_essen.min(), y_essen.max()],
+                   'k--',
+                   lw=2)
 
 #regression part
 slope, intercept, r_value, p_value, std_err = stats.linregress(y_essen,pred_essen)
 print r_value
 print p_value
 
-line = slope*y_essen+intercept
-plt.plot(y_essen, line, lw=2)
+#line = slope*y_essen+intercept
+#plt.plot(y_essen, line, lw=2)
 
 ax.set_xlabel('Pain Sensitivity (trained on Bochum sample, predicted on Essen sample)')
 ax.set_ylabel('Predicted')
 
-#for i, txt in enumerate(essen_data_["ID"]):
-    #ax.annotate(str(txt), (y_essen[i], pred_essen[i]))
+for i, txt in enumerate(essen_data_["ID"]):
+    ax.annotate(str(txt), (y_essen[i], pred_essen[i]))
 plt.title( "Expl. Var.:" + str( 1- (-mean_squared_error(y_pred=pred_essen, y_true=y_essen))/-mean_squared_error(np.repeat(y_bochum.mean(), len(y_essen)), y_essen) ) +
     "\nCorrelation: " + str(np.corrcoef(pred_essen, y_essen)[0,1]))
 plt.show()
@@ -472,6 +475,7 @@ pred_essen = m.predict(X)
 #y_essen=preprocessing.scale(y_essen)
 
 print "CONSERVATIVE Expl. Var.:" + str( 1- (-mean_squared_error(y_pred=pred_essen, y_true=y_essen))/-mean_squared_error(np.repeat(y_bochum.mean(), len(y_essen)), y_essen) )
+print "MSE: " + str(-mean_squared_error(y_pred=pred_essen, y_true=y_essen))
 print "Correlation: " + str(np.corrcoef(pred_essen, y_essen)[0,1])
 
 
@@ -484,19 +488,19 @@ slope, intercept, r_value, p_value, std_err = stats.linregress(y_essen,pred_esse
 print r_value
 print p_value
 
-line = slope*y_essen+intercept
-ax.plot(y_essen, line,'k--')
+#line = slope*y_essen+intercept
+#ax.plot(y_essen, line,'k--')
 
-#ax.plot([y_essen.min(), y_essen.max()],
-#                   [y_essen.min(), y_essen.max()],
-#                   'k--',
-#                   lw=2)
+ax.plot([y_essen.min(), y_essen.max()],
+                   [y_essen.min(), y_essen.max()],
+                   'k--',
+                   lw=2)
 ax.set_xlabel('Pain Sensitivity (trained on Bochum sample, predicted on Essen sample)')
 ax.set_ylabel('Predicted')
 
 #for i, txt in enumerate(essen_data_["ID"]):
     #ax.annotate(str(txt), (y_essen[i], pred_essen[i]))
-plt.title( "Expl. Var.:" + str( 1- (-mean_squared_error(y_pred=pred_essen, y_true=y_essen))/-mean_squared_error(np.repeat(y_bochum.mean(), len(y_essen)), y_essen) ) +
+plt.title( "Expl. Var.:" + str( 1- (-mean_squared_error(y_pred=pred_essen, y_true=y_essen))/-mean_squared_error(y_pred=np.repeat(y_bochum.mean(), len(y_essen)), y_true=y_essen) ) +
     "\nCorrelation: " + str(np.corrcoef(pred_essen, y_essen)[0,1]))
 plt.show()
 fig.savefig("prediction_2.pdf", bbox_inches='tight')
@@ -506,17 +510,22 @@ fig.savefig("prediction_2.pdf", bbox_inches='tight')
 ########################################################################################################################
 
 VAR = "gender"
-y = essen_data[VAR].values.ravel() #CPT conservative
-classnames, indices = np.unique(y, return_inverse=True)
-print y
-y=indices
-print y
+sex = essen_data[VAR].values.ravel() #CPT conservative
+classnames, indices = np.unique(sex, return_inverse=True)
+#print y
+sex=indices
+#print y
 #print y
 #y = np.log(y)
 #print y
+y = essen_data["painsensitivity.NA.boch"].values.ravel()
+y = y[sex == 1]
+X = X_essen
+X = X[sex == 1, :]
 # exclude NANs
-X = X_essen[~np.isnan(y), :]
+X = X[~np.isnan(y), :]
 y = y[~np.isnan(y)]
+
 
 
 pred = m.predict(X)
@@ -526,7 +535,7 @@ pred = m.predict(X)
 pred=preprocessing.scale(pred)
 y=preprocessing.scale(y)
 
-print "CONSERVATIVE Expl. Var.:" + str( 1- (-mean_squared_error(y_pred=pred, y_true=y))/-mean_squared_error(np.repeat(y.mean(), len(y)), y) )
+print "Sex Expl. Var.:" + str( 1- (-mean_squared_error(y_pred=pred, y_true=y))/-mean_squared_error(np.repeat(y.mean(), len(y)), y) )
 print "Correlation: " + str(np.corrcoef(pred, y)[0,1])
 
 

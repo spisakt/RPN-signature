@@ -24,7 +24,10 @@ import PUMI.utils.QC as qc
 import PUMI.connectivity.NetworkBuilder as nw
 import PUMI.func_preproc.DataCensorer as scrub
 
-# parse command line arguments
+########################################################################################################################
+# parse command line arguments and setting up defaults                                                                 #
+########################################################################################################################
+
 if (len(sys.argv) <= 2):
     print("Please specify command line arguments!")
     print("Usage:")
@@ -60,7 +63,9 @@ _ATLAS_MODULES = tsext.mist_modules(mist_directory=_MISTDIR_, resolution="122")
 ##############################
 #_regtype_ = globals._RegType_.FSL
 _regtype_ = globals._RegType_.ANTS
-##############################
+########################################################################################################################
+# DEFINING NODES                                                                                                       #
+########################################################################################################################
 
 # create data grabber
 datagrab = pe.Node(io.DataGrabber(outfields=['func', 'struct']), name='data_grabber')
@@ -183,7 +188,9 @@ measure = "tangent"
 mynetmat = nw.build_netmat(wf_name=measure.replace(" ", "_"))
 mynetmat.inputs.inputspec.measure = measure
 
-
+########################################################################################################################
+# CREATE WORKFLOW AND CONNECT NODES                                                                                    #
+########################################################################################################################
 
 totalWorkflow = nipype.Workflow('preprocess_new1_last5')
 totalWorkflow.base_dir = '.'
@@ -295,6 +302,10 @@ totalWorkflow.connect([
 #totalWorkflow.connect(myextract, 'outputspec.timeseries_file', mynetmat, 'inputspec.timeseries')
 #totalWorkflow.connect(myextract, 'outputspec.reordered_modules', mynetmat, 'inputspec.modules')
 #totalWorkflow.connect(myextract, 'outputspec.relabelled_atlas_file', mynetmat, 'inputspec.atlas')
+
+########################################################################################################################
+# RUN WORKFLOW                                                                                                         #
+########################################################################################################################
 
 totalWorkflow.write_graph('graph-orig.dot', graph2use='orig', simple_form=True)
 totalWorkflow.write_graph('graph-exec-detailed.dot', graph2use='exec', simple_form=False)
