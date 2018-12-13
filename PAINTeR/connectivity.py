@@ -1,6 +1,66 @@
 import pandas as pd
 import numpy as np
+from PAINTeR import global_vars
+from PAINTeR import model
+from PAINTeR import plot
 from sklearn.preprocessing import StandardScaler
+from nilearn.connectome import ConnectivityMeasure
+from sklearn.externals import joblib
+
+
+
+def calculate_connectivity(table=global_vars._RES_BOCHUM_TABLE_,
+                           fd_files=global_vars.bochum_fd_files,
+                           ts_files=global_vars.bochum_ts_files,
+                           atlas_file=global_vars._ATLAS_FILE_,
+                           thres_mean_FD=0.15,
+                           scrubbing=True,
+                           scrub_threshold=0.15,
+                           thres_perc_scrub=30,
+                           plot_labelmap=False,
+                           plot_connectome=False,
+                           plotfile_mean_mtx=global_vars._PLOT_BOCHUM_MEAN_MATRIX_,
+                           save_features=global_vars._FEATURE_BOCHUM_,
+                           save_table=global_vars._RES_BOCHUM_TABLE_,
+                           save_table_excl=global_vars._RES_BOCHUM_TABLE_EXCL_
+                           ):
+    # load bochum data
+    df = pd.read_csv(table)
+
+    # load FD data
+    add_FD_data(fd_files, df)
+
+    # load timeseries data
+    ts, labels = load_timeseries(ts_files, df, scrubbing=scrubbing,
+                                      scrub_threshold=scrub_threshold)
+
+    # exclude data with extensive motion
+    df_excl = exclude(df, thres_mean_FD=thres_mean_FD, thres_perc_scrub=thres_perc_scrub)
+
+    # compute connectivity
+    excl = np.argwhere(df['Excluded'].values == 0).flatten()
+    X, cm = connectivity_matrix(np.array(ts)[excl])
+    # plot group-mean matrix
+    l = pd.read_csv(global_vars._ATLAS_LABELS_, sep="\t")
+    if plot_labelmap:
+        plot.plot_labelmap(atlas_file)
+    plot.plot_matrix(cm.mean_, labels, np.insert(l['modules'].values, 0, "GlobSig"),
+                     outfile=plotfile_mean_mtx)
+    if plot_connectome:
+        plot.plot_connectome(cm.mean_, atlas_file, threshold=0.05)
+
+    # X=np.arctanh(X)
+    X = X
+
+    # serialise feature space
+    if save_features:
+        joblib.dump(X, save_features)
+
+    # save data.frame
+    df.to_csv(save_table)
+    df_excl.to_csv(save_table_excl)
+
+    return X
 
 def add_FD_data(fd_files, data_frame):
     FD = []
@@ -19,6 +79,7 @@ def add_FD_data(fd_files, data_frame):
     data_frame['medianFD'] = median_FD
     data_frame['maxFD'] = max_FD
     data_frame['fd_file'] = fd_files
+    return data_frame
 
 def scrub(ts, fd, scrub_threshold, frames_before=0, frames_after = 0):
 
@@ -56,8 +117,7 @@ def load_timeseries(ts_files, data_frame, scrubbing = True, scrub_threshold=0.15
         if scrubbing:
             ts = scrub(ts, np.array(fd), scrub_threshold)  # ts[np.array(fd) < scrub_threshold, ]
 
-        perc_scrubbed.append( 100*len(ts[:,1])/len(fd) )
-        print 100-100*len(ts[:,1])/len(fd)
+        perc_scrubbed.append(100 - 100*len(ts[:,1])/len(fd) )
 
         # standardise timeseries
         ts = StandardScaler().fit_transform(ts)
@@ -66,8 +126,28 @@ def load_timeseries(ts_files, data_frame, scrubbing = True, scrub_threshold=0.15
     data_frame['perc_scrubbed'] = perc_scrubbed
     data_frame['ts_file'] = ts_files
 
-    return timeseries
+    labels = pd.read_csv(ts_files[0], sep="\t").columns
 
-def exclude():
-    # ToDo: add timeseries file and percent scrubbed
-    return 0
+    return timeseries, labels
+
+def exclude(data_frame, thres_mean_FD=np.nan, thres_median_FD=np.nan, thres_perc_scrub=np.nan):
+    if ~np.isnan(thres_mean_FD):
+        data_frame.loc[data_frame.meanFD > thres_mean_FD, 'Excluded'] = 1
+        data_frame.loc[data_frame.meanFD > thres_mean_FD, 'exclusion_crit'] += '+meanFD'
+    if ~np.isnan(thres_median_FD):
+        data_frame.loc[data_frame.medianFD > thres_median_FD, 'Excluded'] = 1
+        data_frame.loc[data_frame.medianFD > thres_median_FD, 'exclusion_crit'] += '+medianFD'
+    if ~np.isnan(thres_perc_scrub):
+        data_frame.loc[data_frame.perc_scrubbed > thres_perc_scrub, 'Excluded'] = 1
+        data_frame.loc[data_frame.perc_scrubbed > thres_perc_scrub, 'exclusion_crit'] += '+perc_scrub'
+
+    print "Before exclusion: " + str(data_frame.shape[0])
+    data_frame_excl = data_frame[data_frame["Excluded"] !=1]
+    print "After exclusion: " + str(data_frame_excl.shape[0])
+    return data_frame_excl
+
+def connectivity_matrix(timeseries, kind='partial correlation'):
+    # timeseries: as output by load_timeseries
+    correlation_measure = ConnectivityMeasure(kind=kind, vectorize=True, discard_diagonal=True)
+    correlation_matrix = correlation_measure.fit_transform(timeseries)
+    return correlation_matrix, correlation_measure

@@ -1,5 +1,8 @@
 from os import path
 
+# atlas labels
+_ATLAS_LABELS_ = path.join(path.dirname(__file__),"../data/atlas_relabeled.tsv")
+_ATLAS_FILE_ = path.join(path.dirname(__file__),"../data/atlas_relabeled.nii.gz")
 
 # input data.frames
 _BOCHUM_TABLE_ = path.join(path.dirname(__file__),"../data/bochum-sample/bochum_sample.csv")
@@ -269,3 +272,23 @@ _RES_BOCHUM_TABLE_ = path.join(path.dirname(__file__),"../res/bochum_sample.csv"
 _RES_ESSEN_TABLE_ = path.join(path.dirname(__file__),"../res/essen_sample.csv")
 _RES_SZEGED_TABLE_ = path.join(path.dirname(__file__),"../res/szeged_sample.csv")
 
+_RES_BOCHUM_TABLE_EXCL_ = path.join(path.dirname(__file__),"../res/bochum_sample_excl.csv")
+_RES_ESSEN_TABLE_EXCL_ = path.join(path.dirname(__file__),"../res/essen_sample_excl.csv")
+_RES_SZEGED_TABLE_EXCL_ = path.join(path.dirname(__file__),"../res/szeged_sample_excl.csv")
+
+# output features
+_FEATURE_BOCHUM_ = path.join(path.dirname(__file__),"../res/feature_bochum.sav")
+_FEATURE_ESSEN_ = path.join(path.dirname(__file__),"../res/feature_essen.sav")
+_FEATURE_SZEGED_ = path.join(path.dirname(__file__),"../res/feature_szeged.sav")
+
+# output predictive model
+_RES_PRED_MOD_ = path.join(path.dirname(__file__),"../res/predictive_model.sav")
+
+# output plots:
+_PLOT_BOCHUM_MEAN_MATRIX_ = path.join(path.dirname(__file__),"../res/mtx_mean_bochum.pdf")
+_PLOT_ESSEN_MEAN_MATRIX_ = path.join(path.dirname(__file__),"../res//mtx_mean_essen.pdf")
+_PLOT_SZEGED_MEAN_MATRIX_ = path.join(path.dirname(__file__),"../res//mtx_mean_szeged.pdf")
+
+_PLOT_BOCHUM_PREDICTION_ = path.join(path.dirname(__file__),"../res/pred_bochum.pdf")
+_PLOT_ESSEN_PREDICTION_ = path.join(path.dirname(__file__),"../res/pred_essen.pdf")
+_PLOT_SZEGED_PREDICTION_ = path.join(path.dirname(__file__),"../res/pred_szeged.pdf")

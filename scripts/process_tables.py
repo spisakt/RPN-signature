@@ -59,6 +59,7 @@ df_szeged['mean_QST_pain_sensitivity'] = qst.composite_pain_sensitivity_PAINTeR(
 
 
 # save data frames
+#np.savetxt(global_vars._RES_BOCHUM_TABLE_, df_bochum.values)
 df_bochum.to_csv(global_vars._RES_BOCHUM_TABLE_)
 df_essen.to_csv(global_vars._RES_ESSEN_TABLE_)
 df_szeged.to_csv(global_vars._RES_SZEGED_TABLE_)

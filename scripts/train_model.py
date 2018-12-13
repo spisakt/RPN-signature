@@ -1,26 +1,26 @@
 #!/usr/bin/env python
+import warnings
+warnings.filterwarnings("ignore", message="numpy.dtype size changed")
+warnings.filterwarnings("ignore", message="numpy.ufunc size changed")
 import pandas as pd
-import PAINTeR.connectivity as conn
+import numpy as np
+from sklearn.externals import joblib
 from PAINTeR import global_vars
+import PAINTeR.connectivity as conn
+from PAINTeR import plot
+from PAINTeR import model
 
-# load bochum data
-bochum_table = pd.read_csv(global_vars._RES_BOCHUM_TABLE_)
+# load pain sensitivity data (excluded)
+y = pd.read_csv(global_vars._RES_BOCHUM_TABLE_EXCL_)['mean_QST_pain_sensitivity']
 
-# load FD data
-conn.add_FD_data(global_vars.bochum_fd_files, bochum_table)
-
-# load timeseries data
-conn.load_timeseries(global_vars.bochum_ts_files, bochum_table, scrubbing=True)
-
-# compute connectivity
+# load features (excluded)
+X = joblib.load(global_vars._FEATURE_BOCHUM_)
 
 # define model
+mymodel, p_grid = model.pipe_scale_fsel_elnet()
 
 # train model with cross-validation
-
-# estimate model accuracy with nested cross-validation
+m, avg_model, all_models = model.train(X, y, mymodel, p_grid, nested=False)
 
 # serialise model
-
-#save data.frame
-bochum_table.to_csv(global_vars._RES_BOCHUM_TABLE_)
+joblib.dump(m, global_vars._RES_PRED_MOD_)
