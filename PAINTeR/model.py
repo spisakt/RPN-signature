@@ -121,6 +121,14 @@ def train(X, y, model, p_grid, nested=False, model_averaging=True, ):
 
 def pred_stat(observed, predicted, robust=False):
 
+    # convert to np.array
+    observed = np.array(observed)
+    predicted = np.array(predicted)
+
+    #EXCLUDE NA-s:
+    predicted = predicted[~np.isnan(observed)]
+    observed = observed[~np.isnan(observed)]
+
     if robust:
         res = sm.RLM(observed, sm.add_constant(predicted)).fit()
         p_value = res.pvalues[1]

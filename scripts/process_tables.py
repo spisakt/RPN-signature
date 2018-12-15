@@ -20,7 +20,8 @@ df_szeged['BMI']=misc.bmi(df_szeged['height'].values, df_szeged['weight'].values
 df_essen['CPT'] = qst.CPT( df_essen[['qst_cpt_2', 'qst_cpt_3', 'qst_cpt_4', 'qst_cpt_5', 'qst_cpt_6']].values,
                            truncate=True)
 df_essen['HPT'] = qst.HPT( df_essen[['qst_hpt_2', 'qst_hpt_3', 'qst_hpt_4', 'qst_hpt_5', 'qst_hpt_6']].values)
-df_essen['MPT_log_geom'] = qst.MPT( df_essen[['qst_mpt_1_pain', 'qst_mpt_1_no_pain',    # skip first?
+df_essen['MPT_log_geom'] = qst.MPT( df_essen[[
+                   #'qst_mpt_1_pain', 'qst_mpt_1_no_pain',    # skip first?
                    'qst_mpt_2_pain', 'qst_mpt_2_no_pain',
                    'qst_mpt_3_pain', 'qst_mpt_3_no_pain',
                    'qst_mpt_4_pain', 'qst_mpt_4_no_pain',
@@ -36,6 +37,25 @@ df_szeged['MPT_log_geom'] = qst.MPT( df_szeged[[
                    'qst_mpt_4_pain', 'qst_mpt_4_no_pain',
                    'qst_mpt_5_pain', 'qst_mpt_5_no_pain']].values)
 
+
+#calculate detection thresholds:
+df_essen['CDT_log_mean'] = qst.CDT( df_essen[['qst_cdt_2', 'qst_cdt_3', 'qst_cdt_4', 'qst_cdt_5', 'qst_cdt_6']].values)
+df_essen['WDT_log_mean'] = qst.WDT( df_essen[['qst_wdt_2', 'qst_wdt_3', 'qst_wdt_4', 'qst_wdt_5', 'qst_wdt_6']].values)
+df_essen['MDT_log_geom'] = qst.MDT( df_essen[[
+    'qst_mdt_2_felt', 'qst_mdt_2_not_felt',
+    'qst_mdt_3_felt', 'qst_mdt_3_not_felt',
+    'qst_mdt_4_felt', 'qst_mdt_4_not_felt',
+    'qst_mdt_5_felt', 'qst_mdt_5_not_felt'
+]].values)
+
+df_szeged['CDT_log_mean'] = qst.CDT( df_szeged[['qst_cdt_2', 'qst_cdt_3', 'qst_cdt_4', 'qst_cdt_5', 'qst_cdt_6']].values)
+df_szeged['WDT_log_mean'] = qst.WDT( df_szeged[['qst_wdt_2', 'qst_wdt_3', 'qst_wdt_4', 'qst_wdt_5', 'qst_wdt_6']].values)
+df_szeged['MDT_log_geom'] = qst.MDT( df_szeged[[
+    'qst_mdt_2_felt', 'qst_mdt_2_not_felt',
+    'qst_mdt_3_felt', 'qst_mdt_3_not_felt',
+    'qst_mdt_4_felt', 'qst_mdt_4_not_felt',
+    'qst_mdt_5_felt', 'qst_mdt_5_not_felt'
+]].values)
 
 # calculate composite QST pain sensitivity (basedd on bochum sample mean and standard deviation)
 print "Mean deviation from original pain sensitivity score:"

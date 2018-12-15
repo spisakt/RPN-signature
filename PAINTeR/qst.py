@@ -17,6 +17,17 @@ def MPT(mpts):
     return np.log(stats.gmean(mpts,axis=1))
 
 
+def WDT(wdts):
+    return np.log(np.mean(wdts, axis=1))
+
+def CDT(wdts):
+    return np.log(np.mean(wdts, axis=1))
+
+def MDT(mdts):
+    return np.log(stats.gmean(mdts, axis=1))
+
+
+
 def composite_pain_sensitivity(CPT, HPT, MPT):
     # calculates composite pain sensitivity score as in:
     # Zunhammer, M. et al.(2016) Combined glutamate and glutamine levels in pain-processing brain regions are
