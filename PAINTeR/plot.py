@@ -109,9 +109,14 @@ def plot_labelmap(label_map):
                                      threshold=0, symmetric_cmap=False)
     view.open_in_browser()
 
-def plot_prediction(observed, predicted, outfile="", robust=False, sd=True, text=""):
-    color="b"
-    g=sns.jointplot(observed, predicted, kind="reg", color=color, robust=robust, x_ci="sd")
+def plot_prediction(observed, predicted, outfile="", covar=[], robust=False, sd=True, text=""):
+    color = "black"
+    if len(covar):
+        g = sns.jointplot(observed, predicted, scatter=False, color=color, kind="reg", robust=robust, x_ci="sd", )
+        plt.scatter(observed, predicted,
+                    c=covar, cmap=ListedColormap(sns.color_palette(["#5B5BFF","#D73E68"])))
+    else:
+        g = sns.jointplot(observed, predicted, kind="reg", color=color, robust=robust, x_ci="sd")
     #sns.regplot(observed, predicted, color="b", x_bins=10, x_ci=None)
 
 
@@ -119,9 +124,9 @@ def plot_prediction(observed, predicted, outfile="", robust=False, sd=True, text
     if sd:
         xlims=np.array(g.ax_joint.get_xlim())
         if robust:
-            res = sm.RLM(observed, sm.add_constant(predicted)).fit()
-            coefs=res.params
-            residual=res.resid
+            res = sm.RLM(predicted, sm.add_constant(observed)).fit()
+            coefs = res.params
+            residual = res.resid
         else:
             slope, intercept, r_value, p_value, std_err = stats.linregress(observed, predicted)
             coefs=[intercept, slope]

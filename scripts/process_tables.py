@@ -29,7 +29,8 @@ df_essen['MPT_log_geom'] = qst.MPT( df_essen[['qst_mpt_1_pain', 'qst_mpt_1_no_pa
 df_szeged['CPT'] = qst.CPT( df_szeged[['qst_cpt_2', 'qst_cpt_3', 'qst_cpt_4', 'qst_cpt_5', 'qst_cpt_6']].values,
                             truncate=True)
 df_szeged['HPT'] = qst.HPT( df_szeged[['qst_hpt_2', 'qst_hpt_3', 'qst_hpt_4', 'qst_hpt_5', 'qst_hpt_6']].values)
-df_szeged['MPT_log_geom'] = qst.MPT( df_szeged[['qst_mpt_1_pain', 'qst_mpt_1_no_pain',    # skip first?
+df_szeged['MPT_log_geom'] = qst.MPT( df_szeged[[
+                    #'qst_mpt_1_pain', 'qst_mpt_1_no_pain',    # skip first?
                    'qst_mpt_2_pain', 'qst_mpt_2_no_pain',
                    'qst_mpt_3_pain', 'qst_mpt_3_no_pain',
                    'qst_mpt_4_pain', 'qst_mpt_4_no_pain',

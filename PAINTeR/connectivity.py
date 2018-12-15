@@ -35,10 +35,10 @@ def calculate_connectivity(table=global_vars._RES_BOCHUM_TABLE_,
                                       scrub_threshold=scrub_threshold)
 
     # exclude data with extensive motion
-    df_excl = exclude(df, thres_mean_FD=thres_mean_FD, thres_perc_scrub=thres_perc_scrub)
+    df_excl = exclude(df, thres_mean_FD=thres_mean_FD, thres_perc_scrub=thres_perc_scrub, QST=True )
 
     # compute connectivity
-    excl = np.argwhere(df['Excluded'].values == 0).flatten()
+    excl = np.argwhere(df['Excluded'].values < 1).flatten()
     X, cm = connectivity_matrix(np.array(ts)[excl])
     # plot group-mean matrix
     l = pd.read_csv(global_vars._ATLAS_LABELS_, sep="\t")
@@ -49,8 +49,8 @@ def calculate_connectivity(table=global_vars._RES_BOCHUM_TABLE_,
     if plot_connectome:
         plot.plot_connectome(cm.mean_, atlas_file, threshold=0.05)
 
-    # X=np.arctanh(X)
-    X = X
+    #X=np.arctanh(X)
+    #X = X/np.percentile(X, 95)
 
     # serialise feature space
     if save_features:
@@ -130,19 +130,47 @@ def load_timeseries(ts_files, data_frame, scrubbing = True, scrub_threshold=0.15
 
     return timeseries, labels
 
-def exclude(data_frame, thres_mean_FD=np.nan, thres_median_FD=np.nan, thres_perc_scrub=np.nan):
-    if ~np.isnan(thres_mean_FD):
+def exclude(data_frame,
+            thres_mean_FD=None, thres_median_FD=None, thres_perc_scrub=None,
+            QST=False,
+            CPT_min=0, #ref value: m
+            CPT_max=27.21, #ref value: f
+            HPT_min=36.33, #ref value: f
+            HPT_max=49.88, #ref value: m
+            MPT_min=2.48, #ref value: m
+            MPT_max=6.35 #ref value: m
+            ):
+    if thres_mean_FD:
         data_frame.loc[data_frame.meanFD > thres_mean_FD, 'Excluded'] = 1
         data_frame.loc[data_frame.meanFD > thres_mean_FD, 'exclusion_crit'] += '+meanFD'
-    if ~np.isnan(thres_median_FD):
+    if thres_median_FD:
         data_frame.loc[data_frame.medianFD > thres_median_FD, 'Excluded'] = 1
         data_frame.loc[data_frame.medianFD > thres_median_FD, 'exclusion_crit'] += '+medianFD'
-    if ~np.isnan(thres_perc_scrub):
+    if thres_perc_scrub:
         data_frame.loc[data_frame.perc_scrubbed > thres_perc_scrub, 'Excluded'] = 1
         data_frame.loc[data_frame.perc_scrubbed > thres_perc_scrub, 'exclusion_crit'] += '+perc_scrub'
 
+    if QST:
+        data_frame.loc[data_frame.CPT < CPT_min, 'Excluded'] += 0.5
+        data_frame.loc[data_frame.CPT < CPT_min, 'exclusion_crit'] += '+CPT_low'
+
+        data_frame.loc[data_frame.CPT > CPT_max, 'Excluded'] += 0.5
+        data_frame.loc[data_frame.CPT > CPT_max, 'exclusion_crit'] += '+CPT_high'
+
+        data_frame.loc[data_frame.HPT < HPT_min, 'Excluded'] += 0.5
+        data_frame.loc[data_frame.HPT < HPT_min, 'exclusion_crit'] += '+HPT_low'
+
+        data_frame.loc[data_frame.HPT > HPT_max, 'Excluded'] += 0.5
+        data_frame.loc[data_frame.HPT > HPT_max, 'exclusion_crit'] += '+HPT_high'
+
+        data_frame.loc[data_frame.MPT_log_geom < MPT_min, 'Excluded'] += 0.5
+        data_frame.loc[data_frame.MPT_log_geom < MPT_min, 'exclusion_crit'] += '+MPT_low'
+
+        data_frame.loc[data_frame.MPT_log_geom > MPT_max, 'Excluded'] += 0.5
+        data_frame.loc[data_frame.MPT_log_geom > MPT_max, 'exclusion_crit'] += '+MPT_high'
+
     print "Before exclusion: " + str(data_frame.shape[0])
-    data_frame_excl = data_frame[data_frame["Excluded"] !=1]
+    data_frame_excl = data_frame[data_frame["Excluded"] < 1]
     print "After exclusion: " + str(data_frame_excl.shape[0])
     return data_frame_excl
 

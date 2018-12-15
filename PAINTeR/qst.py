@@ -4,8 +4,8 @@ import scipy.stats as stats
 def CPT(cpts, truncate=False):
     # truncate: set elements below zero to zero
     if truncate:
-        cpts[cpts<0]=0
-    return cpts.mean(axis=1)
+        cpts[cpts < 0] = -0.1
+    return np.nanmean(cpts, axis=1)
 
 
 def HPT(hpts):

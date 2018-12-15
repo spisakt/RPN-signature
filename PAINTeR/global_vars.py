@@ -292,3 +292,6 @@ _PLOT_SZEGED_MEAN_MATRIX_ = path.join(path.dirname(__file__),"../res//mtx_mean_s
 _PLOT_BOCHUM_PREDICTION_ = path.join(path.dirname(__file__),"../res/pred_bochum.pdf")
 _PLOT_ESSEN_PREDICTION_ = path.join(path.dirname(__file__),"../res/pred_essen.pdf")
 _PLOT_SZEGED_PREDICTION_ = path.join(path.dirname(__file__),"../res/pred_szeged.pdf")
+_PLOT_ESSEN_SZEGED_PREDICTION_ = path.join(path.dirname(__file__),"../res/pred_essen_szeged.pdf")
+
+_PLOT_LEARNING_CURVE_ = path.join(path.dirname(__file__),"../res/learning_curve.pdf")

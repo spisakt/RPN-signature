@@ -9,13 +9,16 @@ from sklearn.model_selection import LeaveOneOut
 from sklearn.metrics import mean_squared_error
 from sklearn.model_selection import GridSearchCV
 from sklearn.model_selection import cross_val_predict
+from sklearn.model_selection import cross_validate
 
 import PAINTeR.plot as plot
 
-def pipe_scale_fsel_elnet(scaler=preprocessing.MaxAbsScaler(),
+def pipe_scale_fsel_elnet(scaler=preprocessing.RobustScaler(),
                           fsel=SelectKBest(f_regression),
                           model=ElasticNet(max_iter=100000),
-                          p_grid = {'fsel__k': [20, 30, 40, 50, 60, 70, 80], 'model__alpha': [.0005, .001, .005, .01, .05, .1], 'model__l1_ratio': [.000000001, .1, .2, .3, .4, .5, .6, .7, .8, .9, .999999999]}
+                          p_grid = {'fsel__k': [20, 25, 30, 35], 'model__alpha': [.001, .005, .01, .02, 0.05], 'model__l1_ratio': [.999]}
+                        #p_grid = {'fsel__k': [20, 30, 40, 50, 60, 70, 80], 'model__alpha': [.0005, .001, .005, .01, .05, .1], 'model__l1_ratio': [.000000001, .1, .2, .3, .4, .5, .6, .7, .8, .9, .999999999]}
+
                           ):
     mymodel = Pipeline(
         [('scaler', scaler), ('fsel', fsel),
@@ -136,16 +139,87 @@ def pred_stat(observed, predicted, robust=False):
     return p_value, r_2, residual, regline
 
 
-def evaluate_prediction(model, X, y, outfile="", robust=False):
+def learning_curve(model, X, y,  Ns = [15, 20, 25, 30, 35]):
+    from random import shuffle
+
+    train = []
+    test = []
+    for n in Ns:
+        print "******************"
+        print n
+
+        tr=[]
+        te=[]
+        for s in range(10):
+            idx = range(len(y))
+            shuffle(idx)
+            idx=idx[:n]
+            #model, p_grid = pipe_scale_fsel_elnet()
+            cv = cross_validate(model, [X[i] for i in idx], [y[i] for i in idx], scoring="neg_mean_squared_error",
+                                 cv=LeaveOneOut(), return_train_score = True)
+            #clf = GridSearchCV(estimator=model, param_grid=p_grid, cv=LeaveOneOut(), scoring="neg_mean_squared_error",
+            #               verbose=False, return_train_score=True, n_jobs=8)
+            #clf.fit(X[:i], y[:i])
+
+            #train_score = -mean_squared_error(y_pred=clf.best_estimator_.predict(X[:i]), y_true=y[:i])
+            #test_score = clf.best_score_
+            tr.append(np.median(cv["train_score"]))
+            te.append(np.median(cv["test_score"]))
+
+
+        print (np.mean(tr), np.mean(te))
+
+        #print "******************"
+        #print np.mean(cv["test_score"])
+        #print np.mean(cv["train_score"])
+        train.append(np.median(tr))
+        test.append(np.median(te))
+
+        #fitted_model = model.fit()
+        #predicted = model.predict(X)
+    return train, test
+
+
+
+def evaluate_prediction(model, X, y, orig_mean=None, outfile="", robust=False, covar=[]):
     predicted = model.predict(X)
 
     p_value, r_2, residual, regline = pred_stat(y, predicted, robust=robust)
 
-    plot.plot_prediction(y, predicted, outfile, robust=robust, sd=True,
-                         text="$R^2$ = " + "{:.3f}".format(r_2) + "  p = " + "{:.3}".format(p_value) )
+    if orig_mean:
+        y_base = orig_mean
+    else:
+        y_base = y.mean()
 
+    expl_var = (1 - (-mean_squared_error(y_pred=predicted, y_true=y)
+                     /
+                     -mean_squared_error(np.repeat(y_base, len(y)), y))) * 100
+
+    print "R^2=" + "{:.3f}".format(r_2) + "  R=" + "{:.3f}".format(np.sqrt(r_2)) \
+          + "  p=" + "{:.3f}".format(p_value) + "  Expl. Var.: " + "{:.1f}".format(expl_var) + "%"
+
+    plot.plot_prediction(y, predicted, outfile, robust=robust, sd=True, covar=covar,
+                         text="$R^2$ = " + "{:.3f}".format(r_2) +
+                              "  p = " + "{:.3f}".format(p_value)+
+                              " Expl. Var.: " + "{:.1f}".format(expl_var)
+                         )
+    return predicted
 
 
 def evaluate_crossval_prediction(model, X, y, outfile="", cv=LeaveOneOut(), robust=False):
     predicted = cross_val_predict(model, X, y, cv=cv)
-    plot.plot_prediction(y, predicted, outfile,  robust=robust)
+    p_value, r_2, residual, regline = pred_stat(y, predicted, robust=robust)
+
+    expl_var = ( 1- (-mean_squared_error(y_pred=predicted, y_true=y)
+                   /
+                   -mean_squared_error(np.repeat(y.mean(), len(y)), y) ))*100
+
+    print "R2=" + "{:.3f}".format(r_2) + "  R=" + "{:.3f}".format(np.sqrt(r_2))\
+          + "  p=" + "{:.3f}".format(p_value) +"  Expl. Var.: " + "{:.1f}".format(expl_var) + "%"
+
+    plot.plot_prediction(y, predicted, outfile, robust=robust, sd=True,
+                         text="$R2$=" + "{:.3f}".format(r_2) +
+                              "  p=" + "{:.3f}".format(p_value) +
+                              "  Expl. Var.: " + "{:.1f}".format(expl_var) + "%"
+                         )
+    return predicted
