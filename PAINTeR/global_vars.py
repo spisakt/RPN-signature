@@ -284,10 +284,13 @@ _FEATURE_SZEGED_ = path.join(path.dirname(__file__),"../res/feature_szeged.sav")
 # output predictive model
 _RES_PRED_MOD_ = path.join(path.dirname(__file__),"../res/predictive_model.sav")
 
+_RES_PRED_CONN_ = path.join(path.dirname(__file__),"../res/predictive_connections.csv")
+
 # output plots:
 _PLOT_BOCHUM_MEAN_MATRIX_ = path.join(path.dirname(__file__),"../res/mtx_mean_bochum.pdf")
 _PLOT_ESSEN_MEAN_MATRIX_ = path.join(path.dirname(__file__),"../res//mtx_mean_essen.pdf")
 _PLOT_SZEGED_MEAN_MATRIX_ = path.join(path.dirname(__file__),"../res//mtx_mean_szeged.pdf")
+_PLOT_PRED_MATRIX_ = path.join(path.dirname(__file__),"../res//mtx_pred.pdf")
 
 _PLOT_BOCHUM_PREDICTION_ = path.join(path.dirname(__file__),"../res/pred_bochum.pdf")
 _PLOT_ESSEN_PREDICTION_ = path.join(path.dirname(__file__),"../res/pred_essen.pdf")
