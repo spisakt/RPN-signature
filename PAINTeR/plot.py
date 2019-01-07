@@ -28,7 +28,7 @@ def plot_matrix(mat, labels, modules, outfile="", zero_diag=True):
         mat[range(mat.shape[0]), range(mat.shape[0])] = 0
 
     plotting.plot_matrix(mat, labels=labels.tolist(), auto_fit=True, norm=norm,
-                         cmap=ListedColormap(sns.diverging_palette(220, 15, sep=1, n=30)), figure=(10, 10))
+                         cmap=ListedColormap(sns.diverging_palette(220, 15, sep=1, n=31)), figure=(10, 10))
 
     prev=""
     idx=0
