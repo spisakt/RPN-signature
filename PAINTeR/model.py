@@ -204,7 +204,8 @@ def evaluate_prediction(model, X, y, orig_mean=None, outfile="", robust=False, c
                      -mean_squared_error(np.repeat(y_base, len(y)), y))) * 100
 
     print "R^2=" + "{:.3f}".format(r_2) + "  R=" + "{:.3f}".format(np.sqrt(r_2)) \
-          + "  p=" + "{:.3f}".format(p_value) + "  Expl. Var.: " + "{:.1f}".format(expl_var) + "%"
+          + "  p=" + "{:.3f}".format(p_value) + "  Expl. Var.: " + "{:.1f}".format(expl_var) + "%"\
+          + " MSE=" + "{:.3f}".format(mean_squared_error(y_pred=predicted, y_true=y))
 
     plot.plot_prediction(y, predicted, outfile, robust=robust, sd=True, covar=covar,
                          text="$R^2$ = " + "{:.3f}".format(r_2) +
@@ -223,7 +224,8 @@ def evaluate_crossval_prediction(model, X, y, outfile="", cv=LeaveOneOut(), robu
                    -mean_squared_error(np.repeat(y.mean(), len(y)), y) ))*100
 
     print "R2=" + "{:.3f}".format(r_2) + "  R=" + "{:.3f}".format(np.sqrt(r_2))\
-          + "  p=" + "{:.3f}".format(p_value) +"  Expl. Var.: " + "{:.1f}".format(expl_var) + "%"
+          + "  p=" + "{:.6f}".format(p_value) +"  Expl. Var.: " + "{:.1f}".format(expl_var) + "%"\
+          + " MSE=" + "{:.3f}".format(mean_squared_error(y_pred=predicted, y_true=y))
 
     plot.plot_prediction(y, predicted, outfile, robust=robust, sd=True,
                          text="$R2$=" + "{:.3f}".format(r_2) +

@@ -1,6 +1,12 @@
 library(oro.nifti)
 source('~/src/R.lib/custom.ggplot.r')
 
+
+cos.sim=function(A, B)
+{
+  return( sum(A*B)/sqrt(sum(A^2)*sum(B^2)) )
+}
+
 recalculate=T
 RSN=T
 if (recalculate)
@@ -15,8 +21,22 @@ if (recalculate)
   #modules=atlas
   
   map=readNIfTI("~/projects/PAINTeR/comp/bochum_trace_back_regs/SIGNED_REGIONAL_PREDICTIVE_WEIGHT_THR.nii.gz")
-  map2=readNIfTI("~/projects/PAINTeR/src/res/bingel_2011_pain_matrix_ptfce.nii.gz")
+  #map2=readNIfTI("~/projects/PAINTeR/src/res/bingel_2011_pain_matrix_ptfce.nii.gz")
+  map2=readNIfTI("/Users/tspisak/tmp/meta-maps/Full_pain_g_z.nii.gz")
+  #map2=readNIfTI("/Users/tspisak/tmp/meta-maps/Full_pain_g_z.nii.gz")
+  map3=-1*readNIfTI("/Users/tspisak/tmp/meta-maps/Full_pla_g_z.nii.gz") #abs map
+  #map2=readNIfTI("/Users/tspisak/tmp/meta-maps/Full_pla_g_z.nii.gz")
+  map4=readNIfTI("/Users/tspisak/tmp/meta-maps/Full_pla_rrating_z.nii.gz")
   
+  map=abs(map)
+  #map2=abs(map2)
+  #map3=abs(map3)
+  #map4=abs(map4)
+  
+  map2[abs(map2)<1.6] = 0
+  map3[abs(map3)<1.6] = 0
+  map4[abs(map4)<1.6] = 0
+ 
   labels=sort(unique(as.numeric(atlas)))
   if (RSN==T)
   {
@@ -33,6 +53,8 @@ if (recalculate)
   
   value1=c()
   value2=c()
+  value3=c()
+  value4=c()
   
   for (l in labels)
   {
@@ -40,35 +62,56 @@ if (recalculate)
       next;
     #modules[modules==l]=as.numeric(as.factor(atlas_labels$modules)[l])
     print(l)
-    value1[l]=(mean(map[atlas==l]))
-    value2[l]=mean(map2[atlas==l])
+    value1[l]=mean(map[atlas==l], na.rm = T)
+    value2[l]=mean(map2[atlas==l], na.rm = T)
+    value3[l]=mean(map3[atlas==l], na.rm = T)
+    value4[l]=mean(map4[atlas==l], na.rm = T)
   }
   
-  data.orig=data.frame(group=group, value1=value1, value2=value2, region=regs)
+  data.orig=data.frame(group=group, RPN=value1, PM=value2, PLC=value3, PLC_corr=value4, region=regs)
   #writeNIfTI(modules, "data/atlas_modules")
 }
 
-d=data.frame(RSN=factor(c(as.character(data.orig$group),
-                             as.character(data.orig$group)),
-                           levels=c("DMnet", "VISnet", "CER", "VATTnet_SALnet_BG_THAL",
-                                                                  "LIMnet", "FPnet_VISDN",  "MOTnet")
-                           ), VAL=c(data.orig$value1/max(data.orig$value1)*max(data.orig$value2), data.orig$value2), MAP=as.factor(c(rep("myRPN", 7), rep("PainMatrix", 7))))
+#d=data.frame(RSN=factor(c(as.character(data.orig$group),
+#                             as.character(data.orig$group)),
+#                           levels=c("DMnet", "VISnet", "CER", "VATTnet_SALnet_BG_THAL",
+#                                                                  "LIMnet", "FPnet_VISDN",  "MOTnet")
+#                           ), VAL=c(data.orig$value1/max(data.orig$value1)*max(data.orig$value2), data.orig$value2), MAP=as.factor(c(rep("myRPN", 7), rep("PainMatrix", 7))))
+
+d=data.frame(RSN=factor(rep(as.character(data.orig$group), 4),
+                        levels=c("DMnet", "VISnet", "CER", "VATTnet_SALnet_BG_THAL",
+                                 "LIMnet", "FPnet_VISDN",  "MOTnet")),
+             MAP=factor(c(rep("RPN", 7), rep("PM", 7), rep("PLC", 7), rep("PLC_cor", 7))),
+             VAL=c( scale(data.orig$RPN), scale(data.orig$PM), scale(data.orig$PLC), scale(data.orig$PLC_corr)) )
+
+d=data.frame(RSN=factor(rep(as.character(data.orig$group), 4),
+                        levels=c("DMnet", "VISnet", "CER", "VATTnet_SALnet_BG_THAL",
+                                 "LIMnet", "FPnet_VISDN",  "MOTnet")),
+             MAP=factor(c(rep("RPN", 7), rep("PM", 7), rep("PLC", 7), rep("PLC_cor", 7))),
+             VAL=c( scale(data.orig$RPN, center=F),
+                    scale(data.orig$PM, center=F),
+                    #data.orig$PLC/sd(data.orig$PM),
+                    scale(data.orig$PLC, center=F),
+                    scale(data.orig$PLC_corr, center=F)) )
 
 #levels = list( "DMnet", "VISnet", "CER", "VATTnet_SALnet_BG_THAL",
 #                              "LIMnet", "FPnet_VISDN",  "MOTnet"  ))
 
-print(cor(abs(data.orig$value1), data.orig$value2))
+print(cor(data.orig$RPN, data.orig$PM))
+print(cor(data.orig$RPN, data.orig$PLC))
+print(cor(data.orig$RPN, data.orig$PLC_corr))
 
 p=ggplot(data=d, aes(x=RSN, group=MAP, fill=MAP, color=MAP))+
-  geom_line( aes(y=VAL))+
-  #coord_polar()+
-  theme(legend.position = "none",
+  geom_point( aes(y=VAL))+
+  coord_polar()+
+  theme(#legend.position = "none",
         #axis.text = element_blank(),
         axis.title = element_blank(),
         #panel.grid = element_blank(),
         #plot.margin = unit(rep(-1,4), "cm")
         )+
-  ylim(min(d$VAL)-1,max(d$VAL))
+ ylim(min(d$VAL),max(d$VAL)) + scale_color_manual(values=c("blue", "green", "red", "black"))
+ 
 
 
 # # Make the plot
