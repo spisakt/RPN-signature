@@ -35,7 +35,7 @@ Neverthless, we have the following suggestions (which shouldn't be hard to meet)
  2. Run pipeline script for image preprocessing and network calculation: https://github.com/spisakt/PAINTeR/blob/master/pipeline/pipeline_PAINTeR.py
  3. Adjust (if neccessary) and run https://github.com/spisakt/PAINTeR/blob/master/scripts/run_all.sh to perform the prediction.
  
- For a more detailed instruction, please contact Tamas Spisak (spisak.tms<at>uk-essen.de)
+ For a more detailed instruction, please contact Tamas Spisak (spisak.tms@uk-essen.de)
  
  
  
