@@ -17,6 +17,9 @@ This "research product" allows making predictions on the individual's pain sensi
 
 The predictive model should be robust for variations in imaging sequences. Neverthless, we have the following suggestions (which shouldn't be hard to meet):
 
+### In general:
+- 3T filed strength
+
 ### Anatomical image:
 - high-resolution, "close-to-isovoxel" T1-weighted anatomical image, e.g. 1x1x1mm
 
@@ -26,6 +29,7 @@ The predictive model should be robust for variations in imaging sequences. Never
 - TR around 2.5 sec (the model might be robust to this, though)
 - interleaved slice order
 - approximately 3mm voxel
+- carefull fixation to prevent motion artifacts
 
 ## Usage with docker
 
