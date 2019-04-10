@@ -10,7 +10,9 @@ Individual differences in pain perception are of key interest in both basic and 
 ## Inputs
 
 This "research product" allows making predictions on the individual's pain sensitivity based on their resting-state fMRI measutrements. To calculate the prediction, you need an additional input, the T1-weighted anatomical images.
-- The predictive network-signature is to be found [here](https://github.com/spisakt/PAINTeR/blob/master/res/predictive_connections.csv).
+- The predictive network-pattern is to be found [here](https://github.com/spisakt/PAINTeR/blob/master/res/predictive_connections.csv).
+(Note that a sufficient predictive performance is expected only with our dedicated preprocessing pipeline, see below)
+
 - The nodes of the predictive network (with nodel predictive strength) can be downloaded [here](https://github.com/spisakt/PAINTeR/blob/master/res/RPN_predictive_network_nodes.nii.gz).
 
 The predictive model should be robust for variations in imaging sequences. Neverthless, we have the following suggestions (which shouldn't be hard to meet):
