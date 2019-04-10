@@ -38,7 +38,7 @@ The predictive model should be robust for variations in imaging sequences. Never
 - Adjust (if neccessary) and run [https://github.com/spisakt/PAINTeR/blob/master/scripts/run_all.sh to perform the prediction].
 For a more detailed instruction, please contact Tamas Spisak (spisak.tms@uk-essen.de)
 
-##Authors
+## Authors
 Tamas Spisak^1, Balint Kincses^2, Frederik Schlitt^1, Matthias Zunhammer^1, Tobias Schmidt-Wilcke^2, Zsigmond Tamas Kincses^2, Ulrike Bingel^1
 
 1.	Department of Neurology, University Hospital Essen, Essen, Germany
