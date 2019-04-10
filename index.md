@@ -20,7 +20,7 @@ The predictive model should be robust for variations in imaging sequences. Never
 
 ### Functional image:
 - 8-12 min long resting-state fMRI scan
-- whole brain coverage (actually, a few millimeter can be missed from the ventral part of the cerebellum, see the RPN regional connectivity map for reference: https://github.com/spisakt/PAINTeR/blob/master/res/RPN_predictive_network_nodes.nii.gz)
+- whole brain coverage (actually, a few millimeter can be missed from the ventral part of the cerebellum, see the RPN regional connectivity map for reference: [https://github.com/spisakt/PAINTeR/blob/master/res/RPN_predictive_network_nodes.nii.gz]
 - TR around 2.5 sec (the model might be robust to this, though)
 - interleaved slice order
 - approximately 3mm voxel
@@ -32,6 +32,6 @@ The predictive model should be robust for variations in imaging sequences. Never
 ## Running the source code
 
 - Image preprocessing and network calculation is based on our PUMI (https://github.com/spisakt/PUMI) python module (see page for installation and dependencies).
-- Run pipeline script for image preprocessing and network calculation: https://github.com/spisakt/PAINTeR/blob/master/pipeline/pipeline_PAINTeR.py
-- Adjust (if neccessary) and run https://github.com/spisakt/PAINTeR/blob/master/scripts/run_all.sh to perform the prediction.
+- Run pipeline script for image preprocessing and network calculation: [https://github.com/spisakt/PAINTeR/blob/master/pipeline/pipeline_PAINTeR.py]
+- Adjust (if neccessary) and run [https://github.com/spisakt/PAINTeR/blob/master/scripts/run_all.sh to perform the prediction].
 For a more detailed instruction, please contact Tamas Spisak (spisak.tms@uk-essen.de)
