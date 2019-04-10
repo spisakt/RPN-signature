@@ -13,19 +13,6 @@ from sklearn.model_selection import cross_validate
 
 import PAINTeR.plot as plot
 
-def pipe_scale_fsel_elnet(scaler=preprocessing.RobustScaler(),
-                          fsel=SelectKBest(f_regression),
-                          model=ElasticNet(max_iter=100000),
-                          #p_grid = {'fsel__k': [20, 25, 30, 35], 'model__alpha': [.001, .005, .01, .02, 0.05], 'model__l1_ratio': [.999]}
-                        p_grid = {'fsel__k': [20, 25, 30, 35, 40, 45, 50, 60, 70, 80, 80, 100, 120, 140, 160, 180, 200], 'model__alpha': [.001, .005, .01, .05, .1, .5], 'model__l1_ratio': [.999] }
-                        #p_grid = {'fsel__k': [20, 30, 40, 50, 60, 70, 80], 'model__alpha': [.0005, .001, .005, .01, .05, .1], 'model__l1_ratio': [.000000001, .1, .2, .3, .4, .5, .6, .7, .8, .9, .999999999]}
-
-                          ):
-    mymodel = Pipeline(
-        [('scaler', scaler), ('fsel', fsel),
-         ('model', model)])
-    return mymodel, p_grid
-
 def train(X, y, model, p_grid, nested=False, model_averaging=True, ):
 
     inner_cv = LeaveOneOut()
@@ -119,6 +106,16 @@ def train(X, y, model, p_grid, nested=False, model_averaging=True, ):
 
     return model, avg_model, all_models
 
+def pipe_scale_fsel_elnet(scaler=preprocessing.RobustScaler(),
+                          fsel=SelectKBest(f_regression),
+                          model=ElasticNet(max_iter=100000),
+                        p_grid = {'fsel__k': [20, 25, 30, 35, 40, 45, 50, 60, 70, 80], 'model__alpha': [.001, .005, .01, .05, .1, .5], 'model__l1_ratio': [.999] } # for fast re-calculation
+                        # p_grid = {'fsel__k': np.linspace(10, 200, 39), 'model__alpha': [.001, .005, .01, .05, .1, .5], 'model__l1_ratio': [1, .5, .7, .9, .95, .99, .999] } # exhaustive, takes a lot of time
+                          ):
+    mymodel = Pipeline(
+        [('scaler', scaler), ('fsel', fsel),
+         ('model', model)])
+    return mymodel, p_grid
 
 def pred_stat(observed, predicted, robust=False):
 
