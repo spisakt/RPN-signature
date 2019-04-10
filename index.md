@@ -18,7 +18,7 @@ This "research product" allows making predictions on the individual's pain sensi
 The predictive model should be robust for variations in imaging sequences. Neverthless, we have the following suggestions (which shouldn't be hard to meet):
 
 ### In general:
-- 3T filed strength
+- 3T field strength
 
 ### Anatomical image:
 - high-resolution, "close-to-isovoxel" T1-weighted anatomical image, e.g. 1x1x1mm
