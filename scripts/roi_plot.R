@@ -24,7 +24,7 @@ if (recalculate)
   map2=readNIfTI("~/projects/PAINTeR/src/res/bingel_2011_pain_matrix.nii.gz")
   #map2=readNIfTI("/Users/tspisak/tmp/meta-maps/Full_pain_g_z.nii.gz")
   #map2=readNIfTI("/Users/tspisak/tmp/meta-maps/Full_pain_g_z.nii.gz")
-  map3=-1*readNIfTI("/Users/tspisak/tmp/Wager_placebo.nii.gz")
+  map3=readNIfTI("/Users/tspisak/tmp/NPS/NPS_reoriented.nii.gz")
   map4=readNIfTI("/Users/tspisak/tmp/Woo_SIIPS.nii.gz") #abs map
   #map2=readNIfTI("/Users/tspisak/tmp/meta-maps/Full_pla_g_z.nii.gz")
   #map4=readNIfTI("/Users/tspisak/tmp/meta-maps/Full_pla_rrating_z.nii.gz")
@@ -103,8 +103,8 @@ print(cor(data.orig$RPN, data.orig$PLC))
 print(cor(data.orig$RPN, data.orig$PLC_corr))
 
 p=ggplot(data=d, aes(x=RSN, group=MAP, fill=MAP, color=MAP))+
-  geom_line( aes(y=VAL))+
-  #coord_polar()+
+  geom_point( aes(y=VAL))+
+  coord_polar()+
   theme(#legend.position = "none",
         #axis.text = element_blank(),
         axis.title = element_blank(),
