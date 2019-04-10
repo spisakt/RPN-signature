@@ -11,7 +11,7 @@ Individual differences in pain perception are of key interest in both basic and 
 
 This "research product" allows making predictions on the individual's pain sensitivity based on their resting-state fMRI measutrements. To calculate the prediction, you need an additional input, the T1-weighted anatomical images.
 - The predictive network-signature is to be found [here](https://github.com/spisakt/PAINTeR/blob/master/res/predictive_connections.csv).
-- The nodes of the predictive network (with nodel predictive strength) can be downloaded [here] (https://github.com/spisakt/PAINTeR/blob/master/res/RPN_predictive_network_nodes.nii.gz).
+- The nodes of the predictive network (with nodel predictive strength) can be downloaded [here](https://github.com/spisakt/PAINTeR/blob/master/res/RPN_predictive_network_nodes.nii.gz).
 
 The predictive model should be robust for variations in imaging sequences. Neverthless, we have the following suggestions (which shouldn't be hard to meet):
 
@@ -31,7 +31,7 @@ The predictive model should be robust for variations in imaging sequences. Never
 
 ## Running the source code
 
-image preprocessing and network calculation is based on our PUMI (https://github.com/spisakt/PUMI) python module (see page for installation and dependencies).
-Run pipeline script for image preprocessing and network calculation: https://github.com/spisakt/PAINTeR/blob/master/pipeline/pipeline_PAINTeR.py
-Adjust (if neccessary) and run https://github.com/spisakt/PAINTeR/blob/master/scripts/run_all.sh to perform the prediction.
+- Image preprocessing and network calculation is based on our PUMI (https://github.com/spisakt/PUMI) python module (see page for installation and dependencies).
+- Run pipeline script for image preprocessing and network calculation: https://github.com/spisakt/PAINTeR/blob/master/pipeline/pipeline_PAINTeR.py
+- Adjust (if neccessary) and run https://github.com/spisakt/PAINTeR/blob/master/scripts/run_all.sh to perform the prediction.
 For a more detailed instruction, please contact Tamas Spisak (spisak.tms@uk-essen.de)
