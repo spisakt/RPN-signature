@@ -39,7 +39,7 @@ The predictive model should be robust for variations in imaging sequences. Never
 For a more detailed instruction, please contact Tamas Spisak (spisak.tms@uk-essen.de)
 
 ## Authors
-Tamas Spisak^1, Balint Kincses^2, Frederik Schlitt^1, Matthias Zunhammer^1, Tobias Schmidt-Wilcke^2, Zsigmond Tamas Kincses^2, Ulrike Bingel^1
+Tamas Spisak<sup>1</sup>, Balint Kincses^2, Frederik Schlitt^1, Matthias Zunhammer^1, Tobias Schmidt-Wilcke^2, Zsigmond Tamas Kincses^2, Ulrike Bingel^1
 
 1.	Department of Neurology, University Hospital Essen, Essen, Germany
 2.	Faculty of Medicine, Ruhr-University Bochum, Bochum, Germany
