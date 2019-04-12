@@ -179,26 +179,47 @@ var = "anx_state"
 print var
 p_value, r_2, residual, regline =  model.pred_stat(table_bochum[var], table_bochum['prediction'])
 print "{:.3f}".format(r_2) + "\t" + "{:.3f}".format(p_value)
+p_value, r_2, residual, regline =  model.pred_stat(table_essen[var], table_essen['prediction'])
+print "{:.3f}".format(r_2) + "\t" + "{:.3f}".format(p_value)
+p_value, r_2, residual, regline =  model.pred_stat(table_szeged[var], table_szeged['prediction'])
+print "{:.3f}".format(r_2) + "\t" + "{:.3f}".format(p_value)
 
 var = "anx_trait"
 print var
 p_value, r_2, residual, regline =  model.pred_stat(table_bochum[var], table_bochum['prediction'])
+print "{:.3f}".format(r_2) + "\t" + "{:.3f}".format(p_value)
+p_value, r_2, residual, regline =  model.pred_stat(table_essen[var], table_essen['prediction'])
+print "{:.3f}".format(r_2) + "\t" + "{:.3f}".format(p_value)
+p_value, r_2, residual, regline =  model.pred_stat(table_szeged[var], table_szeged['prediction'])
 print "{:.3f}".format(r_2) + "\t" + "{:.3f}".format(p_value)
 
 var = "ads_k"
 print var
 p_value, r_2, residual, regline =  model.pred_stat(table_bochum[var], table_bochum['prediction'])
 print "{:.3f}".format(r_2) + "\t" + "{:.3f}".format(p_value)
+p_value, r_2, residual, regline =  model.pred_stat(table_essen[var], table_essen['prediction'])
+print "{:.3f}".format(r_2) + "\t" + "{:.3f}".format(p_value)
+p_value, r_2, residual, regline =  model.pred_stat(table_szeged[var], table_szeged['prediction'])
+print "{:.3f}".format(r_2) + "\t" + "{:.3f}".format(p_value)
 
 var = "psq"
 print var
 p_value, r_2, residual, regline =  model.pred_stat(table_bochum[var], table_bochum['prediction'])
+print "{:.3f}".format(r_2) + "\t" + "{:.3f}".format(p_value)
+p_value, r_2, residual, regline =  model.pred_stat(table_essen[var], table_essen['prediction'])
+print "{:.3f}".format(r_2) + "\t" + "{:.3f}".format(p_value)
+p_value, r_2, residual, regline =  model.pred_stat(table_szeged[var], table_szeged['prediction'])
 print "{:.3f}".format(r_2) + "\t" + "{:.3f}".format(p_value)
 
 var = "pcs_catastrophizing"
 print var
 p_value, r_2, residual, regline =  model.pred_stat(table_bochum[var], table_bochum['prediction'])
 print "{:.3f}".format(r_2) + "\t" + "{:.3f}".format(p_value)
+p_value, r_2, residual, regline =  model.pred_stat(table_essen[var], table_essen['prediction'])
+print "{:.3f}".format(r_2) + "\t" + "{:.3f}".format(p_value)
+p_value, r_2, residual, regline =  model.pred_stat(table_szeged[var], table_szeged['prediction'])
+print "{:.3f}".format(r_2) + "\t" + "{:.3f}".format(p_value)
+
 
 var = "pcs_rumination"
 print var
@@ -259,3 +280,22 @@ print "{:.3f}".format(r_2) + "\t" + "{:.3f}".format(p_value)
 p_value, r_2, residual, regline =  model.pred_stat(table_szeged[var], table_szeged['prediction'])
 print "{:.3f}".format(r_2) + "\t" + "{:.3f}".format(p_value)
 
+var = "PSQI"
+print var
+#p_value, r_2, residual, regline =  model.pred_stat(table_bochum[var], table_bochum['prediction'])
+#print "{:.3f}".format(r_2) + "\t" + "{:.3f}".format(p_value)
+print "NA\tNA"
+p_value, r_2, residual, regline =  model.pred_stat(table_essen[var], table_essen['prediction'])
+print "{:.3f}".format(r_2) + "\t" + "{:.3f}".format(p_value)
+p_value, r_2, residual, regline =  model.pred_stat(table_szeged[var], table_szeged['prediction'])
+print "{:.3f}".format(r_2) + "\t" + "{:.3f}".format(p_value)
+
+var = "PSQ20"
+print var
+#p_value, r_2, residual, regline =  model.pred_stat(table_bochum[var], table_bochum['prediction'])
+#print "{:.3f}".format(r_2) + "\t" + "{:.3f}".format(p_value)
+print "NA\tNA"
+p_value, r_2, residual, regline =  model.pred_stat(table_essen[var], table_essen['prediction'])
+print "{:.3f}".format(r_2) + "\t" + "{:.3f}".format(p_value)
+p_value, r_2, residual, regline =  model.pred_stat(table_szeged[var], table_szeged['prediction'])
+print "{:.3f}".format(r_2) + "\t" + "{:.3f}".format(p_value)

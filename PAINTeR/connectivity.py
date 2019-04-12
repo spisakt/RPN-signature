@@ -57,6 +57,7 @@ def calculate_connectivity(table=global_vars._RES_BOCHUM_TABLE_,
         joblib.dump(X, save_features)
 
     # save data.frame
+    print("Saving:" + save_table)
     df.to_csv(save_table)
     df_excl.to_csv(save_table_excl)
 
@@ -74,6 +75,9 @@ def add_FD_data(fd_files, data_frame):
         mean_FD.append(fd.mean())
         median_FD.append(np.median(fd))
         max_FD.append(fd.max())
+
+    print (len(mean_FD))
+    print (data_frame.values.shape)
 
     data_frame['meanFD'] = mean_FD
     data_frame['medianFD'] = median_FD
@@ -140,6 +144,8 @@ def exclude(data_frame,
             MPT_min=2.48, #ref value: m
             MPT_max=6.35 #ref value: m
             ):
+    # Just in case:
+    data_frame['exclusion_crit'] = data_frame['exclusion_crit'].astype(str)
     if thres_mean_FD:
         data_frame.loc[data_frame.meanFD > thres_mean_FD, 'Excluded'] = 1
         data_frame.loc[data_frame.meanFD > thres_mean_FD, 'exclusion_crit'] += '+meanFD'
