@@ -125,8 +125,10 @@ RUN python -c "from matplotlib import font_manager" && \
     sed -i 's/\(backend *: \).*$/\1Agg/g' $( python -c "import matplotlib; print(matplotlib.matplotlib_fname())" )
 
 # Installing PUMI
+RUN pip install git+https://github.com/spisakt/PUMI.git
 
 # Installing RPN-signature
+RUN git clone https://github.com/spisakt/RPN-signature.git /home/rpn-signature/src
 
 RUN find $HOME -type d -exec chmod go=u {} + && \
     find $HOME -type f -exec chmod go=u {} +
@@ -135,7 +137,7 @@ ENV IS_DOCKER_8395080871=1
 
 RUN ldconfig
 WORKDIR /tmp/
-ENTRYPOINT ["/usr/local/miniconda/bin/RPN-signature"]
+ENTRYPOINT ["/home/rpn-signature/src/pipeline/pipeline_PAINTeR-BIDS.py"]
 
 ARG BUILD_DATE
 ARG VCS_REF
