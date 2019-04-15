@@ -2,6 +2,10 @@
 
 Welcome to website of the RPN-signature!
 
+.. image:: https://img.shields.io/badge/docker-poldracklab/fmriprep-brightgreen.svg?logo=docker&style=flat
+  :target: https://hub.docker.com/r/tspisak/rpn-signature/tags/
+  :alt: Docker image available!
+
 **_This site is under construction._**
 
 ## Contents
