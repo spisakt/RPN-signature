@@ -270,7 +270,7 @@ plugin_args = {'n_procs' : 7,
                'memory_gb' : 10
               #'status_callback' : log_nodes_cb
                }
-totalWorkflow.run(plugin='MultiProc', plugin_args=plugin_args)
+totalWorkflow.run(plugin='Linear', plugin_args=plugin_args)
 
 #import PUMI.utils.resource_profiler as rp
 #rp.generate_gantt_chart('run_stats.log', cores=8)
