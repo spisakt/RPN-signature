@@ -282,7 +282,8 @@ _FEATURE_ESSEN_ = path.join(path.dirname(__file__),"../res/feature_essen.sav")
 _FEATURE_SZEGED_ = path.join(path.dirname(__file__),"../res/feature_szeged.sav")
 
 # output predictive model
-_RES_PRED_MOD_ = path.join(path.dirname(__file__),"../res/predictive_model.sav")
+_RES_PRED_MOD_ = path.join(path.dirname(__file__),"../res/predictive_model_temp.sav")
+_RES_PRED_MOD_FIXED_ = path.join(path.dirname(__file__),"../res/predictive_model.sav")
 
 _RES_PRED_CONN_ = path.join(path.dirname(__file__),"../res/predictive_connections.csv")
 
