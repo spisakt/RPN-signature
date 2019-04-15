@@ -1,12 +1,10 @@
-.. include:: links.rst
-
 # A predictive signature based on the Resting-state Pain susceptibility Network 
 
 Welcome to website of the RPN-signature!
 
-.. image:: https://img.shields.io/badge/docker-poldracklab/fmriprep-brightgreen.svg?logo=docker&style=flat
-  :target: https://hub.docker.com/r/tspisak/rpn-signature/tags/
-  :alt: Docker image available!
+[![Maintenance](https://img.shields.io/badge/Maintained%3F-yes-green.svg)](https://GitHub.com/Naereen/StrapDown.js/graphs/commit-activity)
+
+
 
 **_This site is under construction._**
 
