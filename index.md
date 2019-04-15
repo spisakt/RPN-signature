@@ -1,3 +1,5 @@
+.. include:: links.rst
+
 # A predictive signature based on the Resting-state Pain susceptibility Network 
 
 Welcome to website of the RPN-signature!
