@@ -2,14 +2,14 @@
 
 Welcome to website of the RPN-signature!
 
-_This site is under construction._
+**_This site is under construction._**
 
 ## Contents
-* [1. Summary](#summary)
-* [2. Inputs of the the RPN-signature](#inputs)
-* [3. Usage via Docker](#usage-with-docker)
-* [4. Running the source code (advanced)](#running-the-source-code)
-* [5. Authors and Citation](#authors)
+* [**1. Summary**](#summary)
+* [**2. Inputs of the the RPN-signature**](#inputs)
+* [**3. Usage via Docker**](#usage-with-docker)
+* [**4. Running the source code (advanced)**](#running-the-source-code)
+* [**5. Authors and Citation**](#authors)
 
 ## Summary
 Individual differences in pain percetheption are of key interest in both basic and clinical research as altered pain sensitivity is both a characteristic and a risk factor for many pain conditions. Individual susceptibility to pain is reflected in the pain-free resting-state activity and functional connectivity of the brain.
@@ -27,7 +27,7 @@ The Resting-state Pain susceptibility Network signature consists of an fMRI imag
 
 This "research product" allows making predictions on the individual's pain sensitivity based on their resting-state fMRI measutrements. For the image preprocessing step, the T1-weighted anatomical images are additionally needed.
 
-All data must be structures according to the Brain Imaging Data Structure [BIDS](http://bids.neuroimaging.io).
+All data must be structures according to the **Brain Imaging Data Structure** [BIDS](http://bids.neuroimaging.io).
 Consider validating your data with the [BIDS validator](https://bids-standard.github.io/bids-validator/) before running the RPN-signature.
 
 The predictive model should be robust for variations in imaging sequences. Neverthless, we have the following suggestions (which shouldn't be hard to meet):
@@ -65,5 +65,5 @@ Tamas Spisak<sup>1</sup>, Balint Kincses<sup>2</sup>, Frederik Schlitt<sup>1</su
 3.	Department of Neurology, University of Szeged, Szeged, Hungary
 
 ## Citation:
-_Tamas Spisak, Balint Kincses, Frederik Schlitt, Matthias Zunhammer, Tobias Schmidt-Wilcke, Zsigmond Tamas Kincses, Ulrike Bingel, Pain-free resting-state functional brain connectivity predicts individual pain sensitivity, under review, 2019._*
+_Tamas Spisak, Balint Kincses, Frederik Schlitt, Matthias Zunhammer, Tobias Schmidt-Wilcke, Zsigmond Tamas Kincses, Ulrike Bingel, Pain-free resting-state functional brain connectivity predicts individual pain sensitivity, under review, 2019._
 
