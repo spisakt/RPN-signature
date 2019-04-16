@@ -1,17 +1,23 @@
-# A predictive signature based on the Resting-state Pain susceptibility Network 
+# A brain-based predictive signature of individual pain sensitivity
+## *based on the Resting-state Pain susceptibility Network (RPN)*
 
 Welcome to website of the RPN-signature!
 
-_This site is under construction._
+**_This site is under construction._**
 
-## Abstract
-Individual differences in pain percetheption are of key interest in both basic and clinical research as altered pain sensitivity is both a characteristic and a risk factor for many pain conditions. It is, however, unclear how individual susceptibility to pain is reflected in the pain-free resting-state activity and functional connectivity of the brain.
-Here, we identified and validated a network pattern in the pain-free resting-state functional brain connectome that is predictive of interindividual differences in pain sensitivity and provides insights into the contribution of regional connectivity changes.
-Our method allows assessing the individual susceptibility to pain without applying any painful stimulation, as might be valuable in patients where reliable behavioural pain reports cannot be obtained. Additionally, as a direct, non-invasive readout of the supraspinal neural contribution to pain sensitivity, it may have broad implications for translational research and the development of analgesic treatment strategies.
+## Contents
+* [1. Summary](#summary)
+* [2. Inputs of the the RPN-signature](#inputs)
+* [3. Usage via Docker](#usage-with-docker)
+* [4. Running the source code (advanced)](#running-the-source-code)
+* [5. Authors and Citation](#authors)
 
-## The RPN-signature
+## Summary
+Individual differences in pain percetheption are of key interest in both basic and clinical research as altered pain sensitivity is both a characteristic and a risk factor for many pain conditions. Individual susceptibility to pain is reflected in the pain-free resting-state activity and functional connectivity of the brain.
+The RPN-signature is a network pattern in the pain-free resting-state functional brain connectome that is predictive of interindividual differences in pain sensitivity.
+The RPN-signature allows assessing the individual susceptibility to pain without applying any painful stimulation, as might be valuable in patients where reliable behavioural pain reports cannot be obtained. Additionally, as a direct, non-invasive readout of the supraspinal neural contribution to pain sensitivity, it may have broad implications for translational research and the development of analgesic treatment strategies.
 
-The Resting-state Pain susceptibility Network signature consists of an fMRI image preprocessing pipeline and a linear combination of specific functional connectivity values. Its output is a single number: a predicted pain sensitivity score, to be interpreted on the scale of the QST-based (Quantitative Sensory Testing) pain sensitivity score. See the paper (under review) for details.
+The Resting-state Pain susceptibility Network signature consists of an fMRI image preprocessing pipeline and a prediction based on (a linear combination of) specific functional connectivity values. Its output is a single number: a predicted pain sensitivity score, to be interpreted on the scale of the QST-based (Quantitative Sensory Testing) pain sensitivity score. See the paper (under review) for details.
 
 - The list of predictive functional connections is to be found [here](https://github.com/spisakt/PAINTeR/blob/master/res/predictive_connections.csv).
 (Note that a sufficient predictive performance is expected only with our dedicated preprocessing pipeline, see below)
@@ -20,7 +26,10 @@ The Resting-state Pain susceptibility Network signature consists of an fMRI imag
 
 ## Inputs
 
-This "research product" allows making predictions on the individual's pain sensitivity based on their resting-state fMRI measutrements. To calculate the prediction, you need an additional input, the T1-weighted anatomical images.
+This "research product" allows making predictions on the individual's pain sensitivity based on their resting-state fMRI measutrements. For the image preprocessing step, the T1-weighted anatomical images are additionally needed.
+
+All data must be structures according to the **Brain Imaging Data Structure** [BIDS](http://bids.neuroimaging.io).
+Consider validating your data with the [BIDS validator](https://bids-standard.github.io/bids-validator/) before running the RPN-signature.
 
 The predictive model should be robust for variations in imaging sequences. Neverthless, we have the following suggestions (which shouldn't be hard to meet):
 
@@ -44,10 +53,10 @@ The predictive model should be robust for variations in imaging sequences. Never
 
 ## Running the source code
 
-- Image preprocessing and network calculation is based on our PUMI (https://github.com/spisakt/PUMI) python module (see page for installation and dependencies).
-- Run pipeline script for image preprocessing and network calculation: [https://github.com/spisakt/PAINTeR/blob/master/pipeline/pipeline_PAINTeR.py]
-- Adjust (if neccessary) and run [https://github.com/spisakt/PAINTeR/blob/master/scripts/run_all.sh to perform the prediction].
-For a more detailed instruction, please contact Tamas Spisak (spisak.tms@uk-essen.de)
+- Running the RPN-signature from source can be tricky for non-developers, because a lot of dependencies must be resolved and installtion is undocumented.
+- Image preprocessing and network calculation is based on our PUMI (https://github.com/spisakt/PUMI) python module (see page for installation and dependencies), which has to be installed first.
+- Run pipeline script for image preprocessing and network calculation: [https://github.com/spisakt/PAINTeR/blob/master/pipeline/pipeline_PAINTeR-BIDS.py]
+- For help, please contact Tamas Spisak (spisak.tms@uk-essen.de)
 
 ## Authors
 Tamas Spisak<sup>1</sup>, Balint Kincses<sup>2</sup>, Frederik Schlitt<sup>1</sup>, Matthias Zunhammer<sup>1</sup>, Tobias Schmidt-Wilcke<sup>2</sup>, Zsigmond Tamas Kincses<sup>2</sup>, Ulrike Bingel<sup>1</sup>
@@ -56,3 +65,15 @@ Tamas Spisak<sup>1</sup>, Balint Kincses<sup>2</sup>, Frederik Schlitt<sup>1</su
 2.	Faculty of Medicine, Ruhr-University Bochum, Bochum, Germany
 3.	Department of Neurology, University of Szeged, Szeged, Hungary
 
+## Citation:
+_Tamas Spisak, Balint Kincses, Frederik Schlitt, Matthias Zunhammer, Tobias Schmidt-Wilcke, Zsigmond Tamas Kincses, Ulrike Bingel, Pain-free resting-state functional brain connectivity predicts individual pain sensitivity, under review, 2019._
+
+[![Open Source Love svg1](https://badges.frapsoft.com/os/v1/open-source.svg?v=103)](https://github.com/spisakt/RPN-signature)
+[![Maintenance](https://img.shields.io/badge/Maintained%3F-yes-green.svg)](https://github.com/spisakt/RPN-signature/graphs/commit-activity)
+[![GitHub license](https://img.shields.io/github/license/spisakt/RPN-signature.svg)](https://github.com/spisakt/RPN-signature/blob/master/LICENSE)
+[![GitHub release](https://img.shields.io/github/release/spisakt/RPN-signature.svg)](https://github.com/spisakt/RPN-signature/releases/)
+[![GitHub issues](https://img.shields.io/github/issues/spisakt/RPN-signature.svg)](https://GitHub.com/spisakt/RPN-signature/issues/)
+[![GitHub issues-closed](https://img.shields.io/github/issues-closed/spisakt/RPN-signature.svg)](https://GitHub.com/spisakt/RPN-signature/issues?q=is%3Aissue+is%3Aclosed)
+[![HitCount](http://hits.dwyl.io/spisakt/RPN-signature.svg)](http://hits.dwyl.io/spisakt/RPN-signature)
+
+2019.
