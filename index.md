@@ -1,5 +1,5 @@
-# A brain-based predictive signature of individual pain sensitivity 
-## <span style="color:blue">based on the Resting-state Pain susceptibility Network (RPN)</span>
+# A brain-based predictive signature of individual pain sensitivity </br>
+## *based on the Resting-state Pain susceptibility Network (RPN)*
 
 Welcome to website of the RPN-signature!
 
