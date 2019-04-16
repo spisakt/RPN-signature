@@ -48,35 +48,67 @@ import PUMI.utils.utils_convert as utils_convert
 import PUMI.utils.globals as globals
 import PUMI.connectivity.TimeseriesExtractor as tsext
 
-
 # parse command line arguments
-if (len(sys.argv) <= 2):
-    print("Please specify command line arguments!")
-    print("Usage:")
-    print(sys.argv[0] + " bids_dir result_directory [bet_fract_int_thr] [bet_vert_grad_thr] [atlas_directory]")
-    print("Example:")
-    print(sys.argv[0] + " /home/user/my_bids_dir /home/user/my_bids_dir/derivatives/RPN")
-    quit()
+from argparse import ArgumentParser
+from argparse import RawTextHelpFormatter
 
-if (len(sys.argv) > 3):
-    _MISTDIR_=sys.argv[3]
-else:
-    _MISTDIR_ = os.path.abspath(os.path.join(os.path.dirname(__file__),"../data/atlas/MIST"))
+parser = ArgumentParser(description='RPN-signature: Resting-state Pain susceptibility Network signature'
+                        'to predict individual pain sensitivity based on resting-state fMRI.\n'
+                        'Webpage: https://spisakt.github.io/RPN-signature/',
+                            formatter_class=RawTextHelpFormatter)
 
-if (len(sys.argv) > 4):
-    bet_fract_int_thr = sys.argv[4]
-else:
-    bet_fract_int_thr = 0.4  # default
+parser.add_argument('bids_dir', action='store',
+                        help='the root folder of a BIDS valid dataset (sub-XXXXX folders should '
+                             'be found at the top level in this folder).')
+parser.add_argument('output_dir', action='store',
+                        help='the output path for the outcomes of preprocessing and visual '
+                             'reports')
+parser.add_argument('analysis_level', choices=['participant'],
+                        help='processing stage to be run, only "participant" in the case of '
+                             'the rpn-signature')
+parser.add_argument('--atlas', action='store',
+                    default=os.path.abspath(os.path.join(os.path.dirname(__file__),"../data/atlas/MIST")),
+                    help='MIST brain atlas directory')
 
-if (len(sys.argv) > 5):
-    bet_fract_int_thr = sys.argv[5]
-else:
-    bet_vertical_gradient = -0.1   # default
+g_comp = parser.add_argument_group('Options for optimizing computations')
+g_comp.add_argument('--bet_fract_int_thr', action='store', type=float, default=0.4,
+                    help='fractional intensity threshold for FSL brain extraction')
+g_comp.add_argument('--bet_vertical_gradient', action='store', type=float, default=-0.1,
+                    help='vertical gradient value for FSL brain extraction')
+
+g_bids = parser.add_argument_group('Options for filtering BIDS queries')
+g_bids.add_argument('--participant_label', '--participant-label', action='store', nargs='+',
+                    help='a space delimited list of participant identifiers or a single '
+                         'identifier (the sub- prefix can be removed)')
+g_bids.add_argument('-t', '--task-id', action='store',
+                        help='select a specific task to be processed (resting-state recommended for the rpn-signature)')
+g_bids.add_argument('--echo-idx', action='store', type=int,
+                    help='select a specific echo to be processed in a multiecho series')
+
+g_perfm = parser.add_argument_group('Options to handle performance')
+g_perfm.add_argument('--nthreads', '--n_cpus', '-n-cpus', action='store', type=int,
+                         help='maximum number of threads across all processes')
+g_perfm.add_argument('--omp-nthreads', action='store', type=int, default=0,
+                         help='maximum number of threads per-process')
+g_perfm.add_argument('--mem_mb', '--mem-mb', action='store', default=0, type=int,
+                         help='upper bound memory limit for FMRIPREP processes')
+g_perfm.add_argument('--template_2mm', '--template-2mm', '--2mm', action='store_true', default=False,
+                         help='normalize to 2mm template (faster but less accurate prediction)')
+
+opts = parser.parse_args()
+
+globals._SinkDir_ = opts.output_dir
+_MISTDIR_ = opts.atlas
 
 ##############################
-globals._brainref="/data/standard/MNI152_T1_1mm_brain.nii.gz"
-globals._headref="/data/standard/MNI152_T1_1mm.nii.gz"
-globals._brainref_mask="/data/standard/MNI152_T1_1mm_brain_mask_dil.nii.gz"
+if (opts.template_2mm):
+    globals._brainref = "/data/standard/MNI152_T1_2mm_brain.nii.gz"
+    globals._headref = "/data/standard/MNI152_T1_2mm.nii.gz"
+    globals._brainref_mask = "/data/standard/MNI152_T1_2mm_brain_mask_dil.nii.gz"
+else:
+    globals._brainref = "/data/standard/MNI152_T1_2mm_brain.nii.gz"
+    globals._headref = "/data/standard/MNI152_T1_2mm.nii.gz"
+    globals._brainref_mask = "/data/standard/MNI152_T1_2mm_brain_mask_dil.nii.gz"
 ##############################
 _refvolplace_ = globals._RefVolPos_.first
 
@@ -99,7 +131,7 @@ totalWorkflow.base_dir = '.'
 
 ########################
 # parse command line args
-bids_dir = sys.argv[1]
+bids_dir = opts.bids_dir
 
 # create BIDS data grabber
 datagrab = pe.Node(io.BIDSDataGrabber(), name='data_grabber')
@@ -130,8 +162,8 @@ reorient_func = pe.MapNode(fsl.utils.Reorient2Std(output_type='NIFTI'),
 totalWorkflow.connect(datagrab, 'bold', reorient_func, 'in_file')
 
 myanatproc = anatproc.AnatProc(stdreg=globals._regType_)
-myanatproc.inputs.inputspec.bet_fract_int_thr = bet_fract_int_thr #0.3  # feel free to adjust, a nice bet is important!
-myanatproc.inputs.inputspec.bet_vertical_gradient = bet_vertical_gradient #-0.3 # feel free to adjust, a nice bet is important!
+myanatproc.inputs.inputspec.bet_fract_int_thr = opts.bet_fract_int_thr #0.3  # feel free to adjust, a nice bet is important!
+myanatproc.inputs.inputspec.bet_vertical_gradient = opts.bet_vertical_gradient #-0.3 # feel free to adjust, a nice bet is important!
 # try scripts/opt_bet.py to optimise these parameters
 totalWorkflow.connect(reorient_struct, 'out_file', myanatproc, 'inputspec.anat')
 
@@ -266,8 +298,8 @@ from nipype.utils.profiler import log_nodes_cb
 #handler = logging.FileHandler(callback_log_path)
 #logger.addHandler(handler)
 
-plugin_args = {'n_procs' : 7,
-               'memory_gb' : 10
+plugin_args = {'n_procs' : opts.nthreads,
+               'memory_gb' : opts.mem_mb
               #'status_callback' : log_nodes_cb
                }
 totalWorkflow.run(plugin='Linear', plugin_args=plugin_args)
