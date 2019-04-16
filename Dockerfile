@@ -113,7 +113,7 @@ RUN conda install -y python=2.7.13 \
     conda build purge-all; sync && \
     conda clean -tipsy && sync
 
-RUN pip install nipype==1.1.9
+RUN pip install nipype==1.1.9 psutil==5.4.8 bids==0.0
 
 # Unless otherwise specified each process should only use one thread - nipype
 # will handle parallelization
@@ -133,7 +133,10 @@ RUN git clone https://github.com/spisakt/PUMI.git /home/rpn-signature/src/PUMI
 # Installing RPN-signature
 RUN git clone https://github.com/spisakt/RPN-signature.git /home/rpn-signature/src/RPN-signature
 
-RUN export PYTHONPATH=$PYTHONPATH:"/home/rpn-signature/src/"
+ENV PYTHONPATH=/home/rpn-signature/src/
+
+RUN cp -a /home/rpn-signature/src/RPN-signature/data/standard $FSLDIR/data/standard
+RUN ls $FSLDIR/data/standard
 
 RUN find $HOME -type d -exec chmod go=u {} + && \
     find $HOME -type f -exec chmod go=u {} +

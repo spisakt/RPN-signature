@@ -67,8 +67,16 @@ parser.add_argument('analysis_level', choices=['participant'],
                         help='processing stage to be run, only "participant" in the case of '
                              'the rpn-signature')
 
-g_set = parser.add_argument_group('Settings for the RPN-signature calculation')
+g_bids = parser.add_argument_group('Options for filtering BIDS queries')
+g_bids.add_argument('--participant_label', '--participant-label', action='store', nargs='+',
+                    help='a space delimited list of participant identifiers or a single '
+                         'identifier (the sub- prefix can be removed)')
+g_bids.add_argument('-t', '--task-id', action='store',
+                        help='select a specific task to be processed (resting-state recommended for the rpn-signature)')
+g_bids.add_argument('--echo-idx', action='store', type=int,
+                    help='select a specific echo to be processed in a multiecho series')
 
+g_set = parser.add_argument_group('Settings for the RPN-signature calculation')
 g_set.add_argument('--atlas', action='store',
                     default=os.path.abspath(os.path.join(os.path.dirname(__file__),"../data/atlas/MIST")),
                     help='MIST brain atlas directory')
@@ -81,23 +89,14 @@ g_comp.add_argument('--bet_fract_int_thr', action='store', type=float, default=0
 g_comp.add_argument('--bet_vertical_gradient', action='store', type=float, default=-0.1,
                     help='vertical gradient value for FSL brain extraction')
 
-g_bids = parser.add_argument_group('Options for filtering BIDS queries')
-g_bids.add_argument('--participant_label', '--participant-label', action='store', nargs='+',
-                    help='a space delimited list of participant identifiers or a single '
-                         'identifier (the sub- prefix can be removed)')
-g_bids.add_argument('-t', '--task-id', action='store',
-                        help='select a specific task to be processed (resting-state recommended for the rpn-signature)')
-g_bids.add_argument('--echo-idx', action='store', type=int,
-                    help='select a specific echo to be processed in a multiecho series')
-
 g_perfm = parser.add_argument_group('Options to handle performance')
 g_perfm.add_argument('--nthreads', '--n_cpus', '-n-cpus', action='store', type=int,
                      default=psutil.cpu_count(logical=True),
                      help='maximum number of threads across all processes')
 g_perfm.add_argument('--omp-nthreads', action='store', type=int, default=2,
                          help='maximum number of threads per-process')
-g_perfm.add_argument('--mem_mb', '--mem-mb', action='store', default=psutil.virtual_memory().total, type=int,
-                         help='upper bound memory limit for FMRIPREP processes')
+g_perfm.add_argument('--mem_gb', '--mem-gb', action='store', default=psutil.virtual_memory().total/(1024*1024*1024), type=int,
+                         help='upper bound memory limit for ROPN-signature processes')
 g_perfm.add_argument('--template_2mm', '--template-2mm', '--2mm', action='store_true', default=False,
                          help='normalize to 2mm template (faster but less accurate prediction)')
 
@@ -112,9 +111,9 @@ if (opts.template_2mm):
     globals._headref = "/data/standard/MNI152_T1_2mm.nii.gz"
     globals._brainref_mask = "/data/standard/MNI152_T1_2mm_brain_mask_dil.nii.gz"
 else:
-    globals._brainref = "/data/standard/MNI152_T1_2mm_brain.nii.gz"
-    globals._headref = "/data/standard/MNI152_T1_2mm.nii.gz"
-    globals._brainref_mask = "/data/standard/MNI152_T1_2mm_brain_mask_dil.nii.gz"
+    globals._brainref = "/data/standard/MNI152_T1_1mm_brain.nii.gz"
+    globals._headref = "/data/standard/MNI152_T1_1mm.nii.gz"
+    globals._brainref_mask = "/data/standard/MNI152_T1_1mm_brain_mask_dil.nii.gz"
 ##############################
 _refvolplace_ = globals._RefVolPos_.first
 
@@ -133,7 +132,7 @@ globals._regType_ = globals._RegType_.ANTS
 ##############################
 
 print("Starting RPN-signature...")
-print("Memory usage limit: " + str(opts.mem_mb/1024/1024) + "MB")
+print("Memory usage limit: " + str(opts.mem_gb) + "GB")
 print("Number of CPUs used: " + str(opts.nthreads))
 
 totalWorkflow = nipype.Workflow('RPN')
@@ -146,7 +145,10 @@ bids_dir = opts.bids_dir
 # create BIDS data grabber
 datagrab = pe.Node(io.BIDSDataGrabber(), name='data_grabber')
 datagrab.inputs.base_dir = bids_dir
-#datagrab.inputs.subject = '01' # ToDo: specify subjects
+print "*********************"
+print opts.participant_label
+if (opts.participant_label):
+    datagrab.inputs.subject = opts.participant_label
 
 # sink: file - idx relationship!!
 pop_id = pe.Node(interface=utils_convert.List2TxtFile,
@@ -316,7 +318,7 @@ from nipype.utils.profiler import log_nodes_cb
 #logger.addHandler(handler)
 
 plugin_args = {'n_procs' : opts.nthreads,
-               'memory_gb' : opts.mem_mb
+               'memory_gb' : opts.mem_gb
               #'status_callback' : log_nodes_cb
                }
 totalWorkflow.run(plugin='MultiProc', plugin_args=plugin_args)
