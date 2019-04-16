@@ -95,7 +95,7 @@ ENV PATH="/usr/local/miniconda/bin:$PATH" \
     PYTHONNOUSERSITE=1
 
 # Installing precomputed python packages
-RUN conda install -y python=3.7.1 \
+RUN conda install -y python=2.7.13 \
                      mkl=2018.0.3 \
                      mkl-service \
                      numpy=1.15.4 \
@@ -113,6 +113,8 @@ RUN conda install -y python=3.7.1 \
     conda build purge-all; sync && \
     conda clean -tipsy && sync
 
+RUN pip install nipype==1.1.9
+
 # Unless otherwise specified each process should only use one thread - nipype
 # will handle parallelization
 ENV MKL_NUM_THREADS=1 \
@@ -125,10 +127,13 @@ RUN python -c "from matplotlib import font_manager" && \
     sed -i 's/\(backend *: \).*$/\1Agg/g' $( python -c "import matplotlib; print(matplotlib.matplotlib_fname())" )
 
 # Installing PUMI
-RUN pip install git+https://github.com/spisakt/PUMI.git
+#RUN pip install git+https://github.com/spisakt/PUMI.git
+RUN git clone https://github.com/spisakt/PUMI.git /home/rpn-signature/src/PUMI
 
 # Installing RPN-signature
-RUN git clone https://github.com/spisakt/RPN-signature.git /home/rpn-signature/src
+RUN git clone https://github.com/spisakt/RPN-signature.git /home/rpn-signature/src/RPN-signature
+
+RUN export PYTHONPATH=$PYTHONPATH:"/home/rpn-signature/src/"
 
 RUN find $HOME -type d -exec chmod go=u {} + && \
     find $HOME -type f -exec chmod go=u {} +
@@ -137,7 +142,7 @@ ENV IS_DOCKER_8395080871=1
 
 RUN ldconfig
 WORKDIR /tmp/
-ENTRYPOINT ["/home/rpn-signature/src/pipeline/pipeline_PAINTeR-BIDS.py"]
+ENTRYPOINT ["/home/rpn-signature/src/RPN-signature/pipeline/rpn-signature.py"]
 
 ARG BUILD_DATE
 ARG VCS_REF

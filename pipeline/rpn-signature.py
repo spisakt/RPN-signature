@@ -31,8 +31,8 @@
 # /Users/tspisak/src/PUMI/scripts/pipeline_PAINTeR.py "/Users/tspisak/projects/PAINTeR/data/nii-szeged/data/PA*/highres.nii" "/Users/tspisak/projects/PAINTeR/data/nii-szeged/data/PA*/rest.nii" /Users/tspisak/projects/PAINTeR/res/szeged /Users/tspisak/data/atlases/MIST/
 
 
-import sys
 import os
+import psutil
 
 import nipype
 import nipype.pipeline as pe
@@ -66,9 +66,14 @@ parser.add_argument('output_dir', action='store',
 parser.add_argument('analysis_level', choices=['participant'],
                         help='processing stage to be run, only "participant" in the case of '
                              'the rpn-signature')
-parser.add_argument('--atlas', action='store',
+
+g_set = parser.add_argument_group('Settings for the RPN-signature calculation')
+
+g_set.add_argument('--atlas', action='store',
                     default=os.path.abspath(os.path.join(os.path.dirname(__file__),"../data/atlas/MIST")),
                     help='MIST brain atlas directory')
+g_set.add_argument('--keep_derivatives', '--keep_derivatives', '--keep_der', '--keep-der', action='store_true', default=False,
+                         help='keep derivatives (preprocessed image files and regional timeseries)')
 
 g_comp = parser.add_argument_group('Options for optimizing computations')
 g_comp.add_argument('--bet_fract_int_thr', action='store', type=float, default=0.4,
@@ -87,10 +92,11 @@ g_bids.add_argument('--echo-idx', action='store', type=int,
 
 g_perfm = parser.add_argument_group('Options to handle performance')
 g_perfm.add_argument('--nthreads', '--n_cpus', '-n-cpus', action='store', type=int,
-                         help='maximum number of threads across all processes')
-g_perfm.add_argument('--omp-nthreads', action='store', type=int, default=0,
+                     default=psutil.cpu_count(logical=True),
+                     help='maximum number of threads across all processes')
+g_perfm.add_argument('--omp-nthreads', action='store', type=int, default=2,
                          help='maximum number of threads per-process')
-g_perfm.add_argument('--mem_mb', '--mem-mb', action='store', default=0, type=int,
+g_perfm.add_argument('--mem_mb', '--mem-mb', action='store', default=psutil.virtual_memory().total, type=int,
                          help='upper bound memory limit for FMRIPREP processes')
 g_perfm.add_argument('--template_2mm', '--template-2mm', '--2mm', action='store_true', default=False,
                          help='normalize to 2mm template (faster but less accurate prediction)')
@@ -125,6 +131,10 @@ _ATLAS_MODULES = tsext.mist_modules(mist_directory=_MISTDIR_, resolution="122")
 #_regtype_ = globals._RegType_.FSL
 globals._regType_ = globals._RegType_.ANTS
 ##############################
+
+print("Starting RPN-signature...")
+print("Memory usage limit: " + str(opts.mem_mb/1024/1024) + "MB")
+print("Number of CPUs used: " + str(opts.nthreads))
 
 totalWorkflow = nipype.Workflow('RPN')
 totalWorkflow.base_dir = '.'
@@ -235,10 +245,11 @@ def calculate_connectivity(ts_files, fd_files):
 
     df = pd.DataFrame()
 
-    df['ts_files'] = ts_files
     df['meanFD'] = mean_FD
     df['medianFD'] = median_FD
     df['maxFD'] = max_FD
+    df['ts_file'] = ts_files
+    df['fd_file'] = ts_files
 
     # load timeseries data
     ts, labels = conn.load_timeseries(ts_files, df, scrubbing=True,
@@ -254,27 +265,33 @@ conn = pe.Node(util.Function(input_names=['ts_files', 'fd_files'],
 totalWorkflow.connect(extract_timeseries, 'outputspec.timeseries', conn, 'ts_files')
 totalWorkflow.connect(myfuncproc, 'outputspec.FD', conn, 'fd_files')
 
-def predict_pain_sensitivity(X, df):
+def predict_pain_sensitivity(X, in_files):
     # load trained model
     from PAINTeR import global_vars
     from sklearn.externals import joblib
+    import pandas as pd
+    import os
+
     model = joblib.load(global_vars._RES_PRED_MOD_FIXED_)
     predicted = model.predict(X)
 
+    df = pd.DataFrame()
+    df['in_file'] = in_files
     df['RPN'] = predicted
 
-    pred_file="prediction.csv"
-    df.to_csv()
+    pred_file = "prediction.csv"
+    df.to_csv(pred_file)
 
-    return pred_file
+    return os.path.abspath(pred_file)
 
 
-predict = pe.Node(util.Function(input_names=['X'],
+predict = pe.Node(util.Function(input_names=['X', 'in_files'],
                                 output_names=['pred_file'],
                                 function=predict_pain_sensitivity),
                   name='predict')
 
 totalWorkflow.connect(conn, 'features', predict, 'X')
+totalWorkflow.connect(datagrab, 'bold', predict, 'in_files')
 
 ds_pred = pe.Node(interface=io.DataSink(), name='ds_pred')
 ds_pred.inputs.regexp_substitutions = [("(\/)[^\/]*$", "results.csv")]
@@ -302,7 +319,42 @@ plugin_args = {'n_procs' : opts.nthreads,
                'memory_gb' : opts.mem_mb
               #'status_callback' : log_nodes_cb
                }
-totalWorkflow.run(plugin='Linear', plugin_args=plugin_args)
+totalWorkflow.run(plugin='MultiProc', plugin_args=plugin_args)
+
+# post-pipeline tasks
+import shutil
+if not opts.keep_derivatives:
+    try:
+        shutil.rmtree(globals._SinkDir_ + "/" + "regional_timeseries")
+    except OSError as ex:
+        print(ex)
+
+    try:
+        shutil.rmtree(globals._SinkDir_ + "/" + "func_preproc")
+    except OSError as ex:
+        print(ex)
+
+    try:
+        shutil.rmtree(globals._SinkDir_ + "/" + "anat_preproc")
+    except OSError as ex:
+        print(ex)
+
+    try:
+        shutil.rmtree(globals._SinkDir_ + "/" + "connectivity")
+    except OSError as ex:
+        print(ex)
+
+    try:
+        os.remove(globals._SinkDir_ + "/" + "subjectsIDs.txt")
+    except OSError as ex:
+        print(ex)
+
+    try:
+        os.remove(globals._SinkDir_ + "/" + "atlas.nii.gz")
+    except OSError as ex:
+        print(ex)
+
+
 
 #import PUMI.utils.resource_profiler as rp
 #rp.generate_gantt_chart('run_stats.log', cores=8)
