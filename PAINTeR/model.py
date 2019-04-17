@@ -6,7 +6,7 @@ from sklearn.feature_selection import SelectKBest, f_regression
 from sklearn import preprocessing
 from sklearn.pipeline import Pipeline
 from sklearn.model_selection import LeaveOneOut
-from sklearn.metrics import mean_squared_error
+from sklearn.metrics import mean_squared_error, mean_absolute_error, median_absolute_error, r2_score, explained_variance_score
 from sklearn.model_selection import GridSearchCV
 from sklearn.model_selection import cross_val_predict
 from sklearn.model_selection import cross_validate
@@ -201,9 +201,14 @@ def evaluate_prediction(model, X, y, orig_mean=None, outfile="", robust=False, c
                      /
                      -mean_squared_error(np.repeat(y_base, len(y)), y))) * 100
 
-    print "R^2=" + "{:.3f}".format(r_2) + "  R=" + "{:.3f}".format(np.sqrt(r_2)) \
-          + "  p=" + "{:.3f}".format(p_value) + "  Expl. Var.: " + "{:.1f}".format(expl_var) + "%"\
-          + " MSE=" + "{:.3f}".format(mean_squared_error(y_pred=predicted, y_true=y))
+    print "R2=" + "{:.3f}".format(r_2) + "  R=" + "{:.3f}".format(np.sqrt(r_2))\
+          + "   p=" + "{:.6f}".format(p_value) +"  Expl. Var.: " + "{:.1f}".format(expl_var) + "%" \
+          + "  Expl. Var.2: " + "{:.1f}".format(explained_variance_score(y_pred=predicted, y_true=y)*100) + "%" \
+          + "  MSE=" + "{:.3f}".format(mean_squared_error(y_pred=predicted, y_true=y))\
+          + " RMSE=" + "{:.3f}".format(np.sqrt(mean_squared_error(y_pred=predicted, y_true=y))) \
+          + "  MAE=" + "{:.3f}".format(mean_absolute_error(y_pred=predicted, y_true=y)) \
+          + " MedAE=" + "{:.3f}".format(median_absolute_error(y_pred=predicted, y_true=y)) \
+          + "  R^2=" + "{:.3f}".format(r2_score(y_pred=predicted, y_true=y))
 
     plot.plot_prediction(y, predicted, outfile, robust=robust, sd=True, covar=covar,
                          text="$R^2$ = " + "{:.3f}".format(r_2) +
@@ -221,9 +226,15 @@ def evaluate_crossval_prediction(model, X, y, outfile="", cv=LeaveOneOut(), robu
                    /
                    -mean_squared_error(np.repeat(y.mean(), len(y)), y) ))*100
 
-    print "R2=" + "{:.3f}".format(r_2) + "  R=" + "{:.3f}".format(np.sqrt(r_2))\
-          + "  p=" + "{:.6f}".format(p_value) +"  Expl. Var.: " + "{:.1f}".format(expl_var) + "%"\
-          + " MSE=" + "{:.3f}".format(mean_squared_error(y_pred=predicted, y_true=y))
+    print "R2=" + "{:.3f}".format(r_2) + "  R=" + "{:.3f}".format(np.sqrt(r_2)) \
+          + "   p=" + "{:.6f}".format(p_value) + "  Expl. Var.: " + "{:.1f}".format(expl_var) + "%" \
+          + "  Expl. Var.2: " + "{:.1f}".format(explained_variance_score(y_pred=predicted, y_true=y)*100) + "%" \
+          + "  MSE=" + "{:.3f}".format(mean_squared_error(y_pred=predicted, y_true=y)) \
+          + " RMSE=" + "{:.3f}".format(np.sqrt(mean_squared_error(y_pred=predicted, y_true=y))) \
+          + "  MAE=" + "{:.3f}".format(mean_absolute_error(y_pred=predicted, y_true=y)) \
+          + " MedAE=" + "{:.3f}".format(median_absolute_error(y_pred=predicted, y_true=y)) \
+          + "  R^2=" + "{:.3f}".format(r2_score(y_pred=predicted, y_true=y))
+
 
     plot.plot_prediction(y, predicted, outfile, robust=robust, sd=True,
                          text="$R2$=" + "{:.3f}".format(r_2) +
