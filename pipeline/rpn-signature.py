@@ -163,12 +163,12 @@ ds_id.inputs.base_directory = globals._SinkDir_
 totalWorkflow.connect(pop_id, 'txt_file', ds_id, 'subjects')
 
 # build the actual pipeline
-reorient_struct = pe.MapNode(fsl.utils.Reorient2Std(output_type='NIFTI'),
+reorient_struct = pe.MapNode(fsl.utils.Reorient2Std(output_type='NIFTI_GZ'),
                       iterfield=['in_file'],
                       name="reorient_struct")
 totalWorkflow.connect(datagrab, 'T1w', reorient_struct, 'in_file')
 
-reorient_func = pe.MapNode(fsl.utils.Reorient2Std(output_type='NIFTI'),
+reorient_func = pe.MapNode(fsl.utils.Reorient2Std(output_type='NIFTI_GZ'),
                       iterfield=['in_file'],
                       name="reorient_func")
 totalWorkflow.connect(datagrab, 'bold', reorient_func, 'in_file')

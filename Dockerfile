@@ -134,7 +134,9 @@ RUN git clone https://github.com/spisakt/PUMI.git /home/rpn-signature/src/PUMI
 RUN git clone https://github.com/spisakt/RPN-signature.git /home/rpn-signature/src/RPN-signature
 
 ENV PYTHONPATH=/home/rpn-signature/src/
+ENV FSLOUTPUTTYPE=NIFTI_GZ
 
+RUN ls /home/rpn-signature/src/RPN-signature/data
 RUN cp -a /home/rpn-signature/src/RPN-signature/data/standard $FSLDIR/data/standard
 RUN ls $FSLDIR/data/standard
 
