@@ -356,6 +356,14 @@ if not opts.keep_derivatives:
     except OSError as ex:
         print(ex)
 
+from shutil import copyfile
+
+import glob
+import shutil
+for file in glob.glob('crash*'):
+    print("crash files:")
+    print(file)
+    shutil.copy(file, globals._SinkDir_)
 
 
 #import PUMI.utils.resource_profiler as rp
