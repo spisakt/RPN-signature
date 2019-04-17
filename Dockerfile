@@ -113,7 +113,7 @@ RUN conda install -y python=2.7.13 \
     conda build purge-all; sync && \
     conda clean -tipsy && sync
 
-RUN pip install nipype==1.1.9 psutil==5.4.8 bids==0.0
+RUN pip install nipype==1.1.9 psutil==5.4.8 bids==0.0 nilearn==0.5.0
 
 # Unless otherwise specified each process should only use one thread - nipype
 # will handle parallelization
