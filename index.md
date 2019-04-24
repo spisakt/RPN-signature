@@ -84,11 +84,11 @@ tspisak/rpn-signature:latest /data /out participant \
 
 _**NOTE2** Output directory must be specified as an absolute path._
 
-_**NOTE3**Note that the --2mm command line option performs spatial co-registration to a 2mm-resolution template (instead of 1mm), which is much faster (total running time is approximately 50 min instead of 8 hours / subject), but was not validasted and gives slighly different (preassumably less accurate) predictions._
+_**NOTE3** Note that the --2mm command line option performs spatial co-registration to a 2mm-resolution template (instead of 1mm), which is much faster (total running time is approximately 50 min instead of 8 hours per subject), but was not validasted and gives slighly different (preassumably less accurate) predictions._
 
 _**NOTE4** Make sure to configure Docker's resource availability to take adavantage of parallell processing._
 
-_**NOTE4** Make sure to have enough free space for storing temporary files (1.5GB per subject)._
+_**NOTE5** Make sure to have enough free space for storing temporary files (1.5GB per subject)._
 
 
 
