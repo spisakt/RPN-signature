@@ -63,12 +63,14 @@ docker run -it tspisak/rpn-signature:latest -h
 ```
 
 5. Run it by mounting and specifying your BIDS directory, output directory and level of analysis, like for any other BIDS-app.
+
 E.g.:
 ```bash
 docker run -it --rm -v /data/nii-bids/:/data:ro -v /data/nii-bids/derivatives:/out tspisak/rpn-signature:latest /data /out participant
 ```
 
 Have a look at the help, there are some useful command line options:
+
 E.g.:
 ```bash
 docker run -it --rm -v /data/nii-bids/:/data:ro -v /data/nii-bids/derivatives:/out tspisak/rpn-signature:latest /data /out participant --participant_label  004 006 007 008 009 011 --mem_gb 10 --nthreads 7 --2mm
