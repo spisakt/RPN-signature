@@ -49,7 +49,34 @@ The predictive model should be robust for variations in imaging sequences. Never
 
 ## Usage with docker
 
-*** Coming soon ***
+The usage of the RPN-siganture with Docker is simple and platform-independent.
+You can run it like any other [BIDS-app](http://bids-apps.neuroimaging.io/tutorial/).
+
+1. Get the Docker Engine (https://docs.docker.com/engine/installation/)
+2. Have your data organized in BIDS (get BIDS specification, see BIDS paper).
+3. Validate your data (http://incf.github.io/bids-validator/). You can safely use the BIDS-validator since no data is uploaded to the server, works locally in your browser.
+
+4. Have a look at the help page to test if it works.
+It will start to download the docker image from docker hub (approximately 2Gb).
+```bash
+docker run -it tspisak/rpn-signature:latest -h
+```
+
+5. Run it by mounting and specifying your BIDS directory, output directory and level of analysis, like for any other BIDS-app.
+
+E.g.:
+```bash
+docker run -it --rm -v /data/nii-bids/:/data:ro -v /data/nii-bids/derivatives:/out tspisak/rpn-signature:latest /data /out participant
+```
+
+Have a look at the help, there are some useful command line options:
+
+E.g.:
+```bash
+docker run -it --rm -v /data/nii-bids/:/data:ro -v /data/nii-bids/derivatives:/out tspisak/rpn-signature:latest /data /out participant --participant_label  004 006 007 008 009 011 --mem_gb 10 --nthreads 7 --2mm
+```
+
+Note that the --2mm command line option performs spatial co-registration to a 2mm-resolution template (instead of 1mm), which is much faster (total running time is approximately 50 min instead of 8 hours / subject), but was not validasted and gives slighly different (preassumably less accurate) predictions.
 
 ## Running the source code
 
