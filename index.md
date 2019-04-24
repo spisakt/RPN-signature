@@ -68,9 +68,12 @@ docker run -it --rm -v /data/nii-bids/:/data:ro -v /data/nii-bids/derivatives:/o
 ```
 
 Have a look at the help, there are some useful command line options:
+E.g.:
 ```bash
 docker run -it --rm -v /data/nii-bids/:/data:ro -v /data/nii-bids/derivatives:/out tspisak/rpn-signature:latest /data /out participant --participant_label  004 006 007 008 009 011 --mem_gb 10 --nthreads 7 --2mm
 ```
+
+Note that the --2mm command line option performs spatial co-registration to a 2mm-resolution template (instead of 1mm), which is much faster (total running time is approximately 50 min instead of 8 hours / subject), but was not validasted and gives slighly different (preassumably less accurate) predictions.
 
 ## Running the source code
 
