@@ -24,8 +24,7 @@ The Resting-state Pain susceptibility Network signature consists of an fMRI imag
 
 - The nodes of the predictive network (with nodal predictive strength) can be downloaded [here](https://github.com/spisakt/PAINTeR/blob/master/res/RPN_predictive_network_nodes.nii.gz). Note that this map is not predictive on it's own, just a spatial map of the RPN-nodes.
 
-## Inputs
-[![Back to Top](https://iaibloggertips.files.wordpress.com/2014/05/e5406-back-to-top-button-for-blogger3-1.png)](#contents)
+## Inputs [![Back to Top](https://iaibloggertips.files.wordpress.com/2014/05/e5406-back-to-top-button-for-blogger3-1.png)](#a-brain-based-predictive-signature-of-individual-pain-sensitivity)
 
 This "research product" allows making predictions on the individual's pain sensitivity based on their resting-state fMRI measutrements. For the image preprocessing step, the T1-weighted anatomical images are additionally needed.
 
