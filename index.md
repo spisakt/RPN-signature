@@ -49,7 +49,13 @@ The predictive model should be robust for variations in imaging sequences. Never
 
 ## Usage with docker
 
-*** Coming soon ***
+The usage of the RPN-siganture with Docker is simple and platform-independent.
+
+1. Get the Docker Engine (https://docs.docker.com/engine/installation/)
+2. Have your data organized in BIDS (get BIDS specification, see BIDS paper).
+3. Validate your data (http://incf.github.io/bids-validator/). You can safely use the BIDS-validator since no data is uploaded to the server, works locally in your browser.
+
+4. 
 
 ## Running the source code
 
