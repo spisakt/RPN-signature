@@ -55,7 +55,22 @@ The usage of the RPN-siganture with Docker is simple and platform-independent.
 2. Have your data organized in BIDS (get BIDS specification, see BIDS paper).
 3. Validate your data (http://incf.github.io/bids-validator/). You can safely use the BIDS-validator since no data is uploaded to the server, works locally in your browser.
 
-4. 
+4. Have a look at the help page to test if it works.
+It will start to download the docker image from docker hub (approximately 2Gb).
+```bash
+docker run -it tspisak/rpn-signature:latest -h
+```
+
+5. Run it by mounting and specifying your BIDS directory, output directory and level of analysis, like for any other BIDS-app.
+E.g.:
+```bash
+docker run -it --rm -v /data/nii-bids/:/data:ro -v /data/nii-bids/derivatives:/out tspisak/rpn-signature:latest /data /out participant
+```
+
+Have a look at the help, there are some useful command line options:
+```bash
+docker run -it --rm -v /data/nii-bids/:/data:ro -v /data/nii-bids/derivatives:/out tspisak/rpn-signature:latest /data /out participant --participant_label  004 006 007 008 009 011 --mem_gb 10 --nthreads 7 --2mm
+```
 
 ## Running the source code
 
