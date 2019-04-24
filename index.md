@@ -50,7 +50,7 @@ The predictive model should be robust for variations in imaging sequences. Never
 ## Usage with docker
 
 The usage of the RPN-siganture with Docker is simple and platform-independent.
-You can run it like any other [BIDS-app](http://bids-apps.neuroimaging.io/tutorial/) 
+You can run it like any other [BIDS-app](http://bids-apps.neuroimaging.io/tutorial/).
 
 1. Get the Docker Engine (https://docs.docker.com/engine/installation/)
 2. Have your data organized in BIDS (get BIDS specification, see BIDS paper).
