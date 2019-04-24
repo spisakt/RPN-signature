@@ -89,7 +89,7 @@ Note that the --2mm command line option performs spatial co-registration to a 2m
 - For help, please contact Tamas Spisak (spisak.tms@uk-essen.de)
 
 ## Authors
-[Back to Contents](#contents)
+| |[Back to Contents](#contents)|
 
 Tamas Spisak<sup>1</sup>, Balint Kincses<sup>2</sup>, Frederik Schlitt<sup>1</sup>, Matthias Zunhammer<sup>1</sup>, Tobias Schmidt-Wilcke<sup>2</sup>, Zsigmond Tamas Kincses<sup>2</sup>, Ulrike Bingel<sup>1</sup>
 
