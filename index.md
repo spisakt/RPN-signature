@@ -61,26 +61,36 @@ You can run it like any other [BIDS-app](http://bids-apps.neuroimaging.io/tutori
 3. Validate your data (http://incf.github.io/bids-validator/). You can safely use the BIDS-validator since no data is uploaded to the server, works locally in your browser.
 
 4. Have a look at the help page to test if it works.
-It will start to download the docker image from docker hub (approximately 2Gb).
+It will start to download the docker image from docker hub (approximately 5.3Gb).
 ```bash
 docker run -it tspisak/rpn-signature:latest -h
 ```
 
 5. Run it by mounting and specifying your BIDS directory, output directory and level of analysis, like for any other BIDS-app.
+E.g.:
+```bash
+docker run -it --rm -v /data/nii-bids/:/data:ro -v /data/nii-bids/derivatives:/out \
+tspisak/rpn-signature:latest /data /out participant
+```
+
+_**NOTE1** Have a look at the help, there are some useful command line options:_
 
 E.g.:
 ```bash
-docker run -it --rm -v /data/nii-bids/:/data:ro -v /data/nii-bids/derivatives:/out tspisak/rpn-signature:latest /data /out participant
+docker run -it --rm -v /data/nii-bids/:/data:ro -v /data/nii-bids/derivatives:/out \
+tspisak/rpn-signature:latest /data /out participant \
+--participant_label  004 006 007 008 009 011 --mem_gb 10 --nthreads 7 --2mm
 ```
 
-Have a look at the help, there are some useful command line options:
+_**NOTE2** Output directory must be specified as an absolute path._
 
-E.g.:
-```bash
-docker run -it --rm -v /data/nii-bids/:/data:ro -v /data/nii-bids/derivatives:/out tspisak/rpn-signature:latest /data /out participant --participant_label  004 006 007 008 009 011 --mem_gb 10 --nthreads 7 --2mm
-```
+_**NOTE3**Note that the --2mm command line option performs spatial co-registration to a 2mm-resolution template (instead of 1mm), which is much faster (total running time is approximately 50 min instead of 8 hours / subject), but was not validasted and gives slighly different (preassumably less accurate) predictions._
 
-Note that the --2mm command line option performs spatial co-registration to a 2mm-resolution template (instead of 1mm), which is much faster (total running time is approximately 50 min instead of 8 hours / subject), but was not validasted and gives slighly different (preassumably less accurate) predictions.
+_**NOTE4** Make sure to configure Docker's resource availability to take adavantage of parallell processing._
+
+_**NOTE4** Make sure to have enough free space for storing temporary files (1.5GB per subject)._
+
+
 
 [![Back to Top](https://iaibloggertips.files.wordpress.com/2014/05/e5406-back-to-top-button-for-blogger3-1.png)](#a-brain-based-predictive-signature-of-individual-pain-sensitivity)
 ## Running the source code
@@ -112,5 +122,5 @@ _Tamas Spisak, Balint Kincses, Frederik Schlitt, Matthias Zunhammer, Tobias Schm
 [![GitHub issues-closed](https://img.shields.io/github/issues-closed/spisakt/RPN-signature.svg)](https://GitHub.com/spisakt/RPN-signature/issues?q=is%3Aissue+is%3Aclosed)
 [![HitCount](http://hits.dwyl.io/spisakt/RPN-signature.svg)](http://hits.dwyl.io/spisakt/RPN-signature)
 
-2019.
+
 [![Back to Top](https://iaibloggertips.files.wordpress.com/2014/05/e5406-back-to-top-button-for-blogger3-1.png)](#a-brain-based-predictive-signature-of-individual-pain-sensitivity)
