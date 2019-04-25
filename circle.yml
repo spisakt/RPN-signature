@@ -150,10 +150,6 @@ workflows:
       - deploy:
           requires:
             - build
-            - test_pytest
-            - build_docs
-            - T1w
-            - bold
           filters:
             branches:
               ignore: /.*/
