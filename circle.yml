@@ -110,7 +110,7 @@ jobs:
             if [[ -n "$DOCKER_PASS" ]]; then
               docker login -u $DOCKER_USER -p $DOCKER_PASS
               docker push tspisak/rpn-signature:latest
-              docker tag tspisak/rpn-signature poldracklab/mriqc:$CIRCLE_TAG
+              docker tag tspisak/rpn-signature tspisak/rpn-signature:$CIRCLE_TAG
               docker push tspisak/rpn-signature:$CIRCLE_TAG
             fi
             
