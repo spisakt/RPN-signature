@@ -45,8 +45,8 @@ jobs:
             rm -rf /tmp/src/rpn-signature
             git clone https://github.com/spisakt/RPN-signature.git /tmp/src/rpn-signature
             cd /tmp/src/rpn-signature
-            docker-compose -f /tmp/src/mriqcwebapi/dockereve-master/docker-compose.yml pull
-            docker-compose -f /tmp/src/mriqcwebapi/dockereve-master/docker-compose.yml build
+            docker-compose -f /tmp/src/rpn-signature/dockereve-master/docker-compose.yml pull
+            docker-compose -f /tmp/src/rpn-signature/dockereve-master/docker-compose.yml build
       - run:
           name: Save Docker images
           no_output_timeout: 40m
