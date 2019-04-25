@@ -67,9 +67,7 @@ jobs:
           no_output_timeout: 40m
           command: |
             docker login -u $DOCKER_USER -p $DOCKER_PASS
-            docker push tspisak/rpn-signature:latest
-            docker tag tspisak/rpn-signature tspisak/rpn-signature:$CIRCLE_TAG
-            docker push tspisak/rpn-signature:$CIRCLE_TAG
+            docker push tspisak/rpn-signature:unstable
       - persist_to_workspace:
           root: /tmp
           paths:
@@ -142,7 +140,5 @@ workflows:
           requires:
             - build
           filters:
-            branches:
-              ignore: /.*/
             tags:
-              only: /.*/
+              only: /^v.*/
