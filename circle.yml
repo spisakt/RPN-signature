@@ -44,15 +44,15 @@ jobs:
           no_output_timeout: 60m
           command: |
             # Build docker image
-            THISVERSION=0.0a
+            THISVERSION=0
             e=1 && for i in {1..5}; do
               docker build \
                 --cache-from=tspisak/rpn-signature \
                 --rm=false \
-                -t tspisak/rpn-signature:latest \
+                -t tspisak/rpn-signature:unstable \
                 --build-arg BUILD_DATE=`date -u +"%Y-%m-%dT%H:%M:%SZ"` \
                 --build-arg VCS_REF=`git rev-parse --short HEAD` \
-                --build-arg VERSION="${CIRCLE_TAG:-$THISVERSION}" . \
+                --build-arg VERSION="${CIRCLE_TAG}" . \
               && e=0 && break || sleep 15
             done && [ "$e" -eq "0" ]
       - run:
@@ -113,8 +113,9 @@ jobs:
           command: |
             if [[ -n "$DOCKER_PASS" ]]; then
               docker login -u $DOCKER_USER -p $DOCKER_PASS
+              docker tag tspisak/rpn-signature:unstable tspisak/rpn-signature:latest
               docker push tspisak/rpn-signature:latest
-              docker tag tspisak/rpn-signature tspisak/rpn-signature:$CIRCLE_TAG
+              docker tag tspisak/rpn-signature:latest tspisak/rpn-signature:$CIRCLE_TAG
               docker push tspisak/rpn-signature:$CIRCLE_TAG
             fi
             
