@@ -38,22 +38,7 @@ jobs:
               pigz -d --stdout /tmp/cache/webapi.tar.gz | docker load
             fi
             docker images
-      - run:
-          name: Prepare RPN-signature
-          command: |
-            python3 -m pip install "docker-compose==1.23.2"
-            rm -rf /tmp/src/rpn-signature
-            git clone https://github.com/spisakt/RPN-signature.git /tmp/src/rpn-signature
-            cd /tmp/src/rpn-signature
-            docker-compose -f /tmp/src/rpn-signature/dockereve-master/docker-compose.yml pull
-            docker-compose -f /tmp/src/rpn-signature/dockereve-master/docker-compose.yml build
-      - run:
-          name: Save Docker images
-          no_output_timeout: 40m
-          command: |
-            mkdir -p /tmp/cache
-            WEBAPI_IMAGES=$(docker images | grep -E 'python|swaggerapi/swagger-ui|nginx|mongo' | awk '{ printf "%s:%s ", $1, $2}')
-            docker save ${WEBAPI_IMAGES} | pigz -2 -p 3 > /tmp/cache/rpn-signature.tar.gz
+      
       - run:
           name: Build Docker image
           no_output_timeout: 60m
