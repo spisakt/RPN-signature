@@ -1,1 +1,161 @@
+version: 2
+jobs:
 
+  build:
+    environment:
+      - TZ: "/usr/share/zoneinfo/America/Los_Angeles"
+      - MRIQC_API_TAG: 1.0.6
+
+    docker:
+      - image: docker:18.01.0-ce-git
+    working_directory: /tmp/src/mriqc
+    steps:
+      - run:
+          name: Install parallel gzip and python3
+          command: apk add --no-cache pigz python3
+      - restore_cache:
+          keys:
+            - docker-v1-{{ .Branch }}-{{ epoch }}
+            - docker-v1-{{ .Branch }}-
+            - docker-v1-master-
+            - docker-v1-
+          paths:
+            - /tmp/cache/docker.tar.gz
+            - /tmp/cache/webapi.tar.gz
+
+      - checkout
+      - setup_remote_docker
+      - run:
+          name: Load Docker image layer cache
+          no_output_timeout: 30m
+          command: |
+            docker info
+            set +o pipefail
+            if [ -f /tmp/cache/docker.tar.gz ]; then
+              pigz -d --stdout /tmp/cache/docker.tar.gz | docker load
+            fi
+            if [ -f /tmp/cache/webapi.tar.gz ]; then
+              pigz -d --stdout /tmp/cache/webapi.tar.gz | docker load
+            fi
+            docker images
+      - run:
+          name: Prepare RPN-signature
+          command: |
+            python3 -m pip install "docker-compose==1.23.2"
+            rm -rf /tmp/src/rpn-signature
+            git clone https://github.com/spisakt/RPN-signature.git /tmp/src/rpn-signature
+            cd /tmp/src/rpn-signature
+            docker-compose -f /tmp/src/mriqcwebapi/dockereve-master/docker-compose.yml pull
+            docker-compose -f /tmp/src/mriqcwebapi/dockereve-master/docker-compose.yml build
+      - run:
+          name: Save Docker images
+          no_output_timeout: 40m
+          command: |
+            mkdir -p /tmp/cache
+            WEBAPI_IMAGES=$(docker images | grep -E 'python|swaggerapi/swagger-ui|nginx|mongo' | awk '{ printf "%s:%s ", $1, $2}')
+            docker save ${WEBAPI_IMAGES} | pigz -2 -p 3 > /tmp/cache/rpn-signature.tar.gz
+      - run:
+          name: Build Docker image
+          no_output_timeout: 60m
+          command: |
+            # Build docker image
+            THISVERSION=0.0a
+            e=1 && for i in {1..5}; do
+              docker build \
+                --cache-from=tspisak/rpn-signature \
+                --rm=false \
+                -t tspisak/rpn-signature:latest \
+                --build-arg BUILD_DATE=`date -u +"%Y-%m-%dT%H:%M:%SZ"` \
+                --build-arg VCS_REF=`git rev-parse --short HEAD` \
+                --build-arg VERSION="${CIRCLE_TAG:-$THISVERSION}" . \
+              && e=0 && break || sleep 15
+            done && [ "$e" -eq "0" ]
+      - run:
+          name: Docker save
+          no_output_timeout: 40m
+          command: |
+            mkdir -p /tmp/cache
+            docker save ubuntu:xenial-20161213 tspisak/rpn-signature:latest \
+              | pigz -2 -p 3 > /tmp/cache/docker.tar.gz
+      - persist_to_workspace:
+          root: /tmp
+          paths:
+            - cache/docker.tar.gz
+            - cache/rpn-signature.tar.gz
+            - src/rpn-signature
+
+
+  update_cache:
+    machine:
+      # Ubuntu 14.04 with Docker 17.10.0-ce
+      image: circleci/classic:201711-01
+    working_directory: /tmp/src/rpn-signature
+    steps:
+      - attach_workspace:
+          at: /tmp
+      - save_cache:
+         key: docker-v1-{{ .Branch }}-{{ epoch }}
+         paths:
+            - /tmp/cache/docker.tar.gz
+            - /tmp/cache/rpn-signature.tar.gz
+
+ 
+  deploy:
+    machine:
+      image: circleci/classic:201711-01
+    working_directory: /tmp/src/mriqc
+    steps:
+      - attach_workspace:
+          at: /tmp
+      - run:
+          name: Load Docker image layer cache
+          no_output_timeout: 30m
+          command: |
+            docker info
+            set +o pipefail
+            if [ -f /tmp/cache/docker.tar.gz ]; then
+              sudo apt update && sudo apt -y install pigz
+              pigz -d --stdout /tmp/cache/docker.tar.gz | docker load
+              docker images
+            fi
+      - run:
+          name: Deploy to Docker Hub
+          no_output_timeout: 40m
+          command: |
+            if [[ -n "$DOCKER_PASS" ]]; then
+              docker login -u $DOCKER_USER -p $DOCKER_PASS
+              docker push tspisak/rpn-signature:latest
+              docker tag tspisak/rpn-signature poldracklab/mriqc:$CIRCLE_TAG
+              docker push tspisak/rpn-signature:$CIRCLE_TAG
+            fi
+            
+workflows:
+  version: 2
+  build_test_deploy:
+    jobs:
+      - build:
+          filters:
+            tags:
+              only: /.*/
+
+      - update_cache:
+          requires:
+            - build
+          filters:
+            branches:
+              ignore: /docs?\/.*/
+            tags:
+              only: /.*/
+
+      - deploy:
+          requires:
+            - build
+            - test_pytest
+            - build_docs
+            - T1w
+            - bold
+          filters:
+            branches:
+              ignore: /.*/
+            tags:
+              only: /.*/
