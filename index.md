@@ -116,6 +116,7 @@ _Tamas Spisak, Balint Kincses, Frederik Schlitt, Matthias Zunhammer, Tobias Schm
 
 [![Open Source Love svg1](https://badges.frapsoft.com/os/v1/open-source.svg?v=103)](https://github.com/spisakt/RPN-signature)
 [![Maintenance](https://img.shields.io/badge/Maintained%3F-yes-green.svg)](https://github.com/spisakt/RPN-signature/graphs/commit-activity)
+[![CircleCI](https://circleci.com/gh/spisakt/pTFCE.svg?style=svg)](https://circleci.com/gh/spisakt/ptfce)
 [![GitHub license](https://img.shields.io/github/license/spisakt/RPN-signature.svg)](https://github.com/spisakt/RPN-signature/blob/master/LICENSE)
 [![GitHub release](https://img.shields.io/github/release/spisakt/RPN-signature.svg)](https://github.com/spisakt/RPN-signature/releases/)
 [![GitHub issues](https://img.shields.io/github/issues/spisakt/RPN-signature.svg)](https://GitHub.com/spisakt/RPN-signature/issues/)
