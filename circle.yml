@@ -62,13 +62,20 @@ jobs:
             mkdir -p /tmp/cache
             docker save ubuntu:xenial-20161213 tspisak/rpn-signature:latest \
               | pigz -2 -p 3 > /tmp/cache/docker.tar.gz
+      - run:
+          name: Deploy to Docker Hub
+          no_output_timeout: 40m
+          command: |
+            docker login -u $DOCKER_USER -p $DOCKER_PASS
+            docker push tspisak/rpn-signature:latest
+            docker tag tspisak/rpn-signature tspisak/rpn-signature:$CIRCLE_TAG
+            docker push tspisak/rpn-signature:$CIRCLE_TAG
       - persist_to_workspace:
           root: /tmp
           paths:
             - cache/docker.tar.gz
             - cache/rpn-signature.tar.gz
             - src/rpn-signature
-
 
   update_cache:
     machine:
@@ -84,7 +91,6 @@ jobs:
             - /tmp/cache/docker.tar.gz
             - /tmp/cache/rpn-signature.tar.gz
 
- 
   deploy:
     machine:
       image: circleci/classic:201711-01
