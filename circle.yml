@@ -111,7 +111,7 @@ jobs:
           name: Deploy to Docker Hub
           no_output_timeout: 40m
           command: |
-            if [[ -n "$DOCKER_PASS" ]]; then
+            if [[ -n "$CIRCLE_TAG" ]]; then
               docker login -u $DOCKER_USER -p $DOCKER_PASS
               docker tag tspisak/rpn-signature:unstable tspisak/rpn-signature:latest
               docker push tspisak/rpn-signature:latest
