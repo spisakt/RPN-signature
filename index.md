@@ -73,7 +73,7 @@ docker run -it --rm -v /data/nii-bids/:/data:ro -v /data/nii-bids/derivatives:/o
 tspisak/rpn-signature:latest /data /out participant
 ```
 
-_**NOTE1** Have a look at the help, there are some useful command line options:_
+_**NOTE 1** Have a look at the help, there are some useful command line options:_
 
 E.g.:
 ```bash
@@ -82,14 +82,60 @@ tspisak/rpn-signature:latest /data /out participant \
 --participant_label  004 006 007 008 009 011 --mem_gb 10 --nthreads 7 --2mm
 ```
 
-_**NOTE2** Output directory must be specified as an absolute path._
+_**NOTE 2** Output directory must be specified as an absolute path._
 
-_**NOTE3** Note that the --2mm command line option performs spatial co-registration to a 2mm-resolution template (instead of 1mm), which is much faster (total running time is approximately 50 min instead of 8 hours per subject), but was not validasted and gives slighly different (preassumably less accurate) predictions._
+_**NOTE 3** Note that the --2mm command line option performs spatial co-registration to a 2mm-resolution template (instead of 1mm), which is much faster (total running time is approximately 50 min instead of 8 hours per subject), but was not validasted and gives slighly different (preassumably less accurate) predictions._
 
-_**NOTE4** Make sure to configure Docker's resource availability to take adavantage of parallell processing._
+_**NOTE 4** Make sure to configure Docker's resource availability to take adavantage of parallell processing._
 
-_**NOTE5** Make sure to have enough free space for storing temporary files (1.5GB per subject)._
+_**NOTE 5** Make sure to have enough free space for storing temporary files (1.5GB per subject)._
 
+_**NOTE 6** Consider using the option --keep_derivatives, if you need the timeseries and connectivity data for further processing._
+
+_**NOTE 7** Do quality checking (see below) before using the predicted values and adjust brain extraction parameters with the options --bet_fract_int_thr and --bet_vertical_gradient if neccessary._
+
+## Output
+.
++-- **RPNresults.csv** : CSV-file containing the RPN-signature scores (predicted pain sensitivity) per subject.
++-- **subjectsID.txt** : text file linking data files to QC indices.
++-- **QC/** : Directory for quality check images.
+:   +-- **anat2mni/** : standardized anatomical image and the standard template overlaid on it.
+:   +-- **brain extraction/** : native-space anatomical image and the result of brain extraction overlayed on it.
+:   +-- **brain extraction_func/**: 
+:   +-- **carpet_plots/**
+:   +-- **compcor_noiseroi/**
+:   +-- **FD/**
+:   +-- **func2anat/**
+:   +-- **func2mni/**
+:   +-- **motion_correction/**
+:   +-- **regional_timeseries/**
+:   +-- **timeseries/**
+:   +-- **tissue_segmentation/**
+:
+: [if --keep_derivatives is selected]
+:
++-- **atlas.nii.gz**
++-- **anat_preproc/**
+|   +-- **anat2mni_std/**
+|   +-- **anat2mni_warpfield/**
+|   +-- **bet_brain/**
+|   +-- **brain_mask/**
+|   +-- **fast_csf/**
+|   +-- **fast_gm/**
+|   +-- **fast_wm/**
+|   +-- **funclastvol/**
++-- **func_preproc/**
+|   +-- **bet_brain/**
+|   +-- **brain_mask/**
+|   +-- **FD_scrubbed/**
+|   +-- **mc_fd/**
+|   +-- **mc_frist24/**
+|   +-- **mc_func/**
+|   +-- **mc_par/**
+|   +-- **mc_rms/**
+|   +-- **popFD_max.txt**
+|   +-- **popFD.txt**
+|   +-- **pop_percent_scrubbed.txt**
 
 
 [![Back to Top](https://iaibloggertips.files.wordpress.com/2014/05/e5406-back-to-top-button-for-blogger3-1.png)](#a-brain-based-predictive-signature-of-individual-pain-sensitivity)
