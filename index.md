@@ -9,8 +9,9 @@ Welcome to website of the RPN-signature!
 * [1. Summary](#summary)
 * [2. Inputs of the the RPN-signature](#inputs)
 * [3. Usage via Docker](#usage-with-docker)
-* [4. Running the source code (advanced)](#running-the-source-code)
-* [5. Authors and Citation](#authors)
+* [4. Output](#output)
+* [5. Running the source code (advanced)](#running-the-source-code)
+* [6. Authors and Citation](#authors)
 
 ## Summary
 Individual differences in pain percetheption are of key interest in both basic and clinical research as altered pain sensitivity is both a characteristic and a risk factor for many pain conditions. Individual susceptibility to pain is reflected in the pain-free resting-state activity and functional connectivity of the brain.
@@ -94,24 +95,11 @@ _**NOTE 6** Consider using the option --keep_derivatives, if you need the timese
 
 _**NOTE 7** Do quality checking (see below) before using the predicted values and adjust brain extraction parameters with the options --bet_fract_int_thr and --bet_vertical_gradient if neccessary._
 
+[![Back to Top](https://iaibloggertips.files.wordpress.com/2014/05/e5406-back-to-top-button-for-blogger3-1.png)](#a-brain-based-predictive-signature-of-individual-pain-sensitivity)
+
 ## Output
-. <br/> 
-+-- **RPNresults.csv** : CSV-file containing the RPN-signature scores (predicted pain sensitivity) per subject. <br/> 
-+-- <abbr title="text file linking data files to QC indices.">**subjectsID.txt**</abbr> <br/> 
-+-- **QC/** : Directory for quality check images. <br/> 
-:   +-- **anat2mni/** : standardized anatomical image and the standard template overlaid on it. <br/> 
-:   +-- **brain extraction/** : native-space anatomical image and the result of brain extraction overlayed on it. <br/> 
-:   +-- **brain extraction_func/**: <br/> 
-:   +-- **carpet_plots/** <br/> 
-:   +-- **compcor_noiseroi/** <br/> 
-:   +-- **FD/** <br/> 
-:   +-- **func2anat/** <br/> 
-:   +-- **func2mni/** <br/> 
-:   +-- **motion_correction/** <br/> 
-:   +-- **regional_timeseries/** <br/> 
-:   +-- **timeseries/** <br/> 
-:   +-- **tissue_segmentation/** <br/> 
-: <br/> 
+
+
 : [if --keep_derivatives is selected] <br/> 
 : <br/> 
 +-- **atlas.nii.gz** <br/> 
@@ -139,17 +127,22 @@ _**NOTE 7** Do quality checking (see below) before using the predicted values an
 
 ```
 output_directoiry/
-│   **RPNresults.csv**
-│   file001.txt    
+│   RPNresults.csv              (CSV-file containing the predicted pain sensitivity scores.)
+│   subjectsID.txt              (text file linking data files to QC indices)  
 │
-└───folder1
-│   │   file011.txt
-│   │   file012.txt
-│   │
-│   └───subfolder1
-│       │   file111.txt
-│       │   file112.txt
-│       │   ...
+└───QC/                         (directory for quality check images)
+│   └───anat2mni/               (standardized anatomical image and the standard template overlaid on it.)
+│   └───brain_extraction/       (native-space anatomical image and the result of brain extraction overlayed on it)
+│   └───brain_extraction_func/
+│   └───carpet_plots/
+│   └───compcor_noiseroi/
+│   └───FD/
+│   └───func2anat/
+│   └───func2mni/
+│   └───motion_correction/
+│   └───regional_timeseries/
+│   └───timeseries/
+│   └───tissue_segmentation/
 │   
 └───folder2
     │   file021.txt
