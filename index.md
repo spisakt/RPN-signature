@@ -101,45 +101,45 @@ _**NOTE 7** Do quality checking (see below) before using the predicted values an
 
 ```
 output_directory/
-│    RPNresults.csv              CSV-file containing the predicted pain sensitivity scores
-│    subjectsID.txt              text file linking data files to QC indices
-└─── QC/                         directory for quality check images
-│   └─── anat2mni/               standardized anatomical image + the standard template
-│   └─── brain_extraction/       anatomical image + the result of brain extraction 
-│   └─── brain_extraction_func/  functional image + the result of brain extraction 
-│   └─── carpet_plots/           carpet plots of preproicessing stages
-│   └─── compcor_noiseroi/       aCompCor noise ROI overlaid on the functional image
-│   └─── FD/                     framewise displacement plots
-│   └─── func2anat/              functional image in anatomical space + anatomical image 
-│   └─── func2mni/               functional image in stnadard space + standard template
-│   └─── motion_correction/      rotational and translational motion estimates
-│   └─── regional_timeseries/    carpet plot of the atlas-based regional timeseries
-│   └─── timeseries/             mean global signal timeseries of preprocessing stages
-│   └─── tissue_segmentation/    tissue segmentation maximum probability images
+│    RPNresults.csv                CSV-file containing the predicted pain sensitivity scores
+│    subjectsID.txt                text file linking data files to QC indices
+└─── QC/                           directory for quality check images
+│   └─── anat2mni/                 standardized anatomical image + the standard template
+│   └─── brain_extraction/         anatomical image + the result of brain extraction 
+│   └─── brain_extraction_func/    functional image + the result of brain extraction 
+│   └─── carpet_plots/             carpet plots of preproicessing stages
+│   └─── compcor_noiseroi/         aCompCor noise ROI overlaid on the functional image
+│   └─── FD/                       framewise displacement plots
+│   └─── func2anat/                functional image in anatomical space + anatomical image 
+│   └─── func2mni/                 functional image in stnadard space + standard template
+│   └─── motion_correction/        rotational and translational motion estimates
+│   └─── regional_timeseries/      carpet plot of the atlas-based regional timeseries
+│   └─── timeseries/               mean global signal timeseries of preprocessing stages
+│   └─── tissue_segmentation/      tissue segmentation maximum probability images
 :
 :    if --keep_derivatives is specified:
 :   
-:    atlas.nii.gz                brain atlas (MIST122) to define ROIs
-:... anat_preproc/               anatomical derivatives
-:   :... anat2mni_std/           standard-space anatomical image
-:   :... anat2mni_warpfield/     warpinf-field for standardisation (contains all steps)
-:   :... bet_brain/              brain extracted anatomical image
-:   :... brain_mask/             anatomical brain mask
-:   :... fast_csf/               CSF probability map
-:   :... fast_gm/                grey matter probability map
-:   :... fast_wm/                white matter probability map
-:... func_preproc/               functional derivatives
-    :    popFD_max.txt           mean FD values per subject
-    :    popFD.txt               max FD values per subject
-    :    pop_percent_scrubbed.txt   percent of volumes scrubbed per subject
-    :... bet_brain/              brain extracted functional image
-    :... brain_mask/             functional brain mask
-    :... FD_scrubbed/            FD timeseries after scrubbing
-    :... mc_fd/                  FD timeseries
-    :... mc_frist24/             Friston-24 expansion of motion parameters
-    :... mc_func/                motion corrected funcrtional image
-    :... mc_par/                 6 motion parameters (3 rotation, 3 translation)
-    :... mc_rms/                 root mean squared motion estimates
+:    atlas.nii.gz                  brain atlas (MIST122) to define ROIs
+:... anat_preproc/                 anatomical derivatives
+:   :... anat2mni_std/             standard-space anatomical image
+:   :... anat2mni_warpfield/       warpinf-field for standardisation (contains all steps)
+:   :... bet_brain/                brain extracted anatomical image
+:   :... brain_mask/               anatomical brain mask
+:   :... fast_csf/                 CSF probability map
+:   :... fast_gm/                  grey matter probability map
+:   :... fast_wm/                  white matter probability map
+:... func_preproc/                 functional derivatives
+    :    popFD_max.txt             mean FD values per subject
+    :    popFD.txt                 max FD values per subject
+    :    pop_percent_scrubbed.txt  percent of volumes scrubbed per subject
+    :... bet_brain/                brain extracted functional image
+    :... brain_mask/               functional brain mask
+    :... FD_scrubbed/              FD timeseries after scrubbing
+    :... mc_fd/                    FD timeseries
+    :... mc_frist24/               Friston-24 expansion of motion parameters
+    :... mc_func/                  motion corrected funcrtional image
+    :... mc_par/                   6 motion parameters (3 rotation, 3 translation)
+    :... mc_rms/                   root mean squared motion estimates
 
 ```
 
