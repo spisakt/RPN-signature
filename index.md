@@ -99,75 +99,48 @@ _**NOTE 7** Do quality checking (see below) before using the predicted values an
 
 ## Output
 
-
-+-- **** <br/> 
-+-- **/** <br/> 
-|   +-- **/** <br/> 
-|   +-- **/** <br/> 
-|   +-- **/** <br/> 
-|   +-- **/** <br/> 
-|   +-- **/** <br/> 
-|   +-- **/** <br/> 
-|   +-- **/** <br/> 
-|   +-- **/** <br/> 
-+-- **/** <br/> 
-   +-- **/** <br/> 
-   +-- **/** <br/> 
-   +-- **/** <br/> 
-   +-- **/** <br/> 
-   +-- **/** <br/> 
-   +-- **/** <br/> 
-   +-- **/** <br/> 
-   +-- **/** <br/> 
-   +-- **** <br/> 
-   +-- **** <br/> 
-   +-- **** <br/> 
-
 ```
-output_directoiry/
-│   RPNresults.csv              (CSV-file containing the predicted pain sensitivity scores.)
-│   subjectsID.txt              (text file linking data files to QC indices)  
-│
-└───QC/                         (directory for quality check images)
-│   └───anat2mni/               (standardized anatomical image and the standard template overlaid on it.)
-│   └───brain_extraction/       (native-space anatomical image and the result of brain extraction overlayed on it)
-│   └───brain_extraction_func/
-│   └───carpet_plots/
-│   └───compcor_noiseroi/
-│   └───FD/
-│   └───func2anat/
-│   └───func2mni/
-│   └───motion_correction/
-│   └───regional_timeseries/
-│   └───timeseries/
-│   └───tissue_segmentation/
+output_directory/
+│   RPNresults.csv              CSV-file containing the predicted pain sensitivity scores
+│   subjectsID.txt              text file linking data files to QC indices
+└───QC/                         directory for quality check images
+│   └───anat2mni/               standardized anatomical image and the standard template overlaid on it
+│   └───brain_extraction/       anatomical image and the result of brain extraction overlayed on it
+│   └───brain_extraction_func/  functional image and the result of brain extraction overlayed on it
+│   └───carpet_plots/           carpet plots of preproicessing stages
+│   └───compcor_noiseroi/       aCompCor noise ROI overlaid on the functional image
+│   └───FD/                     framewise displacement plots
+│   └───func2anat/              functional image in anatomical space with anatomical image overlaid on it
+│   └───func2mni/               functional image in stnadard space with the standard template overlaid on it
+│   └───motion_correction/      rotational and translational motion estimates
+│   └───regional_timeseries/    carpet plot of the atlas-based regional timeseries
+│   └───timeseries/             mean global signal timeseries of preprocessing stages
+│   └───tissue_segmentation/    tissue segmentation maximum probability images
 :
 : if --keep_derivatives is specified
 :   
-:   atlas.nii.gz
+:   atlas.nii.gz                brain atlas (MIST122) to define ROIs
 :
-:...anat_preproc/
-:   :...anat2mni_std/
-:   :...anat2mni_warpfield/
-:   :...bet_brain/
-:   :...brain_mask/
-:   :...fast_csf/
-:   :...fast_gm/
-:   :...fast_wm/
-:   :...funclastvol/
-:
-:...func_preproc/
-    :   popFD_max.txt
-    :   popFD.txt
-    :   pop_percent_scrubbed.txt
-    :...bet_brain/
-    :...brain_mask/
-    :...FD_scrubbed/
-    :...mc_fd/
-    :...mc_frist24/
-    :...mc_func/
-    :...mc_par/
-    :...mc_rms/
+:...anat_preproc/               anatomical derivatives
+:   :...anat2mni_std/           standard-space anatomical image
+:   :...anat2mni_warpfield/     warpinf-field for standardisation (contains all steps)
+:   :...bet_brain/              brain extracted anatomical image
+:   :...brain_mask/             anatomical brain mask
+:   :...fast_csf/               CSF probability map
+:   :...fast_gm/                grey matter probability map
+:   :...fast_wm/                white matter probability map
+:...func_preproc/               functional derivatives
+    :   popFD_max.txt           mean FD values per subject
+    :   popFD.txt               max FD values per subject
+    :   pop_percent_scrubbed.txt   percent of volumes scrubbed per subject
+    :...bet_brain/              brain extracted functional image
+    :...brain_mask/             functional brain mask
+    :...FD_scrubbed/            FD timeseries after scrubbing
+    :...mc_fd/                  FD timeseries
+    :...mc_frist24/             Friston-24 expansion of motion parameters
+    :...mc_func/                motion corrected funcrtional image
+    :...mc_par/                 6 motion parameters (3 rotation, 3 translation)
+    :...mc_rms/                 root mean squared motion estimates
 
 ```
 
