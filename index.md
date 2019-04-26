@@ -138,8 +138,8 @@ _**NOTE 7** Do quality checking (see below) before using the predicted values an
    +-- **pop_percent_scrubbed.txt** <br/> 
 
 ```
-project
-│   README.md
+output_directoiry/
+│   **RPNresults.csv**
 │   file001.txt    
 │
 └───folder1
