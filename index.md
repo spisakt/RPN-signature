@@ -104,14 +104,14 @@ output_directory/
 │    RPNresults.csv              CSV-file containing the predicted pain sensitivity scores
 │    subjectsID.txt              text file linking data files to QC indices
 └─── QC/                         directory for quality check images
-│   └─── anat2mni/               standardized anatomical image and the standard template overlaid on it
-│   └─── brain_extraction/       anatomical image and the result of brain extraction overlayed on it
-│   └─── brain_extraction_func/  functional image and the result of brain extraction overlayed on it
+│   └─── anat2mni/               standardized anatomical image + the standard template
+│   └─── brain_extraction/       anatomical image + the result of brain extraction 
+│   └─── brain_extraction_func/  functional image + the result of brain extraction 
 │   └─── carpet_plots/           carpet plots of preproicessing stages
 │   └─── compcor_noiseroi/       aCompCor noise ROI overlaid on the functional image
 │   └─── FD/                     framewise displacement plots
-│   └─── func2anat/              functional image in anatomical space with anatomical image overlaid on it
-│   └─── func2mni/               functional image in stnadard space with the standard template overlaid on it
+│   └─── func2anat/              functional image in anatomical space + anatomical image 
+│   └─── func2mni/               functional image in stnadard space + standard template
 │   └─── motion_correction/      rotational and translational motion estimates
 │   └─── regional_timeseries/    carpet plot of the atlas-based regional timeseries
 │   └─── timeseries/             mean global signal timeseries of preprocessing stages
