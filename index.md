@@ -100,7 +100,7 @@ _**NOTE 7** Do quality checking (see below) before using the predicted values an
 ## Output
 
 
-: [if --keep_derivatives is selected] <br/> 
+:  <br/> 
 : <br/> 
 +-- **atlas.nii.gz** <br/> 
 +-- **anat_preproc/** <br/> 
@@ -143,10 +143,13 @@ output_directoiry/
 │   └───regional_timeseries/
 │   └───timeseries/
 │   └───tissue_segmentation/
-│   
-└───folder2
-    │   file021.txt
-    │   file022.txt
+:
+: if --keep_derivatives is specified
+:
+:...folder
+    :   file021.txt
+    :   file022.txt
+    :...folder/
 ```
 
 [![Back to Top](https://iaibloggertips.files.wordpress.com/2014/05/e5406-back-to-top-button-for-blogger3-1.png)](#a-brain-based-predictive-signature-of-individual-pain-sensitivity)
