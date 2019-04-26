@@ -9,8 +9,9 @@ Welcome to website of the RPN-signature!
 * [1. Summary](#summary)
 * [2. Inputs of the the RPN-signature](#inputs)
 * [3. Usage via Docker](#usage-with-docker)
-* [4. Running the source code (advanced)](#running-the-source-code)
-* [5. Authors and Citation](#authors)
+* [4. Output](#output)
+* [5. Running the source code (advanced)](#running-the-source-code)
+* [6. Authors and Citation](#authors)
 
 ## Summary
 Individual differences in pain percetheption are of key interest in both basic and clinical research as altered pain sensitivity is both a characteristic and a risk factor for many pain conditions. Individual susceptibility to pain is reflected in the pain-free resting-state activity and functional connectivity of the brain.
@@ -94,49 +95,53 @@ _**NOTE 6** Consider using the option --keep_derivatives, if you need the timese
 
 _**NOTE 7** Do quality checking (see below) before using the predicted values and adjust brain extraction parameters with the options --bet_fract_int_thr and --bet_vertical_gradient if neccessary._
 
-## Output
-. <br/> 
-+-- **RPNresults.csv** : CSV-file containing the RPN-signature scores (predicted pain sensitivity) per subject. <br/> 
-+-- <abbr title="text file linking data files to QC indices.">**subjectsID.txt**</abbr> <br/> 
-+-- **QC/** : Directory for quality check images. <br/> 
-:   +-- **anat2mni/** : standardized anatomical image and the standard template overlaid on it. <br/> 
-:   +-- **brain extraction/** : native-space anatomical image and the result of brain extraction overlayed on it. <br/> 
-:   +-- **brain extraction_func/**: <br/> 
-:   +-- **carpet_plots/** <br/> 
-:   +-- **compcor_noiseroi/** <br/> 
-:   +-- **FD/** <br/> 
-:   +-- **func2anat/** <br/> 
-:   +-- **func2mni/** <br/> 
-:   +-- **motion_correction/** <br/> 
-:   +-- **regional_timeseries/** <br/> 
-:   +-- **timeseries/** <br/> 
-:   +-- **tissue_segmentation/** <br/> 
-: <br/> 
-: [if --keep_derivatives is selected] <br/> 
-: <br/> 
-+-- **atlas.nii.gz** <br/> 
-+-- **anat_preproc/** <br/> 
-|   +-- **anat2mni_std/** <br/> 
-|   +-- **anat2mni_warpfield/** <br/> 
-|   +-- **bet_brain/** <br/> 
-|   +-- **brain_mask/** <br/> 
-|   +-- **fast_csf/** <br/> 
-|   +-- **fast_gm/** <br/> 
-|   +-- **fast_wm/** <br/> 
-|   +-- **funclastvol/** <br/> 
-+-- **func_preproc/** <br/> 
-   +-- **bet_brain/** <br/> 
-   +-- **brain_mask/** <br/> 
-   +-- **FD_scrubbed/** <br/> 
-   +-- **mc_fd/** <br/> 
-   +-- **mc_frist24/** <br/> 
-   +-- **mc_func/** <br/> 
-   +-- **mc_par/** <br/> 
-   +-- **mc_rms/** <br/> 
-   +-- **popFD_max.txt** <br/> 
-   +-- **popFD.txt** <br/> 
-   +-- **pop_percent_scrubbed.txt** <br/> 
+[![Back to Top](https://iaibloggertips.files.wordpress.com/2014/05/e5406-back-to-top-button-for-blogger3-1.png)](#a-brain-based-predictive-signature-of-individual-pain-sensitivity)
 
+## Output
+
+```
+output_directory/
+│    RPNresults.csv              CSV-file containing the predicted pain sensitivity scores
+│    subjectsID.txt              text file linking data files to QC indices
+└─── QC/                         directory for quality check images
+│   └─── anat2mni/               standardized anatomical image + the standard template
+│   └─── brain_extraction/       anatomical image + the result of brain extraction 
+│   └─── brain_extraction_func/  functional image + the result of brain extraction 
+│   └─── carpet_plots/           carpet plots of preproicessing stages
+│   └─── compcor_noiseroi/       aCompCor noise ROI overlaid on the functional image
+│   └─── FD/                     framewise displacement plots
+│   └─── func2anat/              functional image in anatomical space + anatomical image 
+│   └─── func2mni/               functional image in stnadard space + standard template
+│   └─── motion_correction/      rotational and translational motion estimates
+│   └─── regional_timeseries/    carpet plot of the atlas-based regional timeseries
+│   └─── timeseries/             mean global signal timeseries of preprocessing stages
+│   └─── tissue_segmentation/    tissue segmentation maximum probability images
+:
+:    if --keep_derivatives is specified:
+:   
+:    atlas.nii.gz                brain atlas (MIST122) to define ROIs
+:... anat_preproc/               anatomical derivatives
+:   :... anat2mni_std/           standard-space anatomical image
+:   :... anat2mni_warpfield/     warpinf-field for standardisation (contains all steps)
+:   :... bet_brain/              brain extracted anatomical image
+:   :... brain_mask/             anatomical brain mask
+:   :... fast_csf/               CSF probability map
+:   :... fast_gm/                grey matter probability map
+:   :... fast_wm/                white matter probability map
+:... func_preproc/               functional derivatives
+    :    popFD_max.txt           mean FD values per subject
+    :    popFD.txt               max FD values per subject
+    :    pop_percent_scrubbed.txt   percent of volumes scrubbed per subject
+    :... bet_brain/              brain extracted functional image
+    :... brain_mask/             functional brain mask
+    :... FD_scrubbed/            FD timeseries after scrubbing
+    :... mc_fd/                  FD timeseries
+    :... mc_frist24/             Friston-24 expansion of motion parameters
+    :... mc_func/                motion corrected funcrtional image
+    :... mc_par/                 6 motion parameters (3 rotation, 3 translation)
+    :... mc_rms/                 root mean squared motion estimates
+
+```
 
 [![Back to Top](https://iaibloggertips.files.wordpress.com/2014/05/e5406-back-to-top-button-for-blogger3-1.png)](#a-brain-based-predictive-signature-of-individual-pain-sensitivity)
 ## Running the source code
