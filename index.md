@@ -95,8 +95,8 @@ _**NOTE 6** Consider using the option --keep_derivatives, if you need the timese
 _**NOTE 7** Do quality checking (see below) before using the predicted values and adjust brain extraction parameters with the options --bet_fract_int_thr and --bet_vertical_gradient if neccessary._
 
 ## Output
-.
-+-- <abbr title="CSV-file containing the RPN-signature scores (predicted pain sensitivity) per subject.">**RPNresults.csv**</abbr> <br/> 
+. <br/> 
++-- **RPNresults.csv** : CSV-file containing the RPN-signature scores (predicted pain sensitivity) per subject. <br/> 
 +-- <abbr title="text file linking data files to QC indices.">**subjectsID.txt**</abbr> <br/> 
 +-- **QC/** : Directory for quality check images. <br/> 
 :   +-- **anat2mni/** : standardized anatomical image and the standard template overlaid on it. <br/> 
@@ -107,35 +107,35 @@ _**NOTE 7** Do quality checking (see below) before using the predicted values an
 :   +-- **FD/** <br/> 
 :   +-- **func2anat/** <br/> 
 :   +-- **func2mni/** <br/> 
-:   +-- **motion_correction/**
-:   +-- **regional_timeseries/**
-:   +-- **timeseries/**
-:   +-- **tissue_segmentation/**
-:
-: [if --keep_derivatives is selected]
-:
-+-- **atlas.nii.gz**
-+-- **anat_preproc/**
-|   +-- **anat2mni_std/**
-|   +-- **anat2mni_warpfield/**
-|   +-- **bet_brain/**
-|   +-- **brain_mask/**
-|   +-- **fast_csf/**
-|   +-- **fast_gm/**
-|   +-- **fast_wm/**
-|   +-- **funclastvol/**
-+-- **func_preproc/**
-|   +-- **bet_brain/**
-|   +-- **brain_mask/**
-|   +-- **FD_scrubbed/**
-|   +-- **mc_fd/**
-|   +-- **mc_frist24/**
-|   +-- **mc_func/**
-|   +-- **mc_par/**
-|   +-- **mc_rms/**
-|   +-- **popFD_max.txt**
-|   +-- **popFD.txt**
-|   +-- **pop_percent_scrubbed.txt**
+:   +-- **motion_correction/** <br/> 
+:   +-- **regional_timeseries/** <br/> 
+:   +-- **timeseries/** <br/> 
+:   +-- **tissue_segmentation/** <br/> 
+: <br/> 
+: [if --keep_derivatives is selected] <br/> 
+: <br/> 
++-- **atlas.nii.gz** <br/> 
++-- **anat_preproc/** <br/> 
+|   +-- **anat2mni_std/** <br/> 
+|   +-- **anat2mni_warpfield/** <br/> 
+|   +-- **bet_brain/** <br/> 
+|   +-- **brain_mask/** <br/> 
+|   +-- **fast_csf/** <br/> 
+|   +-- **fast_gm/** <br/> 
+|   +-- **fast_wm/** <br/> 
+|   +-- **funclastvol/** <br/> 
++-- **func_preproc/** <br/> 
+   +-- **bet_brain/** <br/> 
+   +-- **brain_mask/** <br/> 
+   +-- **FD_scrubbed/** <br/> 
+   +-- **mc_fd/** <br/> 
+   +-- **mc_frist24/** <br/> 
+   +-- **mc_func/** <br/> 
+   +-- **mc_par/** <br/> 
+   +-- **mc_rms/** <br/> 
+   +-- **popFD_max.txt** <br/> 
+   +-- **popFD.txt** <br/> 
+   +-- **pop_percent_scrubbed.txt** <br/> 
 
 
 [![Back to Top](https://iaibloggertips.files.wordpress.com/2014/05/e5406-back-to-top-button-for-blogger3-1.png)](#a-brain-based-predictive-signature-of-individual-pain-sensitivity)
