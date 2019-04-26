@@ -100,30 +100,28 @@ _**NOTE 7** Do quality checking (see below) before using the predicted values an
 ## Output
 
 
-:  <br/> 
-: <br/> 
-+-- **atlas.nii.gz** <br/> 
-+-- **anat_preproc/** <br/> 
-|   +-- **anat2mni_std/** <br/> 
-|   +-- **anat2mni_warpfield/** <br/> 
-|   +-- **bet_brain/** <br/> 
-|   +-- **brain_mask/** <br/> 
-|   +-- **fast_csf/** <br/> 
-|   +-- **fast_gm/** <br/> 
-|   +-- **fast_wm/** <br/> 
-|   +-- **funclastvol/** <br/> 
-+-- **func_preproc/** <br/> 
-   +-- **bet_brain/** <br/> 
-   +-- **brain_mask/** <br/> 
-   +-- **FD_scrubbed/** <br/> 
-   +-- **mc_fd/** <br/> 
-   +-- **mc_frist24/** <br/> 
-   +-- **mc_func/** <br/> 
-   +-- **mc_par/** <br/> 
-   +-- **mc_rms/** <br/> 
-   +-- **popFD_max.txt** <br/> 
-   +-- **popFD.txt** <br/> 
-   +-- **pop_percent_scrubbed.txt** <br/> 
++-- **** <br/> 
++-- **/** <br/> 
+|   +-- **/** <br/> 
+|   +-- **/** <br/> 
+|   +-- **/** <br/> 
+|   +-- **/** <br/> 
+|   +-- **/** <br/> 
+|   +-- **/** <br/> 
+|   +-- **/** <br/> 
+|   +-- **/** <br/> 
++-- **/** <br/> 
+   +-- **/** <br/> 
+   +-- **/** <br/> 
+   +-- **/** <br/> 
+   +-- **/** <br/> 
+   +-- **/** <br/> 
+   +-- **/** <br/> 
+   +-- **/** <br/> 
+   +-- **/** <br/> 
+   +-- **** <br/> 
+   +-- **** <br/> 
+   +-- **** <br/> 
 
 ```
 output_directoiry/
@@ -145,11 +143,32 @@ output_directoiry/
 │   └───tissue_segmentation/
 :
 : if --keep_derivatives is specified
+:   
+:   atlas.nii.gz
 :
-:...folder
-    :   file021.txt
-    :   file022.txt
-    :...folder/
+:...anat_preproc/
+:   :...anat2mni_std/
+:   :...anat2mni_warpfield/
+:   :...bet_brain/
+:   :...brain_mask/
+:   :...fast_csf/
+:   :...fast_gm/
+:   :...fast_wm/
+:   :...funclastvol/
+:
+:...func_preproc/
+    :   popFD_max.txt
+    :   popFD.txt
+    :   pop_percent_scrubbed.txt
+    :...bet_brain/
+    :...brain_mask/
+    :...FD_scrubbed/
+    :...mc_fd/
+    :...mc_frist24/
+    :...mc_func/
+    :...mc_par/
+    :...mc_rms/
+
 ```
 
 [![Back to Top](https://iaibloggertips.files.wordpress.com/2014/05/e5406-back-to-top-button-for-blogger3-1.png)](#a-brain-based-predictive-signature-of-individual-pain-sensitivity)
