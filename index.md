@@ -117,10 +117,9 @@ output_directory/
 │   └───timeseries/             mean global signal timeseries of preprocessing stages
 │   └───tissue_segmentation/    tissue segmentation maximum probability images
 :
-: if --keep_derivatives is specified
+: if --keep_derivatives is specified:
 :   
 :   atlas.nii.gz                brain atlas (MIST122) to define ROIs
-:
 :...anat_preproc/               anatomical derivatives
 :   :...anat2mni_std/           standard-space anatomical image
 :   :...anat2mni_warpfield/     warpinf-field for standardisation (contains all steps)
