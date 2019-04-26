@@ -96,17 +96,17 @@ _**NOTE 7** Do quality checking (see below) before using the predicted values an
 
 ## Output
 .
-+-- **RPNresults.csv** : CSV-file containing the RPN-signature scores (predicted pain sensitivity) per subject.
-+-- **subjectsID.txt** : text file linking data files to QC indices.
-+-- **QC/** : Directory for quality check images.
-:   +-- **anat2mni/** : standardized anatomical image and the standard template overlaid on it.
-:   +-- **brain extraction/** : native-space anatomical image and the result of brain extraction overlayed on it.
-:   +-- **brain extraction_func/**: 
-:   +-- **carpet_plots/**
-:   +-- **compcor_noiseroi/**
-:   +-- **FD/**
-:   +-- **func2anat/**
-:   +-- **func2mni/**
++-- <abbr title="CSV-file containing the RPN-signature scores (predicted pain sensitivity) per subject.">**RPNresults.csv**</abbr> <br/> 
++-- <abbr title="text file linking data files to QC indices.">**subjectsID.txt**</abbr> <br/> 
++-- **QC/** : Directory for quality check images. <br/> 
+:   +-- **anat2mni/** : standardized anatomical image and the standard template overlaid on it. <br/> 
+:   +-- **brain extraction/** : native-space anatomical image and the result of brain extraction overlayed on it. <br/> 
+:   +-- **brain extraction_func/**: <br/> 
+:   +-- **carpet_plots/** <br/> 
+:   +-- **compcor_noiseroi/** <br/> 
+:   +-- **FD/** <br/> 
+:   +-- **func2anat/** <br/> 
+:   +-- **func2mni/** <br/> 
 :   +-- **motion_correction/**
 :   +-- **regional_timeseries/**
 :   +-- **timeseries/**
