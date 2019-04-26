@@ -137,6 +137,24 @@ _**NOTE 7** Do quality checking (see below) before using the predicted values an
    +-- **popFD.txt** <br/> 
    +-- **pop_percent_scrubbed.txt** <br/> 
 
+```
+project
+│   README.md
+│   file001.txt    
+│
+└───folder1
+│   │   file011.txt
+│   │   file012.txt
+│   │
+│   └───subfolder1
+│       │   file111.txt
+│       │   file112.txt
+│       │   ...
+│   
+└───folder2
+    │   file021.txt
+    │   file022.txt
+```
 
 [![Back to Top](https://iaibloggertips.files.wordpress.com/2014/05/e5406-back-to-top-button-for-blogger3-1.png)](#a-brain-based-predictive-signature-of-individual-pain-sensitivity)
 ## Running the source code
