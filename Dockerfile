@@ -107,13 +107,14 @@ RUN conda install -y python=2.7.13 \
                      libxslt=1.1.32 \
                      graphviz=2.40.1 \
                      traits=4.6.0 \
+                     statsmodels=0.9.0 \
                      zlib; sync && \
     chmod -R a+rX /usr/local/miniconda; sync && \
     chmod +x /usr/local/miniconda/bin/*; sync && \
     conda build purge-all; sync && \
     conda clean -tipsy && sync
 
-RUN pip install nipype==1.1.9 psutil==5.4.8 bids==0.0 nilearn==0.5.0
+RUN pip install nipype==1.1.9 psutil==5.4.8 bids==0.0 nilearn==0.5.0 seaborn==0.9.0
 
 # Unless otherwise specified each process should only use one thread - nipype
 # will handle parallelization
@@ -133,7 +134,7 @@ RUN git clone https://github.com/spisakt/PUMI.git /home/rpn-signature/src/PUMI
 # Installing RPN-signature
 RUN git clone https://github.com/spisakt/RPN-signature.git /home/rpn-signature/src/RPN-signature
 
-ENV PYTHONPATH=/home/rpn-signature/src/
+ENV PYTHONPATH=/home/rpn-signature/src/:/home/rpn-signature/src/RPN-signature
 ENV FSLOUTPUTTYPE=NIFTI_GZ
 
 RUN ls /home/rpn-signature/src/RPN-signature/data
