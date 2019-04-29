@@ -48,6 +48,7 @@ import PUMI.utils.utils_convert as utils_convert
 import PUMI.utils.globals as globals
 import PUMI.connectivity.TimeseriesExtractor as tsext
 
+############ this part follows the BIDS-app specification ##############################################################
 # parse command line arguments
 from argparse import ArgumentParser
 from argparse import RawTextHelpFormatter
@@ -73,7 +74,7 @@ g_bids.add_argument('--participant_label', '--participant-label', action='store'
                          'identifier (the sub- prefix can be removed)')
 g_bids.add_argument('-t', '--task-id', action='store',
                         help='select a specific task to be processed (resting-state recommended for the rpn-signature)')
-g_bids.add_argument('--echo-idx', action='store', type=int,
+g_bids.add_argument('--echo_idx, --echo-idx', action='store', type=int,
                     help='select a specific echo to be processed in a multiecho series')
 
 g_set = parser.add_argument_group('Settings for the RPN-signature calculation')
@@ -93,8 +94,8 @@ g_perfm = parser.add_argument_group('Options to handle performance')
 g_perfm.add_argument('--nthreads', '--n_cpus', '-n-cpus', action='store', type=int,
                      default=psutil.cpu_count(logical=True),
                      help='maximum number of threads across all processes')
-g_perfm.add_argument('--omp-nthreads', action='store', type=int, default=2,
-                         help='maximum number of threads per-process')
+#g_perfm.add_argument('--omp-nthreads', action='store', type=int, default=2, # ToDo: implement this
+#                         help='maximum number of threads per-process')
 g_perfm.add_argument('--mem_gb', '--mem-gb', action='store', default=psutil.virtual_memory().total/(1024*1024*1024), type=int,
                          help='upper bound memory limit for ROPN-signature processes')
 g_perfm.add_argument('--template_2mm', '--template-2mm', '--2mm', action='store_true', default=False,
@@ -104,6 +105,8 @@ opts = parser.parse_args()
 
 globals._SinkDir_ = opts.output_dir
 _MISTDIR_ = opts.atlas
+
+############ this part follows the BIDS-app specification ##############################################################
 
 ##############################
 if (opts.template_2mm):
@@ -145,10 +148,21 @@ bids_dir = opts.bids_dir
 # create BIDS data grabber
 datagrab = pe.Node(io.BIDSDataGrabber(), name='data_grabber')
 datagrab.inputs.base_dir = bids_dir
-print "*********************"
-print opts.participant_label
+
+# BIDS filtering
+if opts.t and opts.echo_idx:
+    datagrab.inputs.output_query['bold'] = dict(datatype='func', task=opts.t, echo=opts.echo_idx)
+elif opts.t:
+    datagrab.inputs.output_query['bold'] = dict(datatype='func', task=opts.t)
+elif opts.echo_idx:
+    datagrab.inputs.output_query['bold'] = dict(datatype='func', echo=opts.echo_idx)
+
+print "Participants selected:"
 if (opts.participant_label):
     datagrab.inputs.subject = opts.participant_label
+    print opts.participant_label
+else:
+    print "all participants in dataset"
 
 # sink: file - idx relationship!!
 pop_id = pe.Node(interface=utils_convert.List2TxtFile,
