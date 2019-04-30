@@ -188,7 +188,6 @@ path.join(path.dirname(__file__),"../data/essen-sample/framewise_displacement/FD
 path.join(path.dirname(__file__),"../data/essen-sample/framewise_displacement/FD_essen-003_pumi-42_pumi+043.txt"),
 path.join(path.dirname(__file__),"../data/essen-sample/framewise_displacement/FD_essen-004_pumi-41_pumi+042.txt"),
 path.join(path.dirname(__file__),"../data/essen-sample/framewise_displacement/FD_essen-005_pumi-18_pumi+019.txt"),
-#path.join(path.dirname(__file__),"../data/essen-sample/framewise_displacement/FD_essen-005_pumi-40_pumi+041.txt"),
 path.join(path.dirname(__file__),"../data/essen-sample/framewise_displacement/FD_essen-006_pumi-39_pumi+040.txt"),
 path.join(path.dirname(__file__),"../data/essen-sample/framewise_displacement/FD_essen-007_pumi-38_pumi+039.txt"),
 path.join(path.dirname(__file__),"../data/essen-sample/framewise_displacement/FD_essen-008_pumi-37_pumi+038.txt"),
