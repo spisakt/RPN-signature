@@ -80,7 +80,7 @@ E.g.:
 ```bash
 docker run -it --rm -v /data/nii-bids/:/data:ro -v /data/nii-bids/derivatives:/out \
 tspisak/rpn-signature:latest /data /out participant \
---participant_label  004 006 007 008 009 011 --mem_gb 10 --nthreads 7 --2mm
+--participant_label  001 002 003 005 008 013 021 034 --mem_gb 10 --nthreads 7 --2mm
 ```
 
 _**NOTE 2** Output directory must be specified as an absolute path._
