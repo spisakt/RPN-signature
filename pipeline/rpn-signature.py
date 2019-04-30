@@ -265,7 +265,7 @@ def calculate_connectivity(ts_files, fd_files):
     df['medianFD'] = median_FD
     df['maxFD'] = max_FD
     df['ts_file'] = ts_files
-    df['fd_file'] = ts_files
+    df['fd_file'] = fd_files
 
     # load timeseries data
     ts, labels = conn.load_timeseries(ts_files, df, scrubbing=True,
@@ -360,10 +360,10 @@ if not opts.keep_derivatives:
     except OSError as ex:
         print(ex)
 
-    try:
-        os.remove(globals._SinkDir_ + "/" + "subjectsIDs.txt")
-    except OSError as ex:
-        print(ex)
+    #try:
+    #    os.remove(globals._SinkDir_ + "/" + "subjectsIDs.txt")
+    #except OSError as ex:
+    #    print(ex)
 
     try:
         os.remove(globals._SinkDir_ + "/" + "atlas.nii.gz")
