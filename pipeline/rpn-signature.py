@@ -24,7 +24,7 @@
 # - computes partial correlation matrix based on the normalised regional timeseries
 #
 # And finally:
-# - computing the pain sensitivity score
+# - computing the pain sensitivity score based on the serialized predictive model
 
 
 # start it like:
@@ -72,7 +72,7 @@ g_bids = parser.add_argument_group('Options for filtering BIDS queries')
 g_bids.add_argument('--participant_label', '--participant-label', action='store', nargs='+',
                     help='a space delimited list of participant identifiers or a single '
                          'identifier (the sub- prefix can be removed)')
-g_bids.add_argument('-t', '--task-id', action='store',
+g_bids.add_argument('-t', '--task-id', '--task_id', action='store',
                         help='select a specific task to be processed (resting-state recommended for the rpn-signature)')
 g_bids.add_argument('--echo_idx, --echo-idx', action='store', type=int,
                     help='select a specific echo to be processed in a multiecho series')
@@ -150,9 +150,9 @@ datagrab = pe.Node(io.BIDSDataGrabber(), name='data_grabber')
 datagrab.inputs.base_dir = bids_dir
 
 # BIDS filtering
-if opts.t and opts.echo_idx:
+if opts.task_id and opts.echo_idx:
     datagrab.inputs.output_query['bold'] = dict(datatype='func', task=opts.t, echo=opts.echo_idx)
-elif opts.t:
+elif opts.task_id:
     datagrab.inputs.output_query['bold'] = dict(datatype='func', task=opts.t)
 elif opts.echo_idx:
     datagrab.inputs.output_query['bold'] = dict(datatype='func', echo=opts.echo_idx)
