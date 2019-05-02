@@ -1,6 +1,6 @@
 # The Resting-state Pain susceptibility Network signature.
 
-Please refer to the website: https://spisakt.github.io/RPN-signature
+Please refer to the website: https://spisakt.github.io/RPN-signature ![Twitter](https://img.shields.io/twitter/url/http/shields.io.svg)
 
 [![GitHub license](https://img.shields.io/github/license/spisakt/RPN-signature.svg)](https://github.com/spisakt/RPN-signature/blob/master/LICENSE)
 [![GitHub release](https://img.shields.io/github/release/spisakt/RPN-signature.svg)](https://github.com/spisakt/RPN-signature/releases/)
@@ -10,8 +10,5 @@ Please refer to the website: https://spisakt.github.io/RPN-signature
 ![Docker Pulls](https://img.shields.io/docker/pulls/tspisak/rpn-signature.svg)
 [![GitHub issues](https://img.shields.io/github/issues/spisakt/RPN-signature.svg)](https://GitHub.com/spisakt/RPN-signature/issues/)
 [![GitHub issues-closed](https://img.shields.io/github/issues-closed/spisakt/RPN-signature.svg)](https://GitHub.com/spisakt/RPN-signature/issues?q=is%3Aissue+is%3Aclosed)
-
-
-![Twitter](https://img.shields.io/twitter/url/http/shields.io.svg)
 
 ![image](img/logo.png)
