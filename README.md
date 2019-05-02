@@ -2,8 +2,6 @@
 
 Please refer to the website: https://spisakt.github.io/RPN-signature
 
-![Twitter](https://img.shields.io/twitter/url/http/shields.io.svg)
-
 [![GitHub license](https://img.shields.io/github/license/spisakt/RPN-signature.svg)](https://github.com/spisakt/RPN-signature/blob/master/LICENSE)
 [![GitHub release](https://img.shields.io/github/release/spisakt/RPN-signature.svg)](https://github.com/spisakt/RPN-signature/releases/)
 [![CircleCI](https://circleci.com/gh/spisakt/pTFCE.svg?style=svg)](https://circleci.com/gh/spisakt/ptfce)
