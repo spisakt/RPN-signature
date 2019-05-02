@@ -32,6 +32,7 @@
 
 
 import os
+import sys
 import psutil
 
 import nipype
@@ -53,10 +54,16 @@ import PUMI.connectivity.TimeseriesExtractor as tsext
 from argparse import ArgumentParser
 from argparse import RawTextHelpFormatter
 
+ver = open("_version", "r")
+__version__ = ver.readline()
+ver.close()
+
 parser = ArgumentParser(description='RPN-signature: Resting-state Pain susceptibility Network signature'
                         'to predict individual pain sensitivity based on resting-state fMRI.\n'
                         'Webpage: https://spisakt.github.io/RPN-signature/',
                             formatter_class=RawTextHelpFormatter)
+
+parser.add_argument('--version', '-v', '--ver', action='version', version='RPN-signature ' + __version__)
 
 parser.add_argument('bids_dir', action='store',
                         help='the root folder of a BIDS valid dataset (sub-XXXXX folders should '
@@ -74,7 +81,7 @@ g_bids.add_argument('--participant_label', '--participant-label', action='store'
                          'identifier (the sub- prefix can be removed)')
 g_bids.add_argument('-t', '--task-id', '--task_id', action='store',
                         help='select a specific task to be processed (resting-state recommended for the rpn-signature)')
-g_bids.add_argument('--echo_idx, --echo-idx', action='store', type=int,
+g_bids.add_argument('--echo_idx', '--echo-idx', action='store', type=int,
                     help='select a specific echo to be processed in a multiecho series')
 
 g_set = parser.add_argument_group('Settings for the RPN-signature calculation')
@@ -102,6 +109,7 @@ g_perfm.add_argument('--template_2mm', '--template-2mm', '--2mm', action='store_
                          help='normalize to 2mm template (faster but less accurate prediction)')
 
 opts = parser.parse_args()
+
 
 globals._SinkDir_ = opts.output_dir
 _MISTDIR_ = opts.atlas
