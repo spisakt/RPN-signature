@@ -32,7 +32,6 @@
 
 
 import os
-import sys
 import psutil
 
 import nipype
@@ -54,7 +53,7 @@ import PUMI.connectivity.TimeseriesExtractor as tsext
 from argparse import ArgumentParser
 from argparse import RawTextHelpFormatter
 
-ver = open("_version", "r")
+ver = open(os.path.join(os.path.dirname(__file__),"../_version"), "r")
 __version__ = ver.readline()
 ver.close()
 
