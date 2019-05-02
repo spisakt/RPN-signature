@@ -129,17 +129,18 @@ output_directory/
 :   :... fast_gm/                  grey matter probability map
 :   :... fast_wm/                  white matter probability map
 :... func_preproc/                 functional derivatives
-    :    popFD_max.txt             mean FD values per subject
-    :    popFD.txt                 max FD values per subject
-    :    pop_percent_scrubbed.txt  percent of volumes scrubbed per subject
-    :... bet_brain/                brain extracted functional image
-    :... brain_mask/               functional brain mask
-    :... FD_scrubbed/              FD timeseries after scrubbing
-    :... mc_fd/                    FD timeseries
-    :... mc_frist24/               Friston-24 expansion of motion parameters
-    :... mc_func/                  motion corrected funcrtional image
-    :... mc_par/                   6 motion parameters (3 rotation, 3 translation)
-    :... mc_rms/                   root mean squared motion estimates
+:   :    popFD_max.txt             mean FD values per subject
+:   :    popFD.txt                 max FD values per subject
+:   :    pop_percent_scrubbed.txt  percent of volumes scrubbed per subject
+:   :... bet_brain/                brain extracted functional image
+:   :... brain_mask/               functional brain mask
+:   :... FD_scrubbed/              FD timeseries after scrubbing
+:   :... mc_fd/                    FD timeseries
+:   :... mc_frist24/               Friston-24 expansion of motion parameters
+:   :... mc_func/                  motion corrected funcrtional image
+:   :... mc_par/                   6 motion parameters (3 rotation, 3 translation)
+:   :... mc_rms/                   root mean squared motion estimates
+:... regional-timeseries           regional timeseries in tab separated format
 
 ```
 
