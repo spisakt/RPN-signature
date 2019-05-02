@@ -12,6 +12,6 @@ Please refer to the website: https://spisakt.github.io/RPN-signature
 [![GitHub issues-closed](https://img.shields.io/github/issues-closed/spisakt/RPN-signature.svg)](https://GitHub.com/spisakt/RPN-signature/issues?q=is%3Aissue+is%3Aclosed)
 
 
-[![Twitter](https://img.shields.io/twitter/url/http/shields.io.svg)
+![Twitter](https://img.shields.io/twitter/url/http/shields.io.svg)
 
 ![image](img/logo.png)
