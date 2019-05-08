@@ -113,6 +113,9 @@ opts = parser.parse_args()
 globals._SinkDir_ = opts.output_dir
 _MISTDIR_ = opts.atlas
 
+_scrub_threshold_ = 0.15
+# ToDo: make motion thresholds parametrisable
+
 ############ this part follows the BIDS-app specification ##############################################################
 
 ##############################
@@ -258,6 +261,7 @@ def calculate_connectivity(ts_files, fd_files):
     mean_FD = []
     median_FD = []
     max_FD = []
+    perc_scrubbed = []
     for f in fd_files:
         fd = pd.read_csv(f, sep="\t").values.flatten()
         fd = np.insert(fd, 0, 0)
@@ -265,25 +269,29 @@ def calculate_connectivity(ts_files, fd_files):
         mean_FD.append(fd.mean())
         median_FD.append(np.median(fd))
         max_FD.append(fd.max())
+        perc_scrubbed.append(100 - 100 * len(fd) / len(fd[fd > _scrub_threshold_]))
 
     df = pd.DataFrame()
 
+    df['ts_file'] = ts_files
+    df['fd_file'] = fd_files
     df['meanFD'] = mean_FD
     df['medianFD'] = median_FD
     df['maxFD'] = max_FD
-    df['ts_file'] = ts_files
-    df['fd_file'] = fd_files
 
     # load timeseries data
     ts, labels = conn.load_timeseries(ts_files, df, scrubbing=True,
-                                 scrub_threshold=0.15)
+                                 scrub_threshold=_scrub_threshold_)
     features, cm = conn.connectivity_matrix(np.array(ts))
 
-    return features, df
+    mot_file = "motion.csv"
+    df.to_csv(mot_file)
+
+    return features, os.path.abspath(mot_file)
 
 
 conn = pe.Node(util.Function(input_names=['ts_files', 'fd_files'],
-                             output_names=['features', 'df'],
+                             output_names=['features', 'motion'],
                              function=calculate_connectivity), name="calculate_connectivity")
 totalWorkflow.connect(extract_timeseries, 'outputspec.timeseries', conn, 'ts_files')
 totalWorkflow.connect(myfuncproc, 'outputspec.FD', conn, 'fd_files')
@@ -315,6 +323,11 @@ predict = pe.Node(util.Function(input_names=['X', 'in_files'],
 
 totalWorkflow.connect(conn, 'features', predict, 'X')
 totalWorkflow.connect(datagrab, 'bold', predict, 'in_files')
+
+ds_mot = pe.Node(interface=io.DataSink(), name='ds_mot')
+ds_mot.inputs.regexp_substitutions = [("(\/)[^\/]*$", "summary.csv")]
+ds_mot.inputs.base_directory = globals._SinkDir_
+totalWorkflow.connect(conn, 'motion', ds_mot, 'motion_')
 
 ds_pred = pe.Node(interface=io.DataSink(), name='ds_pred')
 ds_pred.inputs.regexp_substitutions = [("(\/)[^\/]*$", "results.csv")]
