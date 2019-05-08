@@ -269,7 +269,7 @@ def calculate_connectivity(ts_files, fd_files):
         mean_FD.append(fd.mean())
         median_FD.append(np.median(fd))
         max_FD.append(fd.max())
-        perc_scrubbed.append(100 - 100 * len(fd) / len(fd[fd > _scrub_threshold_]))
+        perc_scrubbed.append(100 - 100 * len(fd) / len(fd[fd <= _scrub_threshold_]))
 
     df = pd.DataFrame()
 
@@ -278,6 +278,7 @@ def calculate_connectivity(ts_files, fd_files):
     df['meanFD'] = mean_FD
     df['medianFD'] = median_FD
     df['maxFD'] = max_FD
+    df['perc_scrubbed'] = perc_scrubbed
 
     # load timeseries data
     ts, labels = conn.load_timeseries(ts_files, df, scrubbing=True,
