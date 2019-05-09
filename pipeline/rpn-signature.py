@@ -113,7 +113,6 @@ opts = parser.parse_args()
 globals._SinkDir_ = opts.output_dir
 _MISTDIR_ = opts.atlas
 
-_scrub_threshold_ = 0.15
 # ToDo: make motion thresholds parametrisable
 
 ############ this part follows the BIDS-app specification ##############################################################
@@ -251,7 +250,7 @@ totalWorkflow.connect(myfuncproc, 'outputspec.FD', extract_timeseries, 'inputspe
 #totalWorkflow.connect(myfuncproc, 'outputspec.FD', extract_timeseries_scrubbed, 'inputspec.confounds')
 
 # Calculate RPN-score: prediction of pain sensitivity
-def calculate_connectivity(ts_files, fd_files):
+def calculate_connectivity(ts_files, fd_files, _scrub_threshold_ = 0.15):
     # load FD data
     import pandas as pd
     import numpy as np
