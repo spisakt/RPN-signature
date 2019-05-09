@@ -91,9 +91,9 @@ g_set.add_argument('--keep_derivatives', '--keep_derivatives', '--keep_der', '--
                          help='keep derivatives (preprocessed image files and regional timeseries)')
 
 g_comp = parser.add_argument_group('Options for optimizing computations')
-g_comp.add_argument('--bet_fract_int_thr', action='store', type=float, default=0.4,
+g_comp.add_argument('--bet_fract_int_thr', action='store', type=float, default=0.3,
                     help='fractional intensity threshold for FSL brain extraction')
-g_comp.add_argument('--bet_vertical_gradient', action='store', type=float, default=-0.1,
+g_comp.add_argument('--bet_vertical_gradient', action='store', type=float, default=-0.3,
                     help='vertical gradient value for FSL brain extraction')
 
 g_perfm = parser.add_argument_group('Options to handle performance')
