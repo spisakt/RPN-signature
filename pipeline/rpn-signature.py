@@ -160,9 +160,9 @@ datagrab.inputs.base_dir = bids_dir
 
 # BIDS filtering
 if opts.task_id and opts.echo_idx:
-    datagrab.inputs.output_query['bold'] = dict(datatype='func', task=opts.t, echo=opts.echo_idx)
+    datagrab.inputs.output_query['bold'] = dict(datatype='func', task=opts.task_id, echo=opts.echo_idx)
 elif opts.task_id:
-    datagrab.inputs.output_query['bold'] = dict(datatype='func', task=opts.t)
+    datagrab.inputs.output_query['bold'] = dict(datatype='func', task=opts.task_id)
 elif opts.echo_idx:
     datagrab.inputs.output_query['bold'] = dict(datatype='func', echo=opts.echo_idx)
 
@@ -252,6 +252,7 @@ totalWorkflow.connect(myfuncproc, 'outputspec.FD', extract_timeseries, 'inputspe
 # Calculate RPN-score: prediction of pain sensitivity
 def calculate_connectivity(ts_files, fd_files, _scrub_threshold_ = 0.15):
     # load FD data
+    import os
     import pandas as pd
     import numpy as np
     import PAINTeR.connectivity as conn
