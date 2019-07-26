@@ -102,7 +102,7 @@ def train(X, y, model, p_grid, nested=False, model_averaging=True, ):
     else:
         all_models = [model]
 
-    model.fit(X, y) # fot to whole data
+    model.fit(X, y) # fit to whole data
 
     return model, avg_model, all_models
 

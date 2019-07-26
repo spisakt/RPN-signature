@@ -299,3 +299,79 @@ p_value, r_2, residual, regline =  model.pred_stat(table_essen[var], table_essen
 print "{:.3f}".format(r_2) + "\t" + "{:.3f}".format(p_value)
 p_value, r_2, residual, regline =  model.pred_stat(table_szeged[var], table_szeged['prediction'])
 print "{:.3f}".format(r_2) + "\t" + "{:.3f}".format(p_value)
+
+#
+table_szeged['mean_QST_pain_sensitivity']=table_szeged['mean_QST_pain_sensitivity']-np.mean(table_szeged['mean_QST_pain_sensitivity'])
+
+
+from sklearn.metrics import mean_absolute_error, mean_squared_error
+from mlxtend.evaluate import permutation_test
+
+p_value = permutation_test(table_bochum['mean_QST_pain_sensitivity'], table_bochum['prediction'],
+                           method='approximate',
+                           func=lambda x, y: np.corrcoef(x, y)[1][0],
+                           num_rounds=10000,
+                           seed=0)
+
+print("Bochum, corr:")
+print(p_value)
+p_value = permutation_test(table_bochum['mean_QST_pain_sensitivity'], table_bochum['prediction'],
+                           method='approximate',
+                           func=lambda x, y: -mean_absolute_error(x, y),
+                           num_rounds=10000,
+                           seed=0)
+print("Bochum, MAE:")
+print(p_value)
+p_value = permutation_test(table_bochum['mean_QST_pain_sensitivity'], table_bochum['prediction'],
+                           method='approximate',
+                           func=lambda x, y: -mean_squared_error(x, y),
+                           num_rounds=10000,
+                           seed=0)
+print("Bochum, MSE:")
+print(p_value)
+
+
+p_value = permutation_test(table_essen['mean_QST_pain_sensitivity'], table_essen['prediction'],
+                           method='approximate',
+                           func=lambda x, y: np.corrcoef(x, y)[1][0],
+                           num_rounds=10000,
+                           seed=0)
+print("Essen, corr:")
+print(p_value)
+p_value = permutation_test(table_essen['mean_QST_pain_sensitivity'], table_essen['prediction'],
+                           method='approximate',
+                           func=lambda x, y: -mean_absolute_error(x, y),
+                           num_rounds=10000,
+                           seed=0)
+print("Essen, MAE:")
+print(p_value)
+p_value = permutation_test(table_essen['mean_QST_pain_sensitivity'], table_essen['prediction'],
+                           method='approximate',
+                           func=lambda x, y: -mean_squared_error(x, y),
+                           num_rounds=10000,
+                           seed=0)
+print("Essen, MSE:")
+print(p_value)
+
+
+p_value = permutation_test(table_szeged['mean_QST_pain_sensitivity'], table_szeged['prediction'],
+                           method='approximate',
+                           func=lambda x, y: np.corrcoef(x, y)[1][0],
+                           num_rounds=10000,
+                           seed=0)
+print("Szeged, corr:")
+print(p_value)
+p_value = permutation_test(table_szeged['mean_QST_pain_sensitivity'], table_szeged['prediction'],
+                           method='approximate',
+                           func=lambda x, y: -mean_absolute_error(x, y),
+                           num_rounds=10000,
+                           seed=0)
+print("Szeged, MAE:")
+print(p_value)
+p_value = permutation_test(table_szeged['mean_QST_pain_sensitivity'], table_szeged['prediction'],
+                           method='approximate',
+                           func=lambda x, y: -mean_squared_error(x, y),
+                           num_rounds=10000,
+                           seed=0)
+print("Szeged, MSE:")
+print(p_value)
