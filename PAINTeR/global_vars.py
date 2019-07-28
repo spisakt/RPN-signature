@@ -298,3 +298,5 @@ _PLOT_SZEGED_PREDICTION_ = path.join(path.dirname(__file__),"../res/pred_szeged.
 _PLOT_ESSEN_SZEGED_PREDICTION_ = path.join(path.dirname(__file__),"../res/pred_essen_szeged.pdf")
 
 _PLOT_LEARNING_CURVE_ = path.join(path.dirname(__file__),"../res/learning_curve.pdf")
+
+N=119
