@@ -171,12 +171,12 @@ elif opts.task_id:
 elif opts.echo_idx:
     datagrab.inputs.output_query['bold'] = dict(datatype='func', echo=opts.echo_idx)
 
-print "Participants selected:"
+print("Participants selected:")
 if (opts.participant_label):
     datagrab.inputs.subject = opts.participant_label
-    print opts.participant_label
+    print(opts.participant_label)
 else:
-    print "all participants in dataset"
+    print("all participants in dataset")
 
 # sink: file - idx relationship!!
 pop_id = pe.Node(interface=utils_convert.List2TxtFile,
