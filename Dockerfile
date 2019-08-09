@@ -108,14 +108,13 @@ RUN conda install -y python=2.7.13 \
                      graphviz=2.40.1 \
                      traits=4.6.0 \
                      statsmodels=0.9.0 \
-                     mlxtend=0.16.0 \
                      zlib; sync && \
     chmod -R a+rX /usr/local/miniconda; sync && \
     chmod +x /usr/local/miniconda/bin/*; sync && \
     conda build purge-all; sync && \
     conda clean -tipsy && sync
 
-RUN pip install nipype==1.1.9 psutil==5.4.8 bids==0.0 nilearn==0.5.0 seaborn==0.9.0
+RUN pip install nipype==1.1.9 psutil==5.4.8 bids==0.0 nilearn==0.5.0 seaborn==0.9.0 mlxtend==0.16.0
 
 # Unless otherwise specified each process should only use one thread - nipype
 # will handle parallelization
@@ -126,7 +125,7 @@ ENV MKL_NUM_THREADS=1 \
 # TODO: set number of threads for ANTS
 
 # Precaching fonts, set 'Agg' as default backend for matplotlib
-RUN python -c "from matplotlib import font_manager" && \
+RUN python2.7 -c "from matplotlib import font_manager" && \
     sed -i 's/\(backend *: \).*$/\1Agg/g' $( python -c "import matplotlib; print(matplotlib.matplotlib_fname())" )
 
 # Installing PUMI
