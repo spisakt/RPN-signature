@@ -119,8 +119,9 @@ RUN pip install nipype==1.1.9 psutil==5.4.8 bids==0.0 nilearn==0.5.0 seaborn==0.
 
 # Unless otherwise specified each process should only use one thread - nipype
 # will handle parallelization
+# tspisak: changed it for ANTs
 ENV MKL_NUM_THREADS=1 \
-    OMP_NUM_THREADS=1
+    OMP_NUM_THREADS=8
     
 # TODO: set number of threads for ANTS
 

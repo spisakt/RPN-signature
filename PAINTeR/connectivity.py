@@ -22,7 +22,8 @@ def calculate_connectivity(table=global_vars._RES_BOCHUM_TABLE_,
                            plotfile_mean_mtx=global_vars._PLOT_BOCHUM_MEAN_MATRIX_,
                            save_features=global_vars._FEATURE_BOCHUM_,
                            save_table=global_vars._RES_BOCHUM_TABLE_,
-                           save_table_excl=global_vars._RES_BOCHUM_TABLE_EXCL_
+                           save_table_excl=global_vars._RES_BOCHUM_TABLE_EXCL_,
+                           kind='partial correlation'
                            ):
     # load bochum data
     df = pd.read_csv(table)
@@ -39,7 +40,11 @@ def calculate_connectivity(table=global_vars._RES_BOCHUM_TABLE_,
 
     # compute connectivity
     excl = np.argwhere(df['Excluded'].values < 1).flatten()
-    X, cm = connectivity_matrix(np.array(ts)[excl])
+    X, cm = connectivity_matrix(np.array(ts)[excl], kind)
+
+    mean=pd.DataFrame(cm.mean_, columns=labels)
+    mean.to_csv(save_table + kind + ".csv")
+
     # plot group-mean matrix
     l = pd.read_csv(global_vars._ATLAS_LABELS_, sep="\t")
     if plot_labelmap:
@@ -61,7 +66,7 @@ def calculate_connectivity(table=global_vars._RES_BOCHUM_TABLE_,
     df.to_csv(save_table)
     df_excl.to_csv(save_table_excl)
 
-    return X
+    return X, cm
 
 def add_FD_data(fd_files, data_frame):
     FD = []

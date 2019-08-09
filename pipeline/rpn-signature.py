@@ -89,6 +89,8 @@ g_set.add_argument('--atlas', action='store',
                     help='MIST brain atlas directory')
 g_set.add_argument('--keep_derivatives', '--keep_derivatives', '--keep_der', '--keep-der', action='store_true', default=False,
                          help='keep derivatives (preprocessed image files and regional timeseries)')
+g_set.add_argument('--debug', '--keep_all', '--keep-all', action='store_true', default=False,
+                         help='keep all computations (useful for debugging)')
 
 g_comp = parser.add_argument_group('Options for optimizing computations')
 g_comp.add_argument('--bet_fract_int_thr', action='store', type=float, default=0.3,
@@ -148,7 +150,10 @@ print("Memory usage limit: " + str(opts.mem_gb) + "GB")
 print("Number of CPUs used: " + str(opts.nthreads))
 
 totalWorkflow = nipype.Workflow('RPN')
-totalWorkflow.base_dir = '.'
+if opts.debug:
+    totalWorkflow.base_dir = globals._SinkDir_
+else:
+    totalWorkflow.base_dir =  '.' # will be lost when docker container is finished
 
 ########################
 # parse command line args
