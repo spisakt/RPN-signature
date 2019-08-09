@@ -110,7 +110,8 @@ RUN conda install -y python=2.7.13 \
                      statsmodels=0.9.0 \
                      zlib; sync && \
     chmod -R a+rX /usr/local/miniconda; sync && \
-    chmod +x /usr/local/miniconda/bin/*; sync && \
+    chmod +x /usr/local/miniconda/bin/*; sync
+    #&& \
     #conda build purge-all; sync && # \
     #conda clean -tipsy && sync
 
