@@ -201,7 +201,7 @@ reorient_func = pe.MapNode(fsl.utils.Reorient2Std(output_type='NIFTI_GZ'),
                       name="reorient_func")
 totalWorkflow.connect(datagrab, 'bold', reorient_func, 'in_file')
 
-# prior probmaps for FAST are now switched off by defaulöt in PUMI
+# prior probmaps for FAST are now switched off by default in PUMI
 # ToDo: make settable
 myanatproc = anatproc.AnatProc(stdreg=globals._regType_)
 myanatproc.inputs.inputspec.bet_fract_int_thr = opts.bet_fract_int_thr #0.3  # feel free to adjust, a nice bet is important!
