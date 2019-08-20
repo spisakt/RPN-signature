@@ -131,7 +131,6 @@ else:
 ##############################
 _refvolplace_ = globals._RefVolPos_.first
 
-
 # specify atlas for network construction:
 # name of labelmap nii (or list of probmaps)
 _ATLAS_FILE = _MISTDIR_ + '/Parcellations/MIST_122.nii.gz'
