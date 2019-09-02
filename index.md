@@ -1,7 +1,8 @@
 # A brain-based predictive signature of individual pain sensitivity
 ## *based on the Resting-state Pain susceptibility Network (RPN)*
 
-Welcome to website of the RPN-signature!
+Welcome to website of the RPN-signature, a resting-state network-based predictive signature of individual pain sensitivity.
+The project is a joint effort of the Predictive Neuroimagiong Laboratory, ([PNI-lab](https://pni-lab.github.io), Tamas Spisak) and the [Bingel-lab](https://www.uk-essen.de/clinical_neurosciences_bingel/) (Ulrike Bingel), University Hospital Essen, Germany.
 
 **_This site is under construction._**
 
@@ -175,5 +176,6 @@ _Tamas Spisak, Balint Kincses, Frederik Schlitt, Matthias Zunhammer, Tobias Schm
 [![GitHub issues](https://img.shields.io/github/issues/spisakt/RPN-signature.svg)](https://GitHub.com/spisakt/RPN-signature/issues/)
 [![GitHub issues-closed](https://img.shields.io/github/issues-closed/spisakt/RPN-signature.svg)](https://GitHub.com/spisakt/RPN-signature/issues?q=is%3Aissue+is%3Aclosed)
 
+Maintained by the [PNI-lab](https://pni-lab.github.io).
 
 [![Back to Top](https://iaibloggertips.files.wordpress.com/2014/05/e5406-back-to-top-button-for-blogger3-1.png)](#a-brain-based-predictive-signature-of-individual-pain-sensitivity)
