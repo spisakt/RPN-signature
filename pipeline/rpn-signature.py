@@ -119,7 +119,6 @@ _MISTDIR_ = opts.atlas
 
 ############ this part follows the BIDS-app specification ##############################################################
 
-
 ##############################
 if (opts.template_2mm):
     globals._brainref = "/data/standard/MNI152_T1_2mm_brain.nii.gz"
