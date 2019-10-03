@@ -52,8 +52,8 @@ The predictive model should be robust for variations in imaging sequences. Never
 - carefull fixation to prevent motion artifacts
 
 [![Back to Top](https://iaibloggertips.files.wordpress.com/2014/05/e5406-back-to-top-button-for-blogger3-1.png)](#a-brain-based-predictive-signature-of-individual-pain-sensitivity)
-## Usage with docker
 
+## Usage with docker
 
 The usage of the RPN-siganture with Docker is simple and platform-independent.
 You can run it like any other [BIDS-app](http://bids-apps.neuroimaging.io/tutorial/).
@@ -99,6 +99,9 @@ _**NOTE 7** Do quality checking (see below) before using the predicted values an
 [![Back to Top](https://iaibloggertips.files.wordpress.com/2014/05/e5406-back-to-top-button-for-blogger3-1.png)](#a-brain-based-predictive-signature-of-individual-pain-sensitivity)
 
 ## Output
+
+The RPN-signature outputs the RPN-score, a prediction of the composite pain sensitivity score of (Zunhammer et al., 2016).
+Click [here](https://github.com/spisakt/RPN-signature/blob/master/notebooks/Supplementary_Analysis_1.html) for more information on the composite score and its feasability as prediction target.
 
 ```
 output_directory/
