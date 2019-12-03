@@ -74,8 +74,8 @@ ENV PATH=$ANTSPATH:$PATH
 
 # Create a shared $HOME directory
 RUN useradd -m -s /bin/bash -G users rpn-signature
-WORKDIR /home/rpn-signature
-ENV HOME="/home/rpn-signature"
+WORKDIR /home/rpn-signature_
+ENV HOME="/home/rpn-signature_"
 
 # Installing bids-validator
 RUN npm install -g bids-validator@1.1.3
@@ -130,16 +130,16 @@ RUN python -c "from matplotlib import font_manager" && \
 
 # Installing PUMI
 #RUN pip install git+https://github.com/spisakt/PUMI.git
-RUN git clone https://github.com/spisakt/PUMI.git /home/rpn-signature/src/PUMI
+RUN git clone https://github.com/spisakt/PUMI.git /home/rpn-signature_/src/PUMI
 
 # Installing RPN-signature
-RUN git clone https://github.com/spisakt/RPN-signature.git /home/rpn-signature/src/RPN-signature
+RUN git clone https://github.com/spisakt/RPN-signature.git /home/rpn-signature_/src/RPN-signature
 
-ENV PYTHONPATH=/home/rpn-signature/src/:/home/rpn-signature/src/RPN-signature
+ENV PYTHONPATH=/home/rpn-signature_/src/:/home/rpn-signature_/src/RPN-signature
 ENV FSLOUTPUTTYPE=NIFTI_GZ
 
-RUN ls /home/rpn-signature/src/RPN-signature/data
-RUN cp -a /home/rpn-signature/src/RPN-signature/data/standard $FSLDIR/data/standard
+RUN ls /home/rpn-signature_/src/RPN-signature/data
+RUN cp -a /home/rpn-signature_/src/RPN-signature/data/standard $FSLDIR/data/standard
 RUN ls $FSLDIR/data/standard
 
 RUN find $HOME -type d -exec chmod go=u {} + && \
@@ -149,7 +149,7 @@ ENV IS_DOCKER_8395080871=1
 
 RUN ldconfig
 WORKDIR /tmp/
-ENTRYPOINT ["/home/rpn-signature/src/RPN-signature/pipeline/rpn-signature.py"]
+ENTRYPOINT ["/home/rpn-signature_/src/RPN-signature/pipeline/rpn-signature.py"]
 
 ARG BUILD_DATE
 ARG VCS_REF
