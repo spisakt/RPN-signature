@@ -79,7 +79,7 @@ globals._brainref_mask="/data/standard/MNI152_T1_1mm_brain_mask_dil.nii.gz"
 ##############################
 _refvolplace_ = globals._RefVolPos_.first
 
-
+#
 # specify atlas for network construction:
 # name of labelmap nii (or list of probmaps)
 _ATLAS_FILE = _MISTDIR_ + '/Parcellations/MIST_122.nii.gz'
