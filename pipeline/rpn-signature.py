@@ -97,6 +97,8 @@ g_comp.add_argument('--bet_fract_int_thr', action='store', type=float, default=0
                     help='fractional intensity threshold for FSL brain extraction')
 g_comp.add_argument('--bet_vertical_gradient', action='store', type=float, default=-0.3,
                     help='vertical gradient value for FSL brain extraction')
+g_comp.add_argument('--smoothing-fwhm', "--fwhm", dest="fwhm", action='store', type=float, default=0,
+                    help='FWHM for smoothing in mm. Zero means no smoothing. (default: 0)')
 
 g_perfm = parser.add_argument_group('Options to handle performance')
 g_perfm.add_argument('--nthreads', '--n_cpus', '-n-cpus', action='store', type=int,
@@ -222,7 +224,7 @@ totalWorkflow.connect(mybbr, 'outputspec.wm_mask_in_funcspace', compcor_roi, 'in
 totalWorkflow.connect(mybbr, 'outputspec.ventricle_mask_in_funcspace', compcor_roi, 'inputspec.ventricle_mask')
 
 # Preprocessing of functional data
-myfuncproc = funcproc.FuncProc_despike_afni(carpet_plot="carpet_plots")
+myfuncproc = funcproc.FuncProc_despike_afni(fwhm=opts.fwhm, carpet_plot="carpet_plots")
 totalWorkflow.connect(reorient_func, 'out_file', myfuncproc, 'inputspec.func')
 totalWorkflow.connect(compcor_roi, 'outputspec.noise_roi', myfuncproc, 'inputspec.cc_noise_roi')
 
