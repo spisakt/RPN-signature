@@ -7,9 +7,8 @@ The project is a joint effort of the Predictive Neuroimagiong Laboratory, ([PNI-
 **_This site is under construction._**
 
 ## News
-_Our paper describing the RPN-signature has been published by Nature Communications:
-*Spisak, T. et al. Pain-free resting-state functional brain connectivity predicts individual pain sensitivity. Nat Commun 11, 187 (2020)*
-[![DOI:10.1016/j.neuroimage.2018.09.078](https://zenodo.org/badge/DOI/10.1038/s41467-019-13785-z.svg)](https://doi.org/10.1038/s41467-019-13785-z)_
+- Our paper describing the RPN-signature has been published by Nature Communications:
+*Spisak, T. et al. Pain-free resting-state functional brain connectivity predicts individual pain sensitivity. Nat Commun 11, 187 (2020)* [![DOI:10.1016/j.neuroimage.2018.09.078](https://zenodo.org/badge/DOI/10.1038/s41467-019-13785-z.svg)](https://doi.org/10.1038/s41467-019-13785-z)
 
 ## Contents
 * [1. Summary](#summary)
