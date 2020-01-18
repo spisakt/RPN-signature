@@ -272,7 +272,7 @@ def calculate_connectivity(ts_files, fd_files, _scrub_threshold_ = 0.15):
     max_FD = []
     perc_scrubbed = []
 
-    # calculate conn for each subject
+    # connectivity for each subject
     for f in fd_files:
         fd = pd.read_csv(f, sep="\t").values.flatten()
         fd = np.insert(fd, 0, 0)
