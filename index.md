@@ -19,7 +19,7 @@ The project is a joint effort of the Predictive Neuroimagiong Laboratory, ([PNI-
 * [6. Authors and Citation](#authors)
 
 ## Summary
-Individual differences in pain percetheption are of key interest in both basic and clinical research as altered pain sensitivity is both a characteristic and a risk factor for many pain conditions. Individual susceptibility to pain is reflected in the pain-free resting-state activity and functional connectivity of the brain.
+Individual differences in pain perception are of key interest in both basic and clinical research as altered pain sensitivity is both a characteristic and a risk factor for many pain conditions. Individual susceptibility to pain is reflected in the pain-free resting-state activity and functional connectivity of the brain.
 The RPN-signature is a network pattern in the pain-free resting-state functional brain connectome that is predictive of interindividual differences in pain sensitivity.
 The RPN-signature allows assessing the individual susceptibility to pain without applying any painful stimulation, as might be valuable in patients where reliable behavioural pain reports cannot be obtained. Additionally, as a direct, non-invasive readout of the supraspinal neural contribution to pain sensitivity, it may have broad implications for translational research and the development of analgesic treatment strategies.
 
@@ -34,12 +34,12 @@ The Resting-state Pain susceptibility Network signature consists of an fMRI imag
 ## Inputs
 
 
-This "research product" allows making predictions on the individual's pain sensitivity based on their resting-state fMRI measutrements. For the image preprocessing step, the T1-weighted anatomical images are additionally needed.
+This "research product" allows making predictions on the individual's pain sensitivity based on their resting-state fMRI measurements. For the image preprocessing step, the T1-weighted anatomical images are additionally needed.
 
-All data must be structures according to the **Brain Imaging Data Structure** [BIDS](http://bids.neuroimaging.io).
+All data must be structured according to the **Brain Imaging Data Structure** [BIDS](http://bids.neuroimaging.io).
 Consider validating your data with the [BIDS validator](https://bids-standard.github.io/bids-validator/) before running the RPN-signature.
 
-The predictive model should be robust for variations in imaging sequences. Neverthless, we have the following suggestions (which shouldn't be hard to meet):
+The predictive model should be robust for variations in imaging sequences. Nevertheless, we have the following suggestions (which shouldn't be hard to meet):
 
 ### In general:
 - 3T field strength
@@ -53,7 +53,7 @@ The predictive model should be robust for variations in imaging sequences. Never
 - TR around 2.5 sec (the model might be robust to this, though)
 - interleaved slice order
 - approximately 3mm voxel
-- carefull fixation to prevent motion artifacts
+- careful fixation to prevent motion artifacts
 
 [![Back to Top](https://iaibloggertips.files.wordpress.com/2014/05/e5406-back-to-top-button-for-blogger3-1.png)](#a-brain-based-predictive-signature-of-individual-pain-sensitivity)
 
@@ -90,15 +90,15 @@ tspisak/rpn-signature:latest /data /out participant \
 
 _**NOTE 2** Output directory must be specified as an absolute path._
 
-_**NOTE 3** Note that the --2mm command line option performs spatial co-registration to a 2mm-resolution template (instead of 1mm), which is much faster (total running time is approximately 50 min instead of 8 hours per subject), but was not validasted and gives slighly different (preassumably less accurate) predictions._
+_**NOTE 3** Note that the --2mm command line option performs spatial co-registration to a 2mm-resolution template (instead of 1mm), which is much faster (total running time is approximately 50 min instead of 8 hours per subject), but was not validated and gives slightly different (presumably less accurate) predictions._
 
-_**NOTE 4** Make sure to configure Docker's resource availability to take adavantage of parallell processing._
+_**NOTE 4** Make sure to configure Docker's resource availability to take advantage of parallel processing._
 
 _**NOTE 5** Make sure to have enough free space for storing temporary files (1.5GB per subject)._
 
 _**NOTE 6** Consider using the option --keep_derivatives, if you need the timeseries and connectivity data for further processing._
 
-_**NOTE 7** Do quality checking (see below) before using the predicted values and adjust brain extraction parameters with the options --bet_fract_int_thr and --bet_vertical_gradient if neccessary._
+_**NOTE 7** Do quality checking (see below) before using the predicted values and adjust brain extraction parameters with the options --bet_fract_int_thr and --bet_vertical_gradient if necessary._
 
 [![Back to Top](https://iaibloggertips.files.wordpress.com/2014/05/e5406-back-to-top-button-for-blogger3-1.png)](#a-brain-based-predictive-signature-of-individual-pain-sensitivity)
 
@@ -158,7 +158,7 @@ output_directory/
 ## Running the source code
 
 
-- Running the RPN-signature from source can be tricky for non-developers, because a lot of dependencies must be resolved and installtion is undocumented.
+- Running the RPN-signature from source can be tricky for non-developers, because a lot of dependencies must be resolved and installation is undocumented.
 - Image preprocessing and network calculation is based on our PUMI (https://github.com/spisakt/PUMI) python module (see page for installation and dependencies), which has to be installed first.
 - Run pipeline script for image preprocessing and network calculation: [https://github.com/spisakt/PAINTeR/blob/master/pipeline/pipeline_PAINTeR-BIDS.py]
 - For help, please contact Tamas Spisak (spisak.tms@uk-essen.de)
