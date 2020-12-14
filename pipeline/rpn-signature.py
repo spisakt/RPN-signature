@@ -107,7 +107,9 @@ g_perfm.add_argument('--nthreads', '--n_cpus', '-n-cpus', action='store', type=i
 #g_perfm.add_argument('--omp-nthreads', action='store', type=int, default=2, # ToDo: implement this
 #                         help='maximum number of threads per-process')
 g_perfm.add_argument('--mem_gb', '--mem-gb', action='store', default=psutil.virtual_memory().total/(1024*1024*1024), type=int,
-                         help='upper bound memory limit for ROPN-signature processes')
+                         help='upper bound memory limit for RPN-signature processes')
+g_perfm.add_argument('--tempdir', '--temp', '-w', action='store', default='.', type=int,
+                         help='directory to store temporary data (default: working directory)')
 g_perfm.add_argument('--template_2mm', '--template-2mm', '--2mm', action='store_true', default=False,
                          help='normalize to 2mm template (faster but less accurate prediction)')
 
@@ -155,7 +157,7 @@ totalWorkflow = nipype.Workflow('RPN')
 if opts.debug:
     totalWorkflow.base_dir = globals._SinkDir_
 else:
-    totalWorkflow.base_dir =  '.' # will be lost when docker container is finished
+    totalWorkflow.base_dir = opts.tempdir  # preferably a fast temporary mount (working dir by default)
 
 ########################
 # parse command line args
