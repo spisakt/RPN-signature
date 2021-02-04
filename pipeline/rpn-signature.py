@@ -108,7 +108,7 @@ g_perfm.add_argument('--nthreads', '--n_cpus', '-n-cpus', action='store', type=i
 #                         help='maximum number of threads per-process')
 g_perfm.add_argument('--mem_gb', '--mem-gb', action='store', default=psutil.virtual_memory().total/(1024*1024*1024), type=int,
                          help='upper bound memory limit for RPN-signature processes')
-g_perfm.add_argument('--tempdir', '--temp', '-w', action='store', default='.', type=int,
+g_perfm.add_argument('--tempdir', '--temp', '-w', action='store', default='.', type=str,
                          help='directory to store temporary data (default: working directory)')
 g_perfm.add_argument('--template_2mm', '--template-2mm', '--2mm', action='store_true', default=False,
                          help='normalize to 2mm template (faster but less accurate prediction)')
