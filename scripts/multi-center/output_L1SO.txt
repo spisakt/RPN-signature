@@ -1,0 +1,41 @@
+model	inner_cv mean score	outer vc score
+[ 0  1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19 20 21 22 23
+ 24 25 26 27 28 29 30 31 32 33 34]
+Fitting 56 folds for each of 90 candidates, totalling 5040 fits
+{'fsel__k': 5000, 'model__alpha': 0.001, 'model__l1_ratio': 0.0001} -0.4817677545260901 -0.42498749456417306
+[35 36 37 38 39 40 41 42 43 44 45 46 47 48 49 50 51 52 53 54 55 56 57 58
+ 59 60 61 62 63 64 65 66 67 68 69 70 71]
+Fitting 54 folds for each of 90 candidates, totalling 4860 fits
+{'fsel__k': 25, 'model__alpha': 0.1, 'model__l1_ratio': 0.9999} -0.3754281645806535 -0.9120011056857207
+[72 73 74 75 76 77 78 79 80 81 82 83 84 85 86 87 88 89 90]
+Fitting 72 folds for each of 90 candidates, totalling 6480 fits
+{'fsel__k': 25, 'model__alpha': 0.001, 'model__l1_ratio': 0.9999} -0.49929921032531954 -0.3564264574197913
+*** Score on mean as model:	-0.5655535039999882
+** Mean score in the inner crossvaludation (inner_cv):	-0.452165043144021
+** Mean Nested Crossvalidation Score (outer_cv):	-0.5644716858898949
+Explained Variance: 0.0019128483908982252
+Correlation: 0.1366369255551004
+/usr/lib/python3.6/site-packages/seaborn/_decorators.py:43: FutureWarning: Pass the following variables as keyword args: x, y. From version 0.12, the only valid positional argument will be `data`, and passing other arguments without an explicit keyword will result in an error or misinterpretation.
+  FutureWarning
+/usr/lib/python3.6/site-packages/seaborn/_decorators.py:43: FutureWarning: Pass the following variables as keyword args: x, y. From version 0.12, the only valid positional argument will be `data`, and passing other arguments without an explicit keyword will result in an error or misinterpretation.
+  FutureWarning
+*** Score on mean as model:	-0.5197784675483742
+** Mean score in the inner crossvaludation (inner_cv):	-0.4817677545260901
+** Mean Nested Crossvalidation Score (outer_cv):	-0.42498749456417306
+Explained Variance: 0.18236802580780098
+L1SO results added
+Correlation: 0.5669687636585362
+/usr/lib/python3.6/site-packages/seaborn/_decorators.py:43: FutureWarning: Pass the following variables as keyword args: x, y. From version 0.12, the only valid positional argument will be `data`, and passing other arguments without an explicit keyword will result in an error or misinterpretation.
+  FutureWarning
+*** Score on mean as model:	-0.618370561472801
+** Mean score in the inner crossvaludation (inner_cv):	-0.3754281645806535
+** Mean Nested Crossvalidation Score (outer_cv):	-0.9120011056857207
+Explained Variance: -0.4748456063522277
+Correlation: 0.05364389950708308
+/usr/lib/python3.6/site-packages/seaborn/_decorators.py:43: FutureWarning: Pass the following variables as keyword args: x, y. From version 0.12, the only valid positional argument will be `data`, and passing other arguments without an explicit keyword will result in an error or misinterpretation.
+  FutureWarning
+*** Score on mean as model:	-0.19811769701105597
+** Mean score in the inner crossvaludation (inner_cv):	-0.49929921032531954
+** Mean Nested Crossvalidation Score (outer_cv):	-0.3564264574197913
+Explained Variance: -0.7990642067674594
+Correlation: 0.46770669440477114
