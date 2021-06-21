@@ -108,12 +108,12 @@ while i < len(df):
 #%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 def pipe_scale_fsel_elnet(scaler=preprocessing.RobustScaler(),
                           fsel=SelectKBest(f_regression),
-                          model=ElasticNet(),
+                          model=ElasticNet(max_iter=1000000),
                           # p_grid = {'fsel__k': [10, 50, 100, 200, 500, 700, 1000, 2000, 3000, 4000, 5000, 'all'], 'model__alpha': [.001, .01, .1, 1, 10], 'model__l1_ratio': [0.001, .1, .3, .5, .7, .9, .999]
                           # p_grid = {'fsel__k': [25, 100, 1000], 'model__alpha': [.001, .01, .1, 1], 'model__l1_ratio': [.001, .5, .999]
                           p_grid={'fsel__k': [25, 50, 100, 1000, 5000, 'all'],
-                                  'model__alpha': [0,  0.1, 1, 10, 1000],
-                                  'model__l1_ratio': [0, .5, 1]
+                              'model__alpha': [0.001,  0.1, 1, 10, 100],
+                                  'model__l1_ratio': [0.0001, .5, 0.9999]
                                   }):
     mymodel = Pipeline(
         [('scaler', scaler),
