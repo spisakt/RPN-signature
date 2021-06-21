@@ -21,22 +21,22 @@ def train(X, y, model, p_grid, nested=False, model_averaging=True, ):
     clf = GridSearchCV(estimator=model, param_grid=p_grid, cv=inner_cv, scoring="neg_mean_squared_error", verbose=False, return_train_score=False, n_jobs=8)
     clf.fit(X, y)
 
-    print "**** Non-nested analysis ****"
-    print "** Best hyperparameters: " + str(clf.best_params_)
+    print("**** Non-nested analysis ****")
+    print("** Best hyperparameters: " + str(clf.best_params_))
 
-    print "** Score on full data as training set:\t" + str(-mean_squared_error(y_pred=clf.best_estimator_.predict(X), y_true=y))
-    print "** Score on mean as model: " + str(-mean_squared_error(np.repeat(y.mean(), len(y)), y))
-    print "** Best Non-nested cross-validated score on test:\t" + str(clf.best_score_)
+    print("** Score on full data as training set:\t" + str(-mean_squared_error(y_pred=clf.best_estimator_.predict(X), y_true=y)))
+    print("** Score on mean as model: " + str(-mean_squared_error(np.repeat(y.mean(), len(y)), y)))
+    print("** Best Non-nested cross-validated score on test:\t" + str(clf.best_score_))
 
     model=clf.best_estimator_
 
-    print "XXXXX Explained Variance: " + str(
-        1 - clf.best_score_ / -mean_squared_error(np.repeat(y.mean(), len(y)), y))
+    print("XXXXX Explained Variance: " + str(
+        1 - clf.best_score_ / -mean_squared_error(np.repeat(y.mean(), len(y)), y)))
 
     avg_model = None
     all_models = []
     if nested:
-        print "**** Nested analysis ****"
+        print("**** Nested analysis ****")
 
 
         #nested_scores = cross_val_score(clf, X, y, cv=outer_cv, scoring="explained_variance")
@@ -52,7 +52,7 @@ def train(X, y, model, p_grid, nested=False, model_averaging=True, ):
         i = 0
         avg = []
         # doing the crossval itewrations manually
-        print "model\tinner_cv mean score\touter vc score"
+        print("model\tinner_cv mean score\touter vc score")
         for train, test in outer_cv.split(X, y):
             clf.fit(X[train], y[train])
 
@@ -67,7 +67,7 @@ def train(X, y, model, p_grid, nested=False, model_averaging=True, ):
             #pyplot.legend(loc='upper right')
             #pyplot.show()
 
-            print str(clf.best_params_) + " " + str(clf.best_score_) + " " + str(clf.score(X[test], y[test]))
+            print(str(clf.best_params_) + " " + str(clf.best_score_) + " " + str(clf.score(X[test], y[test])))
             predicted[i] = clf.predict(X[test])
             actual[i] = y[test]
 
@@ -78,12 +78,12 @@ def train(X, y, model, p_grid, nested=False, model_averaging=True, ):
             #nested_scores_test2[i] = explained_variance_score(y_pred=clf.predict(X[test]), y_true=y[test])
             i = i+1
 
-        print "*** Score on mean as model:\t" + str(-mean_squared_error(np.repeat(y.mean(), len(y)), y))
-        print "** Mean score in the inner crossvaludation (inner_cv):\t" + str(nested_scores_train.mean())
-        print "** Mean Nested Crossvalidation Score (outer_cv):\t" + str(nested_scores_test.mean())
+        print("*** Score on mean as model:\t" + str(-mean_squared_error(np.repeat(y.mean(), len(y)), y)))
+        print("** Mean score in the inner crossvaludation (inner_cv):\t" + str(nested_scores_train.mean()))
+        print("** Mean Nested Crossvalidation Score (outer_cv):\t" + str(nested_scores_test.mean()))
 
-        print "Explained Variance: " +  str( 1- nested_scores_test.mean()/-mean_squared_error(np.repeat(y.mean(), len(y)), y) )
-        print "Correlation: " + str(np.corrcoef(actual, predicted)[0,1])
+        print("Explained Variance: " +  str( 1- nested_scores_test.mean()/-mean_squared_error(np.repeat(y.mean(), len(y)), y) ))
+        print("Correlation: " + str(np.corrcoef(actual, predicted)[0,1]))
 
         avg_model = np.mean(np.array(avg), axis=0)
 
@@ -151,8 +151,8 @@ def learning_curve(model, X, y,  Ns = [15, 20, 25, 30, 35]):
     train = []
     test = []
     for n in Ns:
-        print "******************"
-        print n
+        print("******************")
+        print(n)
 
         tr=[]
         te=[]
@@ -173,7 +173,7 @@ def learning_curve(model, X, y,  Ns = [15, 20, 25, 30, 35]):
             te.append(np.median(cv["test_score"]))
 
 
-        print (np.mean(tr), np.mean(te))
+        print(np.mean(tr), np.mean(te))
 
         #print "******************"
         #print np.mean(cv["test_score"])
@@ -201,14 +201,14 @@ def evaluate_prediction(model, X, y, orig_mean=None, outfile="", robust=False, c
                      /
                      -mean_squared_error(np.repeat(y_base, len(y)), y))) * 100
 
-    print "R2=" + "{:.3f}".format(r_2) + "  R=" + "{:.3f}".format(np.sqrt(r_2))\
+    print("R2=" + "{:.3f}".format(r_2) + "  R=" + "{:.3f}".format(np.sqrt(r_2))\
           + "   p=" + "{:.6f}".format(p_value) +"  Expl. Var.: " + "{:.1f}".format(expl_var) + "%" \
           + "  Expl. Var.2: " + "{:.1f}".format(explained_variance_score(y_pred=predicted, y_true=y)*100) + "%" \
           + "  MSE=" + "{:.3f}".format(mean_squared_error(y_pred=predicted, y_true=y))\
           + " RMSE=" + "{:.3f}".format(np.sqrt(mean_squared_error(y_pred=predicted, y_true=y))) \
           + "  MAE=" + "{:.3f}".format(mean_absolute_error(y_pred=predicted, y_true=y)) \
           + " MedAE=" + "{:.3f}".format(median_absolute_error(y_pred=predicted, y_true=y)) \
-          + "  R^2=" + "{:.3f}".format(r2_score(y_pred=predicted, y_true=y))
+          + "  R^2=" + "{:.3f}".format(r2_score(y_pred=predicted, y_true=y)))
 
     plot.plot_prediction(y, predicted, outfile, robust=robust, sd=True, covar=covar,
                          text="$R^2$ = " + "{:.3f}".format(r_2) +
@@ -226,14 +226,14 @@ def evaluate_crossval_prediction(model, X, y, outfile="", cv=LeaveOneOut(), robu
                    /
                    -mean_squared_error(np.repeat(y.mean(), len(y)), y) ))*100
 
-    print "R2=" + "{:.3f}".format(r_2) + "  R=" + "{:.3f}".format(np.sqrt(r_2)) \
+    print("R2=" + "{:.3f}".format(r_2) + "  R=" + "{:.3f}".format(np.sqrt(r_2)) \
           + "   p=" + "{:.6f}".format(p_value) + "  Expl. Var.: " + "{:.1f}".format(expl_var) + "%" \
           + "  Expl. Var.2: " + "{:.1f}".format(explained_variance_score(y_pred=predicted, y_true=y)*100) + "%" \
           + "  MSE=" + "{:.3f}".format(mean_squared_error(y_pred=predicted, y_true=y)) \
           + " RMSE=" + "{:.3f}".format(np.sqrt(mean_squared_error(y_pred=predicted, y_true=y))) \
           + "  MAE=" + "{:.3f}".format(mean_absolute_error(y_pred=predicted, y_true=y)) \
           + " MedAE=" + "{:.3f}".format(median_absolute_error(y_pred=predicted, y_true=y)) \
-          + "  R^2=" + "{:.3f}".format(r2_score(y_pred=predicted, y_true=y))
+          + "  R^2=" + "{:.3f}".format(r2_score(y_pred=predicted, y_true=y)))
 
 
     plot.plot_prediction(y, predicted, outfile, robust=robust, sd=True,

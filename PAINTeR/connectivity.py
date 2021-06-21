@@ -5,7 +5,7 @@ from PAINTeR import model
 from PAINTeR import plot
 from sklearn.preprocessing import StandardScaler
 from nilearn.connectome import ConnectivityMeasure
-from sklearn.externals import joblib
+import joblib
 
 
 
@@ -49,7 +49,7 @@ def calculate_connectivity(table=global_vars._RES_BOCHUM_TABLE_,
     l = pd.read_csv(global_vars._ATLAS_LABELS_, sep="\t")
     if plot_labelmap:
         plot.plot_labelmap(atlas_file)
-    plot.plot_matrix(cm.mean_, labels, np.insert(l['modules'].values, 0, "GlobSig"),
+    plot.plot_matrix(cm.mean_, labels, c,
                      outfile=plotfile_mean_mtx)
     if plot_connectome:
         plot.plot_connectome(cm.mean_, atlas_file, threshold=0.05)
@@ -180,9 +180,9 @@ def exclude(data_frame,
         data_frame.loc[data_frame.MPT_log_geom > MPT_max, 'Excluded'] += 0.5
         data_frame.loc[data_frame.MPT_log_geom > MPT_max, 'exclusion_crit'] += '+MPT_high'
 
-    print "Before exclusion: " + str(data_frame.shape[0])
+    print("Before exclusion: " + str(data_frame.shape[0]))
     data_frame_excl = data_frame[data_frame["Excluded"] < 1]
-    print "After exclusion: " + str(data_frame_excl.shape[0])
+    print("After exclusion: " + str(data_frame_excl.shape[0]))
     return data_frame_excl
 
 def connectivity_matrix(timeseries, kind='partial correlation'):
