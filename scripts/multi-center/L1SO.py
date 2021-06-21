@@ -35,9 +35,9 @@ thres_perc_scrub = 30 # % scubbed out
 #%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 # load bochum data
-df_bochum = pd.read_csv("../res/bochum_sample_excl.csv")
-df_essen = pd.read_csv("../res/essen_sample_excl.csv")
-df_szeged = pd.read_csv("../res/szeged_sample_excl.csv")
+df_bochum = pd.read_csv("../../res/bochum_sample_excl.csv")
+df_essen = pd.read_csv("../../res/essen_sample_excl.csv")
+df_szeged = pd.read_csv("../../res/szeged_sample_excl.csv")
 df_bochum['study']='bochum'
 df_essen['study']='essen'
 df_szeged['study']='szeged'
@@ -49,13 +49,13 @@ df=df.reset_index()
 timeseries = []
 perc_scrubbed = []
 for i, f in enumerate(df['ts_file']):
-    f = '..' + f.split('/..')[1]
+    f = '../..' + f.split('/..')[1]
     f_scrub = f.split('.tsv')[0] + '-scrubbed.tsv'
 
     ts = pd.read_csv(f_scrub).iloc[:, 1:]  # here we can omit global signal...
 
     fd_file = df["fd_file"].values[i]
-    fd_file = '..' + fd_file.split('/..')[1]
+    fd_file = '../..' + fd_file.split('/..')[1]
     fd = pd.read_csv(fd_file).values.ravel().tolist()
     fd = [0] + fd
 
@@ -64,7 +64,7 @@ for i, f in enumerate(df['ts_file']):
 
 # region names
 labels = ts.columns.values
-l = pd.read_csv('../data/atlas_relabeled.tsv', sep="\t")
+l = pd.read_csv('../../data/atlas_relabeled.tsv', sep="\t")
 modules = np.insert(l['modules'].values, 0, "GlobSig")
 
 correlation_measure = ConnectivityMeasure(kind='partial correlation', vectorize=True, discard_diagonal=True)
